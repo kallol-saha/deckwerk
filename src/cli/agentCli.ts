@@ -62,6 +62,7 @@ import { findHostingServer, hostedContext, hostedLiveDeck, hostedRequest, type H
 import { checkWebPage, renderSlidesToPng } from './renderSlides.js';
 import { removeTempDir, tempDir, untilStopped } from './scratch.js';
 import { failureMessage } from '../main/writeFailure.js';
+import { recordSlidesToVideo } from './recordSlides.js';
 import { runConnectCommand } from './agentConnect.js';
 import { ChatUsageError, listChat, postChat, resolveChatTarget, waitForMention } from './chatClient.js';
 import { HISTORY_FILE, HISTORY_ROTATED_FILE, parseEditHistory, type EditHistoryEntry } from '@shared/editHistory.js';
@@ -166,6 +167,19 @@ Everything else:
             [--annotate] [--built]
                                           add --contact-sheet for one tiled
                                           overview of everything rendered
+  record    [deck] --slide id|number[,...] --output <file.mp4>
+            [--each] [--fps 30] [--size WxH] [--hold <ms>] [--max-step <ms>]
+            [--timing <file.json>] [--crf 18]
+                                          play the slides, in the order named,
+                                          through the real player into an
+                                          H.264 MP4, one exact frame at a time:
+                                          builds, Morphs, web pages and clips
+                                          as presented. Each step is clicked
+                                          once it stops moving plus --hold
+                                          (2000); --timing fixes a step's time
+                                          ({"15": [3000, null, 5000]}, ms per
+                                          step, null = wait). --each writes
+                                          slide-<n>.mp4 per slide into --output
   preview   [deck] [--port <n>] [--open]  export through the real player and
                                           serve it on localhost; blocks until
                                           killed. --open shows it to the user
@@ -255,6 +269,8 @@ export async function runAgentCli(argv: string[], io: CliIo): Promise<number> {
         return await inspectCommand(rest, io);
       case 'render':
         return await renderCommand(rest, io);
+      case 'record':
+        return await recordCommand(rest, io);
       case 'preview':
         return await previewCommand(rest, io);
       case 'validate':
@@ -698,6 +714,108 @@ async function renderCommand(argv: string[], io: CliIo): Promise<number> {
     contactSheet,
     ...(contactSheets.length > 1 ? { contactSheets } : {}),
   }));
+  return EXIT_OK;
+}
+
+/**
+ * Record slides to video: an MP4 of the slides as presented, clicked through
+ * step by step, for a talk's trailer or a thread (see recordSlides.ts).
+ */
+async function recordCommand(argv: string[], io: CliIo): Promise<number> {
+  const { flags, options, positional } = parseFlags(
+    argv, ['output', 'fps', 'size', 'hold', 'max-step', 'timing', 'crf']);
+  ensureKnownFlags('record', flags, ['slide', 'each']);
+  ensurePositionals('record', positional, 1);
+  const deckDir = resolveDeckDir(positional[0], io);
+  const output = options.get('output');
+  if (!output) {
+    io.err('record needs --output <file.mp4> (a folder with --each)');
+    return EXIT_USAGE;
+  }
+  const each = flags.has('each');
+  if (!each && !output.toLowerCase().endsWith('.mp4')) {
+    throw new UsageError(`--output names the .mp4 to write, not "${output}"; with --each it is a folder.`);
+  }
+  const deck = await loadDeck(deckDir);
+  const refs = requestedSlideIds(flags);
+  if (refs.length === 0) {
+    throw new UsageError('record needs --slide <id|number>[,...]: the slides to record, in the order to play them.');
+  }
+  const idFor = (ref: string): string => {
+    const id = slideIdForRef(deck, ref);
+    if (id === null) {
+      throw new UsageError(`No such slide: ${ref}. This deck has ${deck.slides.length} slides;`
+        + ' name one by id or by its 1-based number.');
+    }
+    return id;
+  };
+  const ids = refs.map(idFor);
+
+  const number = (name: string, fallback: number, min: number, max: number): number => {
+    const raw = options.get(name);
+    const value = raw === undefined ? fallback : Number(raw);
+    if (!Number.isFinite(value) || value < min || value > max) {
+      throw new UsageError(`--${name} takes a number from ${min} to ${max}, not "${raw}".`);
+    }
+    return value;
+  };
+  const fps = number('fps', 30, 1, 60);
+  const holdMs = number('hold', 2000, 0, 600_000);
+  const maxStepMs = number('max-step', 20_000, 100, 600_000);
+  const crf = number('crf', 18, 0, 51);
+  const size = /^(\d+)x(\d+)$/.exec(options.get('size') ?? `${deck.canvas.w}x${deck.canvas.h}`);
+  if (!size) throw new UsageError(`--size takes WIDTHxHEIGHT, not "${options.get('size')}".`);
+  // H.264 in yuv420p needs even dimensions.
+  const width = Math.round(Number(size[1]) / 2) * 2;
+  const height = Math.round(Number(size[2]) / 2) * 2;
+
+  // --timing: {"<slide id or number>": [ms for step 0, ms for step 1, ...]},
+  // null for a step that should wait until it stops moving.
+  const dwell = new Map<string, Array<number | null>>();
+  const timingPath = options.get('timing');
+  if (timingPath) {
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(await readFile(resolve(io.cwd, timingPath), 'utf8'));
+    } catch (error) {
+      throw new UsageError(`--timing must be a JSON file: ${error instanceof Error ? error.message : String(error)}`);
+    }
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      throw new UsageError('--timing holds an object: {"<slide>": [ms per step, or null], ...}.');
+    }
+    for (const [ref, steps] of Object.entries(parsed as Record<string, unknown>)) {
+      const valid = Array.isArray(steps)
+        && steps.every((ms) => ms === null || (typeof ms === 'number' && Number.isFinite(ms) && ms >= 0));
+      if (!valid) throw new UsageError(`--timing: slide ${ref} needs an array of milliseconds (or null) per step.`);
+      dwell.set(idFor(ref), steps as Array<number | null>);
+    }
+  }
+
+  const result = await recordSlidesToVideo({
+    deckDir,
+    deck,
+    slides: ids.map((id) => {
+      const index = deck.slides.findIndex((slide) => slide.id === id);
+      return { id, number: index + 1, index, dwell: dwell.get(id) ?? [] };
+    }),
+    output: resolve(io.cwd, output),
+    each,
+    width,
+    height,
+    fps,
+    holdMs,
+    maxStepMs,
+    crf,
+    onProgress: (line) => io.err(line),
+  });
+  // X (Twitter) takes 2 minutes 20 seconds from most accounts.
+  for (const video of result.videos) {
+    if (video.durationMs > 140_000) {
+      result.warnings.push(`${video.path} runs ${Math.round(video.durationMs / 1000)} s;`
+        + ' X (Twitter) accepts 140 s from most accounts.');
+    }
+  }
+  io.out(json(result));
   return EXIT_OK;
 }
 

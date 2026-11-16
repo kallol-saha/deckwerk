@@ -66,6 +66,27 @@ describe('speaker view', () => {
     view.destroy();
   });
 
+  it('previews the next build while the current slide has builds left', () => {
+    const view = open();
+    view.setDeck(deckOf(['Intro', 'Method', 'Results']));
+    view.setState(state({ cursor: { slide: 1, step: 0 }, steps: 3 }));
+
+    expect(host.querySelector('.speaker-next-heading')!.textContent).toBe('Next build');
+    expect(host.querySelector('.speaker-next')!.textContent).toContain('Method');
+    expect(host.querySelector('.speaker-next')!.textContent).not.toContain('Results');
+    view.destroy();
+  });
+
+  it('previews the next slide from the last build', () => {
+    const view = open();
+    view.setDeck(deckOf(['Intro', 'Method', 'Results']));
+    view.setState(state({ cursor: { slide: 1, step: 2 }, steps: 3 }));
+
+    expect(host.querySelector('.speaker-next-heading')!.textContent).toBe('Next slide');
+    expect(host.querySelector('.speaker-next')!.textContent).toContain('Results');
+    view.destroy();
+  });
+
   it('skips hidden slides when choosing the next preview', () => {
     const view = open();
     view.setDeck(deckOf(['Intro', 'Backup', 'Backup 2', 'Results'], [1, 2]));

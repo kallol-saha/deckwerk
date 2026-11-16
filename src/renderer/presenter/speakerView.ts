@@ -10,7 +10,8 @@ import { formatElapsed, formatWallClock, presentationLabel } from './model.js';
 import { videoRateChangeForKey } from '../player/videoRate.js';
 
 /**
- * Speaker View: current and next slide, speaker notes, build position, presentation and slide
+ * Speaker View: current slide and what the next click shows (the slide's next
+ * build, or the next slide), speaker notes, build position, presentation and slide
  * timers, wall clock, and the presenter's controls.
  *
  * One component, two shells. The desktop opens it in its own Electron window
@@ -68,7 +69,7 @@ const MARKUP = `
     </div>
     <aside class="speaker-sidebar">
       <div class="preview-panel next-panel">
-        <h2>Next slide</h2>
+        <h2 class="speaker-next-heading">Next slide</h2>
         <div class="speaker-next preview"></div>
       </div>
       <section class="timers" aria-label="Presentation timing">
@@ -111,6 +112,7 @@ export function createSpeakerView(options: SpeakerViewOptions): SpeakerView {
 
   const currentHost = pick('.speaker-current');
   const nextHost = pick('.speaker-next');
+  const nextHeading = pick('.speaker-next-heading');
   const position = pick('.speaker-position');
   const presentationTimer = pick('.speaker-presentation-timer');
   const slideTimer = pick('.speaker-slide-timer');
@@ -205,10 +207,18 @@ export function createSpeakerView(options: SpeakerViewOptions): SpeakerView {
   function render(): void {
     if (!deck) return;
     preview(currentHost, state.cursor.slide, state.cursor.step);
-    const lastSlide = state.range?.end ?? deck.slides.length - 1;
-    let nextSlide = state.cursor.slide + 1;
-    while (nextSlide <= lastSlide && deck.slides[nextSlide]?.skipped) nextSlide += 1;
-    preview(nextHost, nextSlide <= lastSlide ? nextSlide : -1);
+    // What the next click shows: this slide's next build while it has one,
+    // otherwise the next slide as it arrives.
+    if (state.cursor.step + 1 < state.steps) {
+      nextHeading.textContent = 'Next build';
+      preview(nextHost, state.cursor.slide, state.cursor.step + 1);
+    } else {
+      nextHeading.textContent = 'Next slide';
+      const lastSlide = state.range?.end ?? deck.slides.length - 1;
+      let nextSlide = state.cursor.slide + 1;
+      while (nextSlide <= lastSlide && deck.slides[nextSlide]?.skipped) nextSlide += 1;
+      preview(nextHost, nextSlide <= lastSlide ? nextSlide : -1);
+    }
     position.textContent = presentationLabel(state, deck.slides.length);
     const slide = deck.slides[state.cursor.slide];
     if (shownNotesSlideId !== slide?.id) commitNotes();
