@@ -661,6 +661,64 @@ describe('slide-agent CLI', { timeout: 60_000 }, () => {
     expect(noSuchSlide.stderr).toMatch(/No such slide: not-a-slide/);
   });
 
+  it('fails a recording before launching anything when the request cannot be met', async () => {
+    const noOutput = await cli('record', '--slide', '1');
+    expect(noOutput.code).toBe(EXIT_USAGE);
+    expect(noOutput.stderr).toMatch(/needs --output/);
+
+    const noSlides = await cli('record', '--output', join(dir, 'clip.mp4'));
+    expect(noSlides.code).toBe(EXIT_USAGE);
+    expect(noSlides.stderr).toMatch(/needs --slide/);
+
+    const notMp4 = await cli('record', '--slide', '1', '--output', join(dir, 'clip.gif'));
+    expect(notMp4.code).toBe(EXIT_USAGE);
+
+    await writeFile(join(dir, 'timing.json'), JSON.stringify({ 1: ['soon'] }), 'utf8');
+    const badTiming = await cli('record', '--slide', '1', '--output', join(dir, 'clip.mp4'),
+      '--timing', join(dir, 'timing.json'));
+    expect(badTiming.code).toBe(EXIT_USAGE);
+    expect(badTiming.stderr).toMatch(/milliseconds/);
+  });
+
+  it('records a build frame by frame on the virtual clock, whatever the machine\'s speed', { timeout: 180_000 }, async () => {
+    // A black slide-sized square dissolving in over one second on a click:
+    // half way through, every pixel is exactly half way between white and
+    // black, so the frame shows whether the clip ran on the recorder's time.
+    const deck = await onDisk();
+    deck.slides[1].elements.push({
+      id: 'cover', type: 'shape', shape: 'rect',
+      x: 0, y: 0, w: deck.canvas.w, h: deck.canvas.h, rot: 0, z: 5, opacity: 1,
+      class: [], style: {}, fill: '#000000', stroke: null,
+      strokeWidth: 0, radius: 0, path: null, pathSize: null,
+      arrowStart: false, arrowEnd: false,
+    } as Slide['elements'][number]);
+    deck.slides[1].timeline = [{
+      id: 'build-cover',
+      trigger: { on: 'click', ref: null, delay: 0 },
+      action: { type: 'appear', target: 'cover', value: 'dissolve', duration: 1000 },
+    }];
+    await writeDeck(deck);
+    // 300 ms before the click, 1.5 s after it: at 10 fps, frames 0-2 and 3-17.
+    await writeFile(join(dir, 'timing.json'), JSON.stringify({ 2: [300, 1500] }), 'utf8');
+    const clip = join(dir, 'clip.mp4');
+
+    const result = await parsed('record', '--slide', '2', '--output', clip, '--fps', '10',
+      '--size', '320x180', '--timing', join(dir, 'timing.json'));
+    expect(result.code).toBe(EXIT_OK);
+    expect(result.json.videos).toEqual([{ path: clip, slides: [2], frames: 18, durationMs: 1800 }]);
+
+    const { stdout } = await run(getFfmpegPath(), [
+      '-loglevel', 'error', '-i', clip, '-vf', 'scale=32:18,format=gray', '-f', 'rawvideo', '-',
+    ], { encoding: 'buffer', maxBuffer: 1 << 20 });
+    const pixels = stdout as unknown as Buffer;
+    const frameSize = 32 * 18;
+    expect(pixels.length).toBe(18 * frameSize);
+    const middle = (frame: number) => pixels[frame * frameSize + 9 * 32 + 16];
+    expect(middle(2)).toBeGreaterThan(240); // before the click
+    expect(Math.abs(middle(8) - 128)).toBeLessThan(10); // 500 ms into the dissolve
+    expect(middle(17)).toBeLessThan(15); // long after it
+  });
+
   it('hands an agent the format guide without needing to know where the editor lives', async () => {
     // The whole point: this runs in a deck folder that is not the checkout.
     const { code, stdout } = await cli('docs');

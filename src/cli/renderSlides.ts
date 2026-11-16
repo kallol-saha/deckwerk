@@ -248,7 +248,7 @@ export interface WebPageCheck {
 }
 
 /** How long one Electron child may run before it is killed, and what to say when it is. */
-interface ElectronBudget {
+export interface ElectronBudget {
   timeoutMs: number;
   describe: (seconds: number) => string;
 }
@@ -278,7 +278,17 @@ export function captureTimeoutMs(slideCount: number, ci = Boolean(process.env.CI
   return 60_000 + Math.max(1, slideCount) * perSlideMs;
 }
 
-function runElectron(script: string, jobPath: string, budget: ElectronBudget): Promise<string> {
+/**
+ * Run one Electron helper script on a job file and return its stdout. A
+ * helper that reports progress writes lines to stderr; `onProgress` gets
+ * each one as it arrives (all of stderr still goes into a failure message).
+ */
+export function runElectron(
+  script: string,
+  jobPath: string,
+  budget: ElectronBudget,
+  onProgress?: (line: string) => void,
+): Promise<string> {
   return new Promise((resolvePromise, reject) => {
     const child = spawn(electronBinary(), [script, jobPath, ...headlessElectronArgs()], {
       stdio: ['ignore', 'pipe', 'pipe'],
@@ -287,6 +297,7 @@ function runElectron(script: string, jobPath: string, budget: ElectronBudget): P
     trackHelper(child);
     let out = '';
     let err = '';
+    let partial = '';
     let settled = false;
     const { timeoutMs } = budget;
     const timer = setTimeout(() => {
@@ -298,7 +309,13 @@ function runElectron(script: string, jobPath: string, budget: ElectronBudget): P
     child.stdout.on('data', (chunk) => (out += chunk));
     child.stderr.on('data', (chunk) => {
       err += chunk;
+      // Debugging already shows all of stderr; progress would repeat it.
       if (process.env.SLIDE_AGENT_DEBUG === '1') process.stderr.write(String(chunk));
+      else if (onProgress) {
+        const lines = (partial + String(chunk)).split('\n');
+        partial = lines.pop() ?? '';
+        for (const line of lines) if (line.trim()) onProgress(line.trim());
+      }
     });
     child.on('error', (error) => {
       if (settled) return;

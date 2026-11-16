@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs';
 import { mkdir, readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
-import { join, resolve } from 'node:path';
+import { join, resolve, sep } from 'node:path';
 import {
   applyAgentTransaction,
   validateDeckIntegrity,
@@ -35,7 +35,7 @@ export async function assetChecker(deckDir: string): Promise<(src: string) => bo
   const names = new Set(await readdir(join(deckDir, ASSETS_DIR)).catch(() => []));
   return (src: string) => {
     const abs = resolve(deckDir, src);
-    if (abs !== resolve(deckDir) && !abs.startsWith(resolve(deckDir) + '/')) return false;
+    if (abs !== resolve(deckDir) && !abs.startsWith(resolve(deckDir) + sep)) return false;
     const name = src.split('/').pop();
     return Boolean(name && names.has(name)) || existsSync(abs);
   };
