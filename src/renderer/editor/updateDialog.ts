@@ -53,7 +53,7 @@ export function installUpdates(options: UpdateHost & {
 export async function checkForUpdates(): Promise<void> {
   const api = updatesApi();
   if (!api) return;
-  const operation = host?.beginOperation('Checking github.com/vsitzmann/deckwerk for updates');
+  const operation = host?.beginOperation('Checking github.com/kallol-saha/deckwerk for updates');
   let result: UpdateCheckResult;
   try {
     result = await api.check();

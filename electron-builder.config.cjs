@@ -80,7 +80,7 @@ module.exports = {
   // alongside the installers. The workflow still uploads with `gh release`
   // (`--publish never`), because one GitHub release has to collect artifacts
   // from three separate runners.
-  publish: [{ provider: 'github', owner: 'vsitzmann', repo: 'deckwerk' }],
+  publish: [{ provider: 'github', owner: 'kallol-saha', repo: 'deckwerk' }],
 
   mac: {
     category: 'public.app-category.productivity',

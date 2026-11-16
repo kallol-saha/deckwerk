@@ -118,7 +118,7 @@ describe('release notes and pages', () => {
   });
 
   it('links a version to its tag, and no version to the latest release', () => {
-    expect(releasePageUrl('0.3.1')).toBe('https://github.com/vsitzmann/deckwerk/releases/tag/v0.3.1');
-    expect(releasePageUrl(null)).toBe('https://github.com/vsitzmann/deckwerk/releases/latest');
+    expect(releasePageUrl('0.3.1')).toBe('https://github.com/kallol-saha/deckwerk/releases/tag/v0.3.1');
+    expect(releasePageUrl(null)).toBe('https://github.com/kallol-saha/deckwerk/releases/latest');
   });
 });

@@ -26,7 +26,7 @@ export const UPDATE_IPC = {
   flushed: 'updates:flushed',
 } as const;
 
-export const RELEASES_URL = 'https://github.com/vsitzmann/deckwerk/releases';
+export const RELEASES_URL = 'https://github.com/kallol-saha/deckwerk/releases';
 
 /** The release page for a version, or the list of releases when none is known. */
 export function releasePageUrl(version?: string | null): string {
