@@ -37,7 +37,7 @@ does a Flatpak: for those the menu item opens the release page.
 Python 3.10 or newer, and Git:
 
 ```bash
-git clone https://github.com/vsitzmann/deckwerk.git
+git clone https://github.com/kallol-saha/deckwerk.git
 cd deckwerk
 npm ci
 npm run dist
@@ -45,7 +45,10 @@ npm run dist
 
 The platform-specific installer lands in `release/`. See
 [docs/BUILDING.md](docs/BUILDING.md) for platform-specific details and for
-running DeckWerk directly without packaging it first.
+running DeckWerk directly without packaging it first. **On Windows**, follow
+[docs/BUILDING.md#windows](docs/BUILDING.md#windows). With npm 11 there is one
+extra step, and it has the fix for a privilege error the first build can stop
+on.
 
 ## Why DeckWerk?
 
