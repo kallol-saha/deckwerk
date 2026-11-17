@@ -1,3 +1,4 @@
+import { importDrawioDiagram } from './drawioImport.js';
 import '../player/player.css';
 import '../appChrome.css';
 import './editor.css';
@@ -558,6 +559,7 @@ function buildToolbar(): void {
   const importEntries = [
     { label: 'Keynote…', action: () => void importKeynotePresentation() },
     { label: 'PowerPoint…', action: () => void importPowerPointPresentation() },
+    { label: 'draw.io Diagram…', action: () => void importDrawioDiagram(store, setStatusMessage) },
   ];
   // A server deck is already where an upload would put it.
   const uploadEntry = {

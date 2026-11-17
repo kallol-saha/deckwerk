@@ -63,6 +63,7 @@ import { checkWebPage, renderSlidesToPng } from './renderSlides.js';
 import { removeTempDir, tempDir, untilStopped } from './scratch.js';
 import { failureMessage } from '../main/writeFailure.js';
 import { recordSlidesToVideo } from './recordSlides.js';
+import { diagramCommand } from './diagramCli.js';
 import { runConnectCommand } from './agentConnect.js';
 import { ChatUsageError, listChat, postChat, resolveChatTarget, waitForMention } from './chatClient.js';
 import { HISTORY_FILE, HISTORY_ROTATED_FILE, parseEditHistory, type EditHistoryEntry } from '@shared/editHistory.js';
@@ -131,7 +132,8 @@ Working on a deck someone hosts on a collaboration server:
 
 Everything else:
 
-  docs [authoring|web|themes|internals]   focused guides; bare docs is the
+  docs [authoring|web|themes|internals|diagrams]
+                                          focused guides; bare docs is the
                                           full repository reference
   capabilities                            every feature, with copyable JSON
   validate  [deck] [--slide id|number|a-b|--selected]
@@ -217,6 +219,15 @@ Everything else:
                                           the chat, then print that message
   say       [deck] <text> [--slide <id|number>]
                                           post to the chat as the agent
+  diagram export [deck] --slide <s> [--output f.drawio]
+                                          a slide's draw.io diagram as .drawio
+  diagram apply  [deck] <f.drawio> --slide <s> [--page <n|name>] [--scale <s>]
+                                          make the slide's diagram match the
+                                          file; cells match by draw.io id, so
+                                          untouched ones keep builds and Morph
+  diagram import [deck] <f.drawio> [--after <s>]
+                                          one new slide per page
+  diagram list   [deck] [--slide <s>]     the diagrams and their cells
   transaction apply <deck> <file.json>    JSON fallback, for tooling with no
                                           browser — not how slides are authored
   history   [deck] [--deleted] [--slide <id>] [--limit <n>] [--full]
@@ -293,6 +304,14 @@ export async function runAgentCli(argv: string[], io: CliIo): Promise<number> {
         return await connectCommand(rest, io);
       case 'history':
         return await historyCommand(rest, io);
+      case 'diagram':
+        return await diagramCommand(rest, io, {
+          resolveDeckDir: (candidate) => resolveDeckDir(candidate, io),
+          loadDeck,
+          applyOperations: (deckDir, label, operations, extra) =>
+            applyTransaction(deckDir, { version: AGENT_PROTOCOL_VERSION, label, operations }, io, extra),
+          usageError: (message) => new UsageError(message),
+        });
       case 'help':
       case '--help':
       case undefined:
@@ -328,9 +347,10 @@ async function docsCommand(argv: string[], io: CliIo): Promise<number> {
     web: 'agent-web.md',
     themes: 'agent-themes.md',
     internals: 'agent-internals.md',
+    diagrams: 'agent-diagrams.md',
   };
   const file = topics[topic];
-  if (!file) throw new UsageError(`Unknown docs topic: ${topic}. Choose authoring, web, themes or internals.`);
+  if (!file) throw new UsageError(`Unknown docs topic: ${topic}. Choose authoring, web, themes, internals or diagrams.`);
   io.out(await readFile(fileURLToPath(new URL(`../../docs/${file}`, import.meta.url)), 'utf8'));
   return EXIT_OK;
 }

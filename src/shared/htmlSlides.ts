@@ -12,6 +12,7 @@ import {
 import { shapeSvg } from './shapeSvg.js';
 import { bakeEndpointFlips, canonicalOrientation, elementTransform, orientationFromMatrix, sameOrientation } from './flip.js';
 import { codeElementFromNode, codeElementToHtml, lineBuildsFromNode } from './codeHtml.js';
+import { diagramElementFromNode, diagramElementToHtml } from './diagram/diagramHtml.js';
 import { formatLineBuilds } from './codeBlocks.js';
 import { CODE_AUTHORING_CSS } from './codeBlocks.js';
 import { applyTableColumnWidths } from './paragraphs.js';
@@ -1929,6 +1930,10 @@ function elementFromMeasured(
     };
   }
 
+  if (node.dataset.element === 'vertex' || node.dataset.element === 'connector') {
+    return diagramElementFromNode(node, base, node.dataset.element);
+  }
+
   if (node.dataset.element === 'code') return codeElementFromNode(node, base);
 
   // A sandboxed web page. Its box is what the browser measured; everything
@@ -2420,6 +2425,9 @@ function elementToHtml(
       return `  <div ${attrs} data-element="unsupported"`
         + ` data-original-type="${escape(element.originalType)}"`
         + ` ${styleAttr(position, inline)}>${escape(element.note)}</div>`;
+    case 'vertex':
+    case 'connector':
+      return diagramElementToHtml(element, attrs, styleAttr(position, inline));
     default:
       return `  <div ${attrs} data-element="html"`
         + `${element.type === 'html' && element.fallbackReason ? ` data-fallback-reason="${escape(element.fallbackReason)}"` : ''}`

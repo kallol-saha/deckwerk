@@ -1,3 +1,4 @@
+import { withRoutedConnectors } from './diagram/reroute.js';
 import { z } from 'zod';
 import {
   CommentSchema,
@@ -311,7 +312,8 @@ export function applyAgentOperations(deck: Deck, operations: AgentOperation[]): 
   for (const operation of operations) {
     applyOperation(next, AgentOperationSchema.parse(renameRetiredFields(operation)));
   }
-  const parsed = DeckSchema.parse(next);
+  // Connectors follow their vertices, and lose an end whose vertex was deleted.
+  const parsed = withRoutedConnectors(null, DeckSchema.parse(next));
   const errors = validateDeckIntegrity(parsed);
   if (errors.length > 0) throw new Error(errors.join('\n'));
   return parsed;
@@ -492,6 +494,21 @@ export function validateDeckIntegrity(deck: Deck, assetExists?: (src: string) =>
         if (!assetExists(element.src)) errors.push(`Missing asset for ${element.id}: ${element.src}`);
         if ((element.type === 'video' || element.type === 'web') && element.poster && !assetExists(element.poster)) {
           errors.push(`Missing poster for ${element.id}: ${element.poster}`);
+        }
+      }
+    }
+    const vertexIds = new Set(slide.elements.filter((element) => element.type === 'vertex').map((element) => element.id));
+    const diagramCells = new Map<string, string>();
+    for (const element of slide.elements) {
+      if (element.type !== 'vertex' && element.type !== 'connector') continue;
+      const key = `${element.diagram}\u0000${element.cell}`;
+      const other = diagramCells.get(key);
+      if (other) errors.push(`Diagram cell ${element.cell} of ${element.diagram} is used by both ${other} and ${element.id}`);
+      diagramCells.set(key, element.id);
+      if (element.type !== 'connector') continue;
+      for (const end of [element.source, element.target]) {
+        if (end != null && !vertexIds.has(end)) {
+          errors.push(`Connector ${element.id} is attached to ${end}, which is not a vertex on its slide`);
         }
       }
     }

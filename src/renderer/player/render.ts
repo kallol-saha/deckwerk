@@ -10,6 +10,7 @@ import { videoMemory } from './videoMemory.js';
 import { previewPosterProvider } from './previewPosterProvider.js';
 import { prepareSlideLinks } from './links.js';
 import { quadraticPath, shapeSvg } from '@shared/shapeSvg.js';
+import { connectorMarkup, vertexMarkup } from '@shared/diagram/element.js';
 import { isMediaBorderPaint, typedPropertyOwnsCss } from '@shared/nativeCss.js';
 import { applyTableColumnWidths } from '@shared/paragraphs.js';
 import { isEmbeddableWebSrc, webReadinessAction } from '@shared/webBridge.js';
@@ -877,7 +878,33 @@ function renderBody(el: SlideElement, opts: RenderOptions): HTMLElement | SVGEle
       div.textContent = el.note || el.originalType;
       return div;
     }
+
+    case 'vertex':
+    case 'connector':
+      return renderDiagramCell(el);
   }
+}
+
+/**
+ * A draw.io cell: the shape or connector and its labels, drawn by the
+ * diagram engine (src/shared/diagram) into one SVG sized to the box. The
+ * same markup is what figure export writes, so the slide and the exported
+ * figure agree.
+ */
+function renderDiagramCell(el: Extract<SlideElement, { type: 'vertex' | 'connector' }>): SVGElement {
+  const template = document.createElement('template');
+  template.innerHTML = el.type === 'vertex' ? vertexMarkup(el) : connectorMarkup(el);
+  return template.content.firstElementChild as SVGElement;
+}
+
+/** Redraw a draw.io cell for its current fields (the editor's patch path). */
+export function syncDiagramBody(
+  node: HTMLElement,
+  el: Extract<SlideElement, { type: 'vertex' | 'connector' }>,
+): void {
+  const body = elementBody(node);
+  if (!body) return;
+  body.replaceWith(renderDiagramCell(el));
 }
 
 /**

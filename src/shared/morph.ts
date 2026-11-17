@@ -112,6 +112,8 @@ function contentKey(element: SlideElement): string | null {
         + `:${element.arrowStart}:${element.arrowEnd}`;
     case 'image':
     case 'video': return `${element.type}:${element.src}`;
+    case 'vertex':
+    case 'connector': return `${element.type}:${element.cell}`;
     default: return null;
   }
 }
@@ -237,6 +239,11 @@ function similarity(a: SlideElement, b: SlideElement): number {
     case 'unsupported':
       return b.type === 'unsupported' && a.originalType === b.originalType &&
         a.note === b.note ? 90 : 0;
+    case 'vertex':
+    case 'connector':
+      // draw.io cells pair by their cell id, the identity a diagram keeps
+      // from slide to slide (and from .drawio file to .drawio file).
+      return b.type === a.type && b.cell === a.cell ? 130 : 0;
   }
 }
 

@@ -2074,6 +2074,40 @@ export class Inspector {
     return section.section;
   }
 
+  /**
+   * A draw.io cell: its style string as draw.io's Edit Style shows it, and
+   * its label. The style is the source of truth for the look, so editing it
+   * here is editing the diagram in draw.io's own vocabulary.
+   */
+  private diagramSection(el: Extract<SlideElement, { type: 'vertex' | 'connector' }>): HTMLElement {
+    const wrap = typeSections();
+    const kind = el.type === 'vertex' ? 'Shape' : 'Connector';
+    const style = optionSection(`Diagram ${kind.toLowerCase()}`, 'diagram-style-options', `draw.io cell ${el.cell}`);
+    const styleField = textAreaField('Edit Style (draw.io)', el.dio, (v) =>
+      this.store.updateSelected((e) => {
+        if (e.type === 'vertex' || e.type === 'connector') {
+          e.dio = v.trim().replace(/\s*\n\s*/g, '');
+          // The element box turns with the style's rotation, as draw.io's does.
+          if (e.type === 'vertex') {
+            const match = /(?:^|;)rotation=([-0-9.]+)/.exec(e.dio);
+            e.rot = match ? Number(match[1]) || 0 : 0;
+          }
+        }
+      }, { label: 'Edit style' }));
+    styleField.classList.add('diagram-style-field');
+    style.content.appendChild(styleField);
+    style.content.appendChild(textAreaField('Label', el.label, (v) =>
+      this.store.updateSelected((e) => {
+        if (e.type === 'vertex' || e.type === 'connector') e.label = v;
+      }, { label: 'Edit label' })));
+    if (el.type === 'connector') {
+      const ends = [el.source ? 'attached at the start' : 'loose at the start', el.target ? 'attached at the end' : 'loose at the end'];
+      style.content.appendChild(hint(`This connector is ${ends.join(' and ')}. It re-routes whenever a shape it is attached to moves.`));
+    }
+    wrap.appendChild(style.section);
+    return wrap;
+  }
+
   private typeSection(el: SlideElement): HTMLElement | null {
     switch (el.type) {
       case 'video': {
@@ -2938,6 +2972,10 @@ export class Inspector {
         wrap.appendChild(details.section);
         return wrap;
       }
+
+      case 'vertex':
+      case 'connector':
+        return this.diagramSection(el);
     }
   }
 

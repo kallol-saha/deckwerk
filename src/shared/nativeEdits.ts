@@ -171,6 +171,18 @@ const ELEMENT_PROPERTIES: Record<SlideElement['type'], PropertyDoc[]> = {
     { path: 'lineNumbers', type: 'boolean', description: 'Show a gutter of line numbers.', example: true },
   ],
   unsupported: [],
+  vertex: [
+    { path: 'dio', type: 'draw.io style string', description: 'The shape’s look in draw.io’s own vocabulary, verbatim: shape, fillColor, strokeColor, rounded, dashed, fontSize, align, … (see `slide-agent docs diagrams`).', example: 'rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;' },
+    { path: 'label', type: 'string', description: 'The label: HTML when the style has html=1, else plain text.', example: 'Encoder' },
+    { path: 'cell', type: 'string', description: 'The draw.io cell id, unique within its diagram.', example: 'n3' },
+  ],
+  connector: [
+    { path: 'dio', type: 'draw.io style string', description: 'The connector’s look and routing in draw.io’s vocabulary: edgeStyle, endArrow, startArrow, rounded, curved, dashed, exitX/entryX ports, …', example: 'edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;' },
+    { path: 'label', type: 'string', description: 'The connector’s own label.', example: 'yes' },
+    { path: 'source', type: 'element id|null', description: 'The vertex the connector starts at; it stays attached when that vertex moves.', example: 'vertex-ab12cd34' },
+    { path: 'target', type: 'element id|null', description: 'The vertex the connector ends at.', example: 'vertex-ef56gh78' },
+    { path: 'points', type: '{x,y}[]', description: 'Waypoints in slide pixels.', example: [{ x: 640, y: 300 }] },
+  ],
 };
 
 const SLIDE_PROPERTIES: PropertyDoc[] = [

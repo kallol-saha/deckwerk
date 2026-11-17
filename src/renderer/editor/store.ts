@@ -1,3 +1,4 @@
+import { withRoutedConnectors } from '@shared/diagram/reroute.js';
 import type { Deck, Slide, SlideElement } from '@shared/deck.js';
 import { DeckSchema, NEW_MEDIA_FIT, SlideSchema, parseDeck } from '@shared/deck.js';
 import { renameRetiredFields } from '@shared/fieldAliases.js';
@@ -504,6 +505,8 @@ export class EditorStore {
       coalesceKey?: string; historyGroup?: string; measurement?: boolean;
     },
   ): void {
+    // Connectors follow the vertices they join, whatever moved them.
+    next = withRoutedConnectors(previous, next);
     const forward = diffDecks(previous, next);
     if (forward.length === 0) return;
 
@@ -905,6 +908,7 @@ export class EditorStore {
     const ids = this.state.selection;
     if (ids.size === 0) return [];
     const created: string[] = [];
+    const copies = new Map<string, string>();
     const index = this.state.slideIndex;
     this.commit((deck) => {
       const slide = deck.slides[index];
@@ -919,8 +923,32 @@ export class EditorStore {
           copy.control.x += offset.x;
           copy.control.y += offset.y;
         }
+        if (copy.type === 'connector') {
+          const shift = (p: { x: number; y: number }) => ({ x: p.x + offset.x, y: p.y + offset.y });
+          copy.points = copy.points.map(shift);
+          copy.route = copy.route.map(shift);
+          if (copy.sourcePoint) copy.sourcePoint = shift(copy.sourcePoint);
+          if (copy.targetPoint) copy.targetPoint = shift(copy.targetPoint);
+        }
         created.push(copy.id);
+        copies.set(el.id, copy.id);
         slide.elements.push(copy);
+      }
+      // Copied connectors stay attached to copied shapes; an end whose shape
+      // was not copied becomes loose where the copy draws it, as in draw.io.
+      for (const id of created) {
+        const copy = slide.elements.find((candidate) => candidate.id === id);
+        if (copy?.type !== 'connector') continue;
+        if (copy.source) {
+          const mapped = copies.get(copy.source);
+          if (!mapped) copy.sourcePoint = copy.route[0] ? { ...copy.route[0] } : copy.sourcePoint;
+          copy.source = mapped ?? null;
+        }
+        if (copy.target) {
+          const mapped = copies.get(copy.target);
+          if (!mapped) copy.targetPoint = copy.route.length > 0 ? { ...copy.route[copy.route.length - 1] } : copy.targetPoint;
+          copy.target = mapped ?? null;
+        }
       }
     }, { label: ids.size === 1 ? 'Duplicate object' : 'Duplicate objects' });
     this.select(created);

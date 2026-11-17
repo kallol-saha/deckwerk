@@ -49,6 +49,7 @@ import {
   applyVideoPlaybackState,
   applyTextRenderState,
   syncShapeBody,
+  syncDiagramBody,
   fitAutoText,
   renderElement,
   renderSlide,
@@ -1961,6 +1962,8 @@ export class EditorCanvas {
       // A shape's drawing is sized by its own viewBox, so the wrapper's new
       // box is not enough: rebuild the SVG for the current geometry.
       if (el.type === 'shape') syncShapeBody(node, el);
+      // A draw.io cell is drawn from its fields and its route; redraw when it changed.
+      if ((el.type === 'vertex' || el.type === 'connector') && before !== el) syncDiagramBody(node, el);
       // A code block's lines are drawn from its fields; redraw when they change.
       if (el.type === 'code') syncCodeBody(node, el);
     }
@@ -4073,7 +4076,65 @@ export class EditorCanvas {
       // already have opened it (see pendingMediaToggle).
       if (this.codeEditor.editingId() === hit.id) return;
       this.codeEditor.begin(hit.id, { clientX: ev.clientX, clientY: ev.clientY });
+    } else if (hit.type === 'vertex' || hit.type === 'connector') {
+      this.editDiagramLabel(hit.id);
     }
+  }
+
+  /**
+   * Edit a draw.io cell's label in place, as double-clicking a shape does in
+   * draw.io. A label with `html=1` keeps its formatting; a plain one is
+   * plain text with line breaks. Return with Ctrl/Cmd, or leaving the box,
+   * keeps the edit; Escape drops it.
+   */
+  private editDiagramLabel(id: string): void {
+    const node = this.slideLayer.querySelector<HTMLElement>(`[data-element-id="${CSS.escape(id)}"]`);
+    const el = this.store.slide?.elements.find((candidate) => candidate.id === id);
+    if (!node || !el || (el.type !== 'vertex' && el.type !== 'connector')) return;
+    const html = /(?:^|;)html=1(?:;|$)/.test(el.dio);
+    const rect = node.getBoundingClientRect();
+    const editor = document.createElement('div');
+    editor.className = 'diagram-label-editor';
+    editor.contentEditable = html ? 'true' : 'plaintext-only';
+    if (html) editor.innerHTML = el.label;
+    else editor.textContent = el.label;
+    const width = Math.max(rect.width, 120);
+    const height = Math.max(rect.height, 28);
+    editor.style.left = `${rect.left + rect.width / 2 - width / 2}px`;
+    editor.style.top = `${rect.top + rect.height / 2 - height / 2}px`;
+    editor.style.width = `${width}px`;
+    editor.style.minHeight = `${height}px`;
+    document.body.appendChild(editor);
+    editor.focus();
+    const range = document.createRange();
+    range.selectNodeContents(editor);
+    const selection = window.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    let done = false;
+    const finish = (keep: boolean) => {
+      if (done) return;
+      done = true;
+      const value = html ? editor.innerHTML : editor.innerText.replace(/\n$/, '');
+      editor.remove();
+      if (!keep || value === el.label) return;
+      const index = this.store.get().slideIndex;
+      this.store.commit((deck) => {
+        const target = deck.slides[index]?.elements.find((candidate) => candidate.id === id);
+        if (target && (target.type === 'vertex' || target.type === 'connector')) target.label = value;
+      }, { label: 'Edit label' });
+    };
+    editor.addEventListener('blur', () => finish(true));
+    editor.addEventListener('keydown', (event) => {
+      event.stopPropagation();
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        finish(false);
+      } else if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
+        finish(true);
+      }
+    });
   }
 
   /** Start drawing a path with the pen (Pen ▾ → Pen, or P). */
@@ -8796,6 +8857,14 @@ export function elementContainsPoint(
   point: { x: number; y: number },
   tolerance = LINE_HIT_SCREEN_PX,
 ): boolean {
+  // A draw.io connector is hit along its route, never across the empty
+  // rectangle its route spans (which usually covers the shapes it joins).
+  if (el.type === 'connector') {
+    if (el.hidden) return false;
+    const reach = Math.max(tolerance, 4 * el.scale);
+    return el.route.slice(1).some((next, i) => distanceToSegment(point, el.route[i], next) <= reach);
+  }
+  if (el.type === 'vertex' && el.hidden) return false;
   if (el.type === 'shape' && el.shape === 'brace') {
     const points = bracePolyline(el);
     const reach = Math.max(tolerance, el.strokeWidth / 2);
