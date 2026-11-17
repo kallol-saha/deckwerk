@@ -1,0 +1,123 @@
+<mxfile host="deckwerk-fixtures" agent="drawio-reference fixtures" version="32.7.4">
+  <diagram id="edges-elbow" name="elbow, entity relation, side/top, isometric">
+    <mxGraphModel dx="0" dy="0" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="elbow-h-s" value="S" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="50" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="elbow-h-t" value="T" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="160" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="elbow-h" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;elbow=horizontal;" edge="1" parent="1" source="elbow-h-s" target="elbow-h-t">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="elbow-v-s" value="S" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="50" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="elbow-v-t" value="T" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="160" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="elbow-v" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;elbow=vertical;" edge="1" parent="1" source="elbow-v-s" target="elbow-v-t">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="elbow-h-point-s" value="S" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="610" y="50" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="elbow-h-point-t" value="T" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="160" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="elbow-h-point" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;elbow=horizontal;" edge="1" parent="1" source="elbow-h-point-s" target="elbow-h-point-t">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="660" y="140" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="elbow-v-point-s" value="S" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="260" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="elbow-v-point-t" value="T" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="370" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="elbow-v-point" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;elbow=vertical;" edge="1" parent="1" source="elbow-v-point-s" target="elbow-v-point-t">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="0" y="350" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="elbow-behind-s" value="S" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="460" y="260" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="elbow-behind-t" value="T" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="380" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="elbow-behind" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="elbow-behind-s" target="elbow-behind-t">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="side-to-side-s" value="S" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="610" y="260" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="side-to-side-t" value="T" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="370" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="side-to-side" value="" style="edgeStyle=sideToSideEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="side-to-side-s" target="side-to-side-t">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="top-to-bottom-s" value="S" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="470" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="top-to-bottom-t" value="T" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="580" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="top-to-bottom" value="" style="edgeStyle=topToBottomEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="top-to-bottom-s" target="top-to-bottom-t">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="entity-relation-s" value="S" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="470" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="entity-relation-t" value="T" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="580" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="entity-relation" value="" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERoneToMany;startArrow=ERmandOne;rounded=0;" edge="1" parent="1" source="entity-relation-s" target="entity-relation-t">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="entity-relation-behind-s" value="S" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="740" y="470" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="entity-relation-behind-t" value="T" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="730" y="590" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="entity-relation-behind" value="" style="edgeStyle=entityRelationEdgeStyle;html=1;rounded=0;segment=15;endArrow=ERmany;startArrow=ERone;" edge="1" parent="1" source="entity-relation-behind-s" target="entity-relation-behind-t">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="isometric-1" value="" style="edgeStyle=isometricEdgeStyle;endArrow=none;html=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="50" y="760" as="sourcePoint" />
+            <mxPoint x="100" y="660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="isometric-2" value="" style="edgeStyle=isometricEdgeStyle;endArrow=none;html=1;elbow=vertical;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="180" y="760" as="sourcePoint" />
+            <mxPoint x="230" y="660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="palette-elbow-h" value="" style="edgeStyle=elbowEdgeStyle;elbow=horizontal;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="760" as="sourcePoint" />
+            <mxPoint x="420" y="660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="palette-elbow-v" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="480" y="760" as="sourcePoint" />
+            <mxPoint x="580" y="660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
