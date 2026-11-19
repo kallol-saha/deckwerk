@@ -1,0 +1,144 @@
+/*
+ * draw.io's canvas chrome for diagram cells (diagramEditing.ts): hover
+ * arrows, connection points, edge handles and previews. Positions are slide
+ * pixels in the overlay; sizes that draw.io keeps constant on screen are
+ * set from the zoom by the module.
+ */
+
+.dg-layer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* HoverIcons: the four arrows (cursor 'copy'). */
+.dg-arrow {
+  position: absolute;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  pointer-events: auto;
+  cursor: copy;
+  z-index: 3;
+}
+
+/* mxConstraintHandler: the connection points and the one under the pointer. */
+.dg-point {
+  position: absolute;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  pointer-events: none;
+}
+
+.dg-point-highlight {
+  position: absolute;
+  border-radius: 50%;
+  background: #00a8ff;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* mxCellHighlight around a drop target. */
+.dg-highlight {
+  position: absolute;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Sidebar.createDragPreview: where a clone would go. */
+.dg-drag-preview {
+  position: absolute;
+  box-sizing: border-box;
+  border-style: dashed;
+  border-color: #000;
+  pointer-events: none;
+}
+
+.dg-connector-preview {
+  position: absolute;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.dg-connector-preview.faint { opacity: 0.6; }
+
+/* A selected connector: no box, the route dashed and draw.io's handles. */
+.sel-box.dg-edge-selection {
+  outline: none;
+}
+
+.dg-edge-path {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.dg-edge-path polyline {
+  fill: none;
+  stroke: #00a8ff;
+}
+
+.dg-handle {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.dg-handle-terminal { z-index: 3; }
+.dg-handle-label { z-index: 4; }
+
+.canvas-host.dg-connecting,
+.canvas-host.dg-connecting .stage * { cursor: crosshair !important; }
+
+/* draw.io's grid (View > Grid), behind the slide's elements, editor only. */
+.canvas-host.dg-grid .slide-layer > .slide::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--dg-grid-image);
+  background-size: var(--dg-grid-size);
+  background-position: var(--dg-grid-position);
+  pointer-events: none;
+}
+
+.zoom-button.dg-grid-toggle.active { color: var(--accent); }
+
+/* EditorUi.createShapePicker (.geShapePicker). */
+.dg-shape-picker {
+  position: absolute;
+  z-index: 20;
+  width: 142px;
+  box-sizing: content-box;
+  border-radius: 10px;
+  border: 1px solid #dadce0;
+  padding: 6px 0 8px 0;
+  text-align: center;
+  white-space: normal;
+  background: #fff;
+  box-shadow: 0 0 3px 1px #d1d1d1;
+}
+
+.dg-shape-picker-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 1px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #000;
+}
+
+.dg-shape-picker-item:hover,
+.dg-shape-picker-item:focus-visible { background: #e8f0fe; outline: none; }
+
+.dg-shape-picker-item svg { width: 25px; height: 25px; overflow: visible; }

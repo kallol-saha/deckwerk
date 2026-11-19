@@ -13,6 +13,8 @@
  */
 
 import type { SvgCanvas } from '../canvas.js';
+import { RoughCanvas, isSketch } from '../sketch.js';
+import type { Stencil } from '../stencil.js';
 import type { Point, Rect, Style } from '../types.js';
 import {
   LINE_ARCSIZE, NONE, RECTANGLE_ROUNDING_FACTOR, SHADOWCOLOR, SHADOW_BLUR, SHADOW_OFFSET_X,
@@ -112,6 +114,10 @@ export class Shape {
   fillOpacity = 100;
   strokeOpacity = 100;
   fillStyle: string | null = null;
+  /** Pattern and sketch fill settings (mxShape.hachureGap, hachureAngle, fillWeight). */
+  hachureGap: string | number | null = null;
+  hachureAngle: string | number | null = null;
+  fillWeight: string | number | null = null;
   stroke: string | null = null;
   strokewidth = 1;
   spacing = 0;
@@ -139,6 +145,19 @@ export class Shape {
   /** Default connection points (the prototype's `constraints`). */
   constraints: readonly ConnectionConstraint[] | null = null;
 
+  /** The XML stencil this shape paints (new mxShape(stencil)), or null for shape classes. */
+  stencil: Stencil | null = null;
+
+  /** The id of the cell (mxCellState.cell.id), which seeds the sketch style. */
+  cellId: string | null = null;
+
+  /**
+   * mxShape.viewTranslate: the sketch style gives rough.js the painted
+   * coordinates less this. Null (0) here: cells are painted at their page
+   * coordinates, as draw.io's export paints them.
+   */
+  viewTranslate: Point | null = null;
+
   /** mxShape.apply: copies the style into the shape's fields. */
   apply(style: Style): void {
     this.style = style;
@@ -149,6 +168,9 @@ export class Shape {
     this.opacity = toNumber(getValue(style, 'opacity', this.opacity));
     this.fillOpacity = toNumber(getValue(style, 'fillOpacity', this.fillOpacity));
     this.fillStyle = stringValue(getValue(style, 'fillStyle', null));
+    this.hachureGap = getValue(style, 'hachureGap', null);
+    this.hachureAngle = getValue(style, 'hachureAngle', null);
+    this.fillWeight = getValue(style, 'fillWeight', null);
     this.strokeOpacity = toNumber(getValue(style, 'strokeOpacity', this.strokeOpacity));
     this.stroke = colorValue(getValue(style, 'strokeColor', this.stroke));
     this.strokewidth = numberOr(style, 'strokeWidth', this.strokewidth);
@@ -161,6 +183,12 @@ export class Shape {
     this.direction = stringValue(getValue(style, 'direction', this.direction));
     this.flipH = isOne(style, 'flipH', 0);
     this.flipV = isOne(style, 'flipV', 0);
+
+    // Legacy support for stencilFlipH/V
+    if (this.stencil != null) {
+      this.flipH = isOne(style, 'stencilFlipH', 0) || this.flipH;
+      this.flipV = isOne(style, 'stencilFlipV', 0) || this.flipV;
+    }
 
     if (this.direction === 'north' || this.direction === 'south') {
       const tmp = this.flipH;
@@ -230,8 +258,29 @@ export class Shape {
   isRoundable(): boolean { return false; }
   isGlassable(): boolean { return false; }
 
-  /** mxShape.paint (with Graph's multiple copies), painting into the given canvas. */
+  /**
+   * mxShape.paint (with Graph's multiple copies), painting into the given
+   * canvas; for sketch=1 through rough.js (the hand jiggle of beforePaint,
+   * removed in afterPaint). draw.io's sketch paint first runs a pass with
+   * no colours for pointer events, which paints nothing and is left out.
+   */
   paint(c: SvgCanvas): void {
+    if (this.bounds == null) return;
+    const jiggle = c.handJiggle == null ? this.createHandJiggle(c) : null;
+    if (jiggle != null) c.handJiggle = jiggle;
+    try {
+      this.paintWithCanvas(c);
+    } finally {
+      if (jiggle != null) c.handJiggle = null;
+    }
+  }
+
+  /** mxShape.createHandJiggle with Editor's sketch style: a RoughCanvas for sketch=1, else none. */
+  createHandJiggle(c: SvgCanvas): RoughCanvas | null {
+    return isSketch(this) ? new RoughCanvas(c, this) : null;
+  }
+
+  private paintWithCanvas(c: SvgCanvas): void {
     if (this.bounds == null) return;
     const s = this.scale;
     let x = this.bounds.x / s;
@@ -310,8 +359,12 @@ export class Shape {
     this.paintShapeOnce(c, x, y, w, h);
   }
 
-  /** mxShape.paintShape: the edge or the vertex shape in the configured canvas. */
+  /** mxShape.paintShape: the stencil, the edge or the vertex shape in the configured canvas. */
   protected paintShapeOnce(c: SvgCanvas, x: number, y: number, w: number, h: number): void {
+    if (this.stencil != null) {
+      this.stencil.drawShape(c, this, x, y, w, h);
+      return;
+    }
     // Stencils have separate strokewidth
     c.setStrokeWidth(this.strokewidth);
     const pts = this.getWaypoints();
@@ -373,7 +426,7 @@ export class Shape {
       c.setGradient(this.fill, this.gradient, b.x, b.y, b.width, b.height, this.gradientDirection);
     } else {
       c.setFillColor(this.fill);
-      c.setFillStyle(this.fillStyle);
+      c.setFillStyle(this.fillStyle, this.hachureGap, this.fillWeight, this.hachureAngle);
     }
 
     if (this.hasStyle) {
@@ -436,12 +489,16 @@ export class Shape {
 
   /** Shapes.js mxShape.paintGlassEffect: the highlight over the top part of the shape. */
   paintGlassEffect(c: GlassCanvas, x: number, y: number, w: number, h: number, arc: number): void {
+    // Editor.js: the glass effect is never sketched
+    const jiggle = (c as Partial<SvgCanvas>).handJiggle ?? null;
+    if (jiggle != null) jiggle.passThrough = true;
     const sw = Math.ceil(this.strokewidth / 2);
     c.setGradient('#ffffff', '#ffffff', x, y, w, h * 0.6, 'south', 0.9, 0.1);
     c.begin();
     this.paintGlassEffectPath(c, x, y, w, h, sw, arc);
     c.close();
     c.fill();
+    if (jiggle != null) jiggle.passThrough = false;
   }
 
   /** Shapes.js mxShape.paintGlassEffectPath. */
@@ -535,7 +592,7 @@ export class Shape {
   /** mxShape.isPaintBoundsInverted. */
   isPaintBoundsInverted(): boolean {
     // Stencil implements inversion via aspect
-    return this.direction === 'north' || this.direction === 'south';
+    return this.stencil == null && (this.direction === 'north' || this.direction === 'south');
   }
 
   getRotation(): number {

@@ -16,6 +16,8 @@ import { tmpdir } from 'node:os';
 import type { Slide } from '../src/shared/deck.js';
 import { pageToElements } from '../src/shared/diagram/convert.js';
 import { diagramFigureSvg } from '../src/shared/diagram/figure.js';
+import { katexCssFor } from '../src/shared/diagram/figureExport.js';
+import { KATEX_CSS } from '../src/shared/katexInline.js';
 import {
   comparePngs, encodePng, listDrawioFixtures, loadDrawioFixture, rasterizeSvgFiles, referencePngPath,
 } from '../test/support/drawioReference.js';
@@ -36,16 +38,20 @@ for (const name of fixtures) {
   const fixture = await loadDrawioFixture(name);
   fixture.document.pages.forEach((page, index) => {
     const ref = fixture.reference.pages[index];
-    const { elements } = pageToElements(page, {
+    const { elements, meta } = pageToElements(page, {
       diagramId: 'd', placement: { origin: { x: 0, y: 0 }, scale: 1 }, makeId: (p) => `${p}-${++n}`,
     });
     const s = ref.svg.scale;
-    const svg = diagramFigureSvg(elements as Slide['elements'], {
+    const options = {
       viewBox: { x: -ref.svg.translate.x, y: -ref.svg.translate.y, width: ref.svg.width / s, height: ref.svg.height / s },
       width: ref.svg.width,
       height: ref.svg.height,
       background: page.model.background && page.model.background !== 'none' ? page.model.background : null,
-    });
+      diagrams: { d: meta },
+    };
+    let svg = diagramFigureSvg(elements as Slide['elements'], options);
+    // Typeset math needs KaTeX's stylesheet inside the SVG (figureExport.ts).
+    if (svg.includes('class="katex')) svg = diagramFigureSvg(elements as Slide['elements'], { ...options, css: katexCssFor(svg, KATEX_CSS) });
     const svgPath = join(out, `${name}.${index}.svg`);
     jobs.push({ name, page: index, svgPath, pngPath: join(out, `${name}.${index}.png`) });
     void writeFile(svgPath, svg, 'utf8');

@@ -5,8 +5,9 @@
  * compare with draw.io's own rendering.
  */
 
-import type { SlideElement } from '../deck.js';
-import { connectorMarkup, vertexMarkup } from './element.js';
+import type { DiagramMeta, SlideElement } from '../deck.js';
+import { cellMarkupOptions } from './cellContext.js';
+import { connectorLineJumps, connectorMarkup, vertexMarkup } from './element.js';
 import { pointsBounds } from './element.js';
 import { vertexPaintMargin, edgePaintMargin } from './paint.js';
 import { resolveStyle } from './style.js';
@@ -22,10 +23,29 @@ export interface FigureOptions {
   height?: number;
   /** A background colour, or none. */
   background?: string | null;
+  /**
+   * The slide's diagrams (`slide.diagrams`), for what a page sets for all
+   * its cells: shadow="1" draws every cell with the page shadow, math="1"
+   * typesets TeX in labels, and the layers and root hold properties that
+   * `%placeholders%` read.
+   */
+  diagrams?: Readonly<Record<string, Readonly<Partial<DiagramMeta>>>>;
+  /**
+   * All of the slide's elements, when `elements` is only part of them (a
+   * selection): placeholders still read the ancestors that are left out.
+   */
+  slideElements?: readonly SlideElement[];
+  /** HTML labels carry draw.io's SVG <text> fallback for viewers without foreignObject. */
+  textFallback?: boolean;
+  /** A stylesheet to embed (fonts, KaTeX's styles). */
+  css?: string;
+  /** More attributes for the root <svg> (draw.io's `content`), unescaped. */
+  attributes?: Readonly<Record<string, string>>;
 }
 
 function escapeAttr(text: string): string {
-  return text.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+  return text.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/\n/g, '&#10;').replace(/\r/g, '&#13;').replace(/\t/g, '&#9;');
 }
 
 function fmt(n: number): string {
@@ -73,19 +93,28 @@ export function diagramFigureSvg(elements: readonly SlideElement[], options: Fig
   const width = options.width ?? vb.width;
   const height = options.height ?? vb.height;
   let body = '';
+  const jumps = connectorLineJumps(cells);
+  const slide = { elements: options.slideElements ?? elements, diagrams: options.diagrams ?? null };
   for (const el of cells) {
+    if (el.type !== 'vertex' && el.type !== 'connector') continue;
+    // The page's shadow and math, placeholders from ancestors (cellContext.ts).
+    const cellOptions = { ...cellMarkupOptions(slide, el), textFallback: options.textFallback };
     if (el.type === 'vertex') {
       const turn = el.rot ? ` rotate(${fmt(el.rot)} ${fmt(el.w / 2)} ${fmt(el.h / 2)})` : '';
-      body += `<g transform="translate(${fmt(el.x)} ${fmt(el.y)})${turn}">${vertexMarkup(el)}</g>`;
-    } else if (el.type === 'connector') {
-      body += `<g transform="translate(${fmt(el.x)} ${fmt(el.y)})">${connectorMarkup(el)}</g>`;
+      body += `<g transform="translate(${fmt(el.x)} ${fmt(el.y)})${turn}">${vertexMarkup(el, cellOptions)}</g>`;
+    } else {
+      body += `<g transform="translate(${fmt(el.x)} ${fmt(el.y)})">${connectorMarkup(el, { ...cellOptions, routedPoints: jumps.get(el.id) })}</g>`;
     }
   }
   const background = options.background
     ? `<rect x="${fmt(vb.x)}" y="${fmt(vb.y)}" width="${fmt(vb.width)}" height="${fmt(vb.height)}" fill="${escapeAttr(options.background)}"/>`
     : '';
+  const css = options.css
+    ? `<defs><style type="text/css"><![CDATA[${options.css.replace(/\]\]>/g, ']]]]><![CDATA[>')}]]></style></defs>`
+    : '';
+  const extra = Object.entries(options.attributes ?? {}).map(([k, v]) => ` ${k}="${escapeAttr(v)}"`).join('');
   return '<?xml version="1.0" encoding="UTF-8"?>\n'
     + `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"`
-    + ` width="${fmt(width)}" height="${fmt(height)}" viewBox="${fmt(vb.x)} ${fmt(vb.y)} ${fmt(vb.width)} ${fmt(vb.height)}">`
-    + `${background}${body}</svg>\n`;
+    + ` width="${fmt(width)}" height="${fmt(height)}" viewBox="${fmt(vb.x)} ${fmt(vb.y)} ${fmt(vb.width)} ${fmt(vb.height)}"${extra}>`
+    + `${css}${background}${body}</svg>\n`;
 }

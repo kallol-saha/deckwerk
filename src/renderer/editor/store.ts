@@ -1,4 +1,5 @@
 import { withRoutedConnectors } from '@shared/diagram/reroute.js';
+import { withTableLayout } from '@shared/diagram/table.js';
 import type { Deck, Slide, SlideElement } from '@shared/deck.js';
 import { DeckSchema, NEW_MEDIA_FIT, SlideSchema, parseDeck } from '@shared/deck.js';
 import { renameRetiredFields } from '@shared/fieldAliases.js';
@@ -506,7 +507,7 @@ export class EditorStore {
     },
   ): void {
     // Connectors follow the vertices they join, whatever moved them.
-    next = withRoutedConnectors(previous, next);
+    next = withRoutedConnectors(previous, withTableLayout(previous, next));
     const forward = diffDecks(previous, next);
     if (forward.length === 0) return;
 

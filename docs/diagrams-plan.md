@@ -89,8 +89,9 @@ DeckWerk's own suites run as usual.
 - [x] SVG canvas with draw.io's drawing API
 - [x] ~40 General/Misc/Advanced shapes; every arrowhead; fill, stroke, dash, gradient, shadow, rounding, opacity, flip, rotation, direction
 - [x] Labels: wrap, alignment, inside/outside position, spacing, background/border, vertical text, rich text
-- [ ] `shapeInside=1` text flow (in progress)
-- [ ] Page-wide `shadow=1`; `%placeholders%` from ancestors and the page (own properties done)
+- [x] `shapeInside=1` text flow (text wrapped inside diamonds, ellipses, …; matches draw.io byte for byte on the fixtures)
+- [x] Page-wide `shadow=1` (drawn everywhere)
+- [x] `%placeholders%` from ancestors and the page (date/page-number placeholders not yet)
 - [x] Connectors: straight, orthogonal, elbow, entity-relation, curved, rounded; waypoints; ports and floating ends; edge labels
 - [x] `vertex` / `connector` element types: schema, integrity, paste remap, delete cleanup
 - [x] Drawn everywhere: editor, presenter, thumbnails, PDF, recorder, web export (one renderer path; checked with `slide-agent render`)
@@ -101,34 +102,35 @@ DeckWerk's own suites run as usual.
 - [ ] Rebuild one real figure as a native diagram
 
 ### Phase 2 — edit like draw.io
-- [ ] Connection points on hover; drag from a shape's arrows to create a connected shape; drop a connector end on a shape/port to attach
-- [ ] Waypoint and segment dragging; add/remove bends
-- [ ] Shape library panel (searchable): General, Misc, Advanced, Basic, Flowchart, Arrows
-- [ ] Format panel: fill, line, arrowheads, routing, text; copy/paste style
-- [ ] Group/ungroup; containers and swimlanes; layers panel (show/hide/lock)
+- [x] Connection points on hover; drag from a shape's arrows to create a connected shape; drop a connector end on a shape/port to attach (`diagramEditing.ts`, `editing.ts`)
+- [x] Waypoint and segment dragging; add/remove bends
+- [x] Shape library panel (searchable): General, Misc, Advanced, Basic, Arrows, Flowchart, Entity Relation, UML — 388 entries extracted from draw.io's own Sidebar code (`shapeLibrary.ts`, `library/`)
+- [x] Format panel: Style / Text / Arrange tabs after draw.io's Format.js; copy/paste style, default style, edit data (`diagramFormat.ts`, `format.ts`)
+- [x] Group/ungroup; containers and swimlanes (collapse/expand, children follow); layers panel (show/hide/lock/current layer) (`structure.ts`, `diagramCommands.ts`, `layersPanel.ts`)
 - [ ] Grid, guides, align/distribute for diagram objects
-- [ ] Copy/paste keeps connections between copied shapes
+- [x] Copy/paste keeps connections between copied shapes (and a pasted group keeps its children)
 
 ### Phase 3 — agent toolkit
-- [ ] `diagram style` (patch keys on cells), `diagram layout` (ELK: layered, tree, radial)
-- [ ] Diagram objects in `inspect --html` so the HTML loop works too
-- [ ] `slide-agent docs diagrams`: style keys, shape names, arrowheads, routing styles, rendered examples
-- [ ] `validate` flags dangling connectors and unknown shapes
+- [x] `diagram style` (patch keys on cells), `diagram layout` (ELK: layered, tree, radial; plus organic, circle), `diagram add` (compact spec, library shapes); Format panel ▸ Arrange ▸ Layout (`diagramAgentCli.ts`, `agentEdit.ts`, `layout.ts`, `diagramLayoutMenu.ts`)
+- [x] Diagram objects in `inspect --html` so the HTML loop works too (cells, diagram records as `data-diagrams`, wipe builds; round trip exact)
+- [x] `slide-agent docs diagrams`: style keys, shape names, arrowheads, routing styles, rendered examples (`--examples`; generated in `diagramDocs.ts`)
+- [x] `validate` flags dangling connectors and unknown shapes (also duplicate ids, missing parents, rot vs rotation=, off-slide cells: `validate.ts`)
 
 ### Phase 4 — animation
-- [ ] draw.io animation steps ⇄ DeckWerk builds
-- [ ] Connector draw-on along its route with the arrowhead at the tip; wipe, pop, fade
-- [ ] `flowAnimation` (dash, dot, ring) in the player; start/stop as builds
-- [ ] Morph by cell id; connectors re-route every frame; labels cross-fade
-- [ ] "Build this diagram in order" helper
+- [x] draw.io animation steps ⇄ DeckWerk builds (`shared/diagram/animation.ts`; a `wait` is a click; unplayed steps kept verbatim)
+- [x] Connector draw-on along its route with the arrowhead at the tip; wipe, pop, fade (player and Build preview; `motion.ts`, `player/diagramMotion.ts`)
+- [x] `flowAnimation` in the player, presenter and editor; start/stop as builds — dashes checked in a recording; dot and ring ported but not yet checked on screen
+- [x] Morph by cell id; connectors re-route every frame; labels cross-fade
+- [x] "Build this diagram in order" helper (Build panel, `slide-agent diagram build`)
 
 ### Phase 5 — paper figures and the long tail
-- [ ] Figure export: slide or selection → SVG / PDF / PNG, cropped, vector, fonts embedded; SVG/PNG carry the `.drawio`
-- [ ] `slide-agent figure`
-- [ ] LaTeX in labels (draw.io's delimiters, DeckWerk's KaTeX)
-- [ ] Sketch style
-- [ ] Stencil libraries: basic, flowchart, arrows, electrical, networks, infographic
-- [ ] Line jumps, tables, find/replace
+- [x] Figure export: slide or selection → SVG / PDF / PNG, cropped, vector, fonts embedded; SVG/PNG carry the `.drawio`
+- [x] `slide-agent figure`
+- [x] LaTeX in labels (draw.io's delimiters, DeckWerk's KaTeX; no AsciiMath)
+- [x] Sketch style (draw.io's rough.js 4.6.6, seeded by cell id as draw.io does)
+- [x] Stencil libraries: basic, flowchart, arrows, electrical, networks, infographic, lean mapping, ER, UML 2.5, BPMN stencils (293 shape classes, 738 XML stencils)
+- [x] Line jumps (drawn everywhere); fill patterns
+- [x] Tables (layout, insert/delete rows and columns), find/replace (Ctrl+F / Ctrl+H)
 
 Not planned: draw.io's obstacle-avoiding router (LGPL libavoid) and vendor
 icon sets (AWS, Azure, … are trademarked).

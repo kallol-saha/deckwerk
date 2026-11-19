@@ -2,7 +2,7 @@ import { openContextMenu } from './contextMenuPlacement.js';
 import { makeId } from '@shared/geometry.js';
 import { recoverPreviewFrames } from '../player/previewFrameRecovery.js';
 import { freezePreviewVideos, releasePreviewVideos } from '../player/previewPoster.js';
-import { renderElement, renderSlide, type RenderOptions } from '../player/render.js';
+import { diagramRedraws, renderElement, renderSlide, type RenderOptions } from '../player/render.js';
 import { applyDeckThemeToNewSlide } from '@shared/themes.js';
 import { LAYOUT_LABELS_BY_ID } from './layoutPreview.js';
 import { LAYOUT_LABELS, applySlideLayout, type SlideLayout } from './slideLayouts.js';
@@ -92,6 +92,11 @@ function previewRenderOptions(): RenderOptions {
 function previewPatch(thumb: HTMLElement, previous: Slide, slide: Slide): (() => void) | null {
   const changed = changedSlideObjects(previous, slide);
   if (!changed) return null;
+  // A re-routed connector moves the line jumps of the others it crosses.
+  const redraw = diagramRedraws(slide, previous);
+  for (const element of slide.elements) {
+    if (redraw.has(element.id) && !changed.includes(element)) changed.push(element);
+  }
   const before = new Map(previous.elements.map((element) => [element.id, element]));
   const plain = (type: string) => type !== 'video' && type !== 'web';
   if (!changed.every((element) => plain(element.type) && plain(before.get(element.id)!.type))) return null;
@@ -104,7 +109,7 @@ function previewPatch(thumb: HTMLElement, previous: Slide, slide: Slide): (() =>
   const nodes = changed.map((element) => drawn.get(element.id));
   if (nodes.some((node) => !node)) return null;
   return () => {
-    const options = previewRenderOptions();
+    const options = { ...previewRenderOptions(), diagramSlide: slide };
     changed.forEach((element, i) => nodes[i]!.replaceWith(renderElement(element, options)));
   };
 }

@@ -1,4 +1,4 @@
-import { videoSpeed, type Deck, type Slide, type SlideElement, type TimelineEntry } from '@shared/deck.js';
+import { isDiagramElement, videoSpeed, type DiagramEl, type Deck, type Slide, type SlideElement, type TimelineEntry } from '@shared/deck.js';
 import {
   type Cursor,
   type SlideState,
@@ -40,9 +40,11 @@ import {
   releaseDecodedVideo,
 } from './decodedVideoPool.js';
 import { applyStaticSlideState } from './staticState.js';
+import { morphDiagramCells, playCellEffect, playCellHighlight } from './diagramMotion.js';
 import type { MediaBlobCache } from './mediaBlobCache.js';
 import {
   essentialMorphPairs,
+  diagramMorphPairs,
   explicitMorphPairs,
   restyledMorphPairs,
   unchangedMorphPairs,
@@ -1248,6 +1250,7 @@ export class Player {
     // Text is positioned from what the DOM actually laid out, so measure both
     // slides' glyphs before any transform is written.
     const textLayouts = measureTextLayouts(targetSlide, pairs, previousNodes);
+    const diagramPairs: Array<[DiagramEl, DiagramEl]> = [];
 
     for (const [from, to] of pairs) {
       const node = this.stage.querySelector<HTMLElement>(
@@ -1259,6 +1262,25 @@ export class Player {
       // fades out as a ghost rather than popping out of existence.
       if (node.style.visibility === 'hidden') {
         pairedSources.delete(from.id);
+        continue;
+      }
+      // draw.io cells are drawn again each frame instead: vertices between
+      // their boxes, connectors re-routed between them (diagramMotion.ts).
+      if (isDiagramElement(from) && isDiagramElement(to) && from.type === to.type) {
+        // A cell a build had hidden on the source slide was not on screen:
+        // it fades in like a new object (a connector still follows its ends).
+        if (!previousNodes.has(from.id)) {
+          node.animate([
+            { opacity: '0', offset: 0 }, { opacity: '0', offset: 0.75 }, { opacity: String(to.opacity), offset: 1 },
+          ], { duration, easing: 'linear', fill: 'none' });
+          continue;
+        }
+        diagramPairs.push([from, to]);
+        const stacking = stackingFrames(to.id);
+        if (stacking) {
+          zIndexInUse = true;
+          node.animate(stacking, { duration, easing: 'linear', fill: 'none' });
+        }
         continue;
       }
       // Two equations that say different things move glyph by glyph: every
@@ -1302,6 +1324,10 @@ export class Player {
       ];
       node.animate(motion([String(from.opacity), String(to.opacity)]), { duration, easing: 'linear', fill: 'none' });
       this.blendMorphPaint(from, to, node, previousNodes, motion, { duration, easing });
+    }
+
+    if (diagramPairs.length > 0) {
+      morphDiagramCells(this.stage, diagramPairs, next, duration, easing);
     }
 
     // Genuinely new objects (nothing on the source slide is even essentially
@@ -1552,9 +1578,32 @@ export class Player {
     // An equation build animates from what is on screen now (a term's old
     // colour), so it looks before the state lands and plays after.
     const equation = prepareEquationEffect(this.stage, slide, entry, duration);
+    // draw.io cells wipe, pop and highlight as draw.io draws them (diagramMotion.ts).
+    const el = slide.elements.find((candidate) => candidate.id === target);
+    const cell = el && isDiagramElement(el) ? el : null;
+    const node = this.nodeFor(target);
+    const cellEffect = cell && node && (effect === 'wipe' || effect === 'pop' || (effect === 'draw' && cell.type === 'connector'))
+      ? (effect === 'pop' ? 'pop' : 'wipe') : null;
+    // An opacity build fades from what is on screen now.
+    const fadeFrom = entry.action.type === 'opacity' && node && node.style.visibility !== 'hidden'
+      ? getComputedStyle(node).opacity || '1' : '0';
+    if (cellEffect && entry.action.type === 'disappear') {
+      this.effects.push(playCellEffect(node!, cell!, cellEffect, false, duration, slide));
+    }
+    if (effect === 'opacity' && entry.action.type === 'opacity' && !(Number(entry.action.value) > 0)) this.dissolveOut(target, duration);
     applyAction(state, entry, slide);
     this.applyState(slide, state);
-    if (effect === 'draw') this.drawIn(slide, entry, duration);
+    if (cellEffect && entry.action.type === 'appear') {
+      this.effects.push(playCellEffect(node!, cell!, cellEffect, true, duration, slide));
+    } else if (cellEffect) {
+      // played above, on a copy of the cell leaving
+    } else if (effect === 'opacity' && node && Number(entry.action.value) > 0 && node.animate && duration > 0) {
+      const animation = node.animate([{ opacity: fadeFrom }, { opacity: node.style.opacity }], { duration, easing: 'ease-in-out', fill: 'none' });
+      this.effects.push(() => animation.finish());
+    } else if (entry.action.type === 'highlight' && cell && node) {
+      this.effects.push(playCellHighlight(node, cell, entry.action.color, entry.action.duration,
+        typeof entry.action.value === 'number' ? entry.action.value : null, slide));
+    } else if (effect === 'draw') this.drawIn(slide, entry, duration);
     else if (fade && entry.action.type === 'appear') this.dissolveIn(target, duration, fade === 'blur');
     else if (effect === 'pop') this.popIn(target, duration, popScales(entry));
     if (equation) this.effects.push(equation());
@@ -2315,7 +2364,9 @@ export function matchMorphElements(
   previous: SlideElement[],
   next: SlideElement[],
 ): Array<[SlideElement, SlideElement]> {
-  return explicitMorphPairs(previous, next);
+  const explicit = explicitMorphPairs(previous, next);
+  // draw.io cells also pair by their cell id, the identity a diagram keeps.
+  return [...explicit, ...diagramMorphPairs(previous, next, new Set(explicit.flat()))];
 }
 
 /** How far out of focus a blur build starts (or ends), in canvas px. */

@@ -4,6 +4,7 @@ import type { SlideState } from '@shared/timeline.js';
 import { curvedShadowClasses } from '@shared/shapeShadow.js';
 import { applyTermStates } from './equationBuilds.js';
 import { applyCodeLineState } from './codeRender.js';
+import { syncConnectorFlow } from './diagramMotion.js';
 
 /**
  * Apply the resolved, motion-free endpoint of one build state.
@@ -29,6 +30,11 @@ export function applyStaticSlideState(
     const visible = state.visible.has(element.id);
     node.style.visibility = visible ? 'visible' : 'hidden';
     node.style.pointerEvents = visible ? '' : 'none';
+    // An `opacity` build's fade, on top of the element's own opacity.
+    const factor = state.opacity?.get(element.id);
+    node.style.opacity = String(factor === undefined ? element.opacity : element.opacity * factor);
+    // A connector's flow, as its style says or a `flow` build left it.
+    if (element.type === 'connector') syncConnectorFlow(node, element, state.flowing?.get(element.id));
     node.className = [
       'element',
       `element-${element.type}`,

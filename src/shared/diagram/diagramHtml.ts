@@ -1,6 +1,43 @@
-import type { ConnectorEl, DiagramEl, VertexEl } from '../deck.js';
+import { DiagramMetaSchema, type ConnectorEl, type DiagramEl, type DiagramMeta, type Slide, type SlideElement, type VertexEl } from '../deck.js';
 import type { MeasuredNode } from '../htmlSlides.js';
 import { connectorMarkup, vertexMarkup } from './element.js';
+
+/**
+ * The slide's diagram records (`slide.diagrams`: page name and id, layers,
+ * origin, scale, model attributes, animation) ride on the section as
+ * `data-diagrams` (URI-encoded JSON), so a page round-trips them and a
+ * section copied elsewhere keeps its layers.
+ */
+export function diagramRecordsAttr(slide: Pick<Slide, 'diagrams'>): string {
+  const records = slide.diagrams;
+  if (!records || Object.keys(records).length === 0) return '';
+  return ` data-diagrams="${escapeAttr(encodeURIComponent(JSON.stringify(records)))}"`;
+}
+
+/** The records a section's `data-diagrams` states, as slide properties; unreadable ones are dropped. */
+export function diagramRecordsFromSection(encoded: string | undefined, _elements: readonly SlideElement[]): { diagrams?: Record<string, DiagramMeta> } {
+  if (!encoded) return {};
+  try {
+    const parsed: unknown = JSON.parse(decodeURIComponent(encoded));
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return {};
+    const out: Record<string, DiagramMeta> = {};
+    for (const [id, value] of Object.entries(parsed as Record<string, unknown>)) {
+      const meta = DiagramMetaSchema.safeParse(value);
+      if (meta.success) out[id] = meta.data;
+    }
+    return Object.keys(out).length > 0 ? { diagrams: out } : {};
+  } catch {
+    return {};
+  }
+}
+
+/** The previous slide's records for the diagrams `elements` still have cells in, or null. */
+export function keptDiagramRecords(previous: Pick<Slide, 'diagrams'>, elements: readonly SlideElement[]): Record<string, DiagramMeta> | null {
+  if (!previous.diagrams) return null;
+  const used = new Set(elements.flatMap((el) => (el.type === 'vertex' || el.type === 'connector' ? [el.diagram] : [])));
+  const kept = Object.fromEntries(Object.entries(previous.diagrams).filter(([id]) => used.has(id)));
+  return Object.keys(kept).length > 0 ? structuredClone(kept) : null;
+}
 
 /**
  * draw.io cells in the HTML authoring format, both ways.

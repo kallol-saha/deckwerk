@@ -49,6 +49,10 @@ export interface VertexLabelOptions {
    * cell (Graph.getEdgeLabelAngle), used when the style has labelAutoRotate=1.
    */
   edgeAngle?: number | null;
+  /** The page has math="1": TeX in an HTML label is typeset (mathLabel.ts). */
+  math?: boolean;
+  /** An HTML label carries draw.io's SVG <text> fallback (standalone SVG export). */
+  textFallback?: boolean;
 }
 
 export interface EdgeLabelOptions {
@@ -60,6 +64,10 @@ export interface EdgeLabelOptions {
    * used when the style has labelAutoRotate=1.
    */
   edgeAngle?: number | null;
+  /** The page has math="1": TeX in an HTML label is typeset (mathLabel.ts). */
+  math?: boolean;
+  /** An HTML label carries draw.io's SVG <text> fallback (standalone SVG export). */
+  textFallback?: boolean;
 }
 
 /**

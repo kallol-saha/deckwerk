@@ -1,0 +1,100 @@
+<mxfile host="deckwerk-fixtures" agent="drawio-reference fixtures" version="32.7.4">
+  <diagram id="page-patterns" name="Fill patterns">
+    <mxGraphModel dx="0" dy="0" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+      <mxCell id="0" />
+      <mxCell id="1" parent="0" />
+      <mxCell id="p-hatch-1" value="" style="whiteSpace=wrap;html=1;fillStyle=hatch;fillColor=#6c8ebf;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxGeometry x="10" y="11" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-hatch-2" value="" style="ellipse;whiteSpace=wrap;html=1;fillStyle=hatch;fillColor=#6c8ebf;strokeColor=#6c8ebf;strokeWidth=3;" vertex="1" parent="1">
+        <mxGeometry x="140" y="11" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-hatch-3" value="" style="rhombus;whiteSpace=wrap;html=1;fillStyle=hatch;fillColor=#6c8ebf;strokeColor=#6c8ebf;hachureGap=6;" vertex="1" parent="1">
+        <mxGeometry x="270" y="11" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-hatch-4" value="" style="rounded=1;whiteSpace=wrap;html=1;fillStyle=hatch;fillColor=#6c8ebf;strokeColor=#6c8ebf;fillWeight=3;" vertex="1" parent="1">
+        <mxGeometry x="400" y="11" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-hatch-5" value="" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fillStyle=hatch;fillColor=#6c8ebf;strokeColor=#6c8ebf;hachureAngle=30;" vertex="1" parent="1">
+        <mxGeometry x="530" y="11" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-hatch-6" value="" style="shape=cylinder3;whiteSpace=wrap;html=1;fillStyle=hatch;fillColor=#6c8ebf;strokeColor=#6c8ebf;hachureGap=12;fillWeight=1;hachureAngle=-20;" vertex="1" parent="1">
+        <mxGeometry x="660" y="11" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-dots-1" value="" style="whiteSpace=wrap;html=1;fillStyle=dots;fillColor=#82b366;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxGeometry x="10" y="101" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-dots-2" value="" style="ellipse;whiteSpace=wrap;html=1;fillStyle=dots;fillColor=#82b366;strokeColor=#82b366;strokeWidth=3;" vertex="1" parent="1">
+        <mxGeometry x="140" y="101" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-dots-3" value="" style="rhombus;whiteSpace=wrap;html=1;fillStyle=dots;fillColor=#82b366;strokeColor=#82b366;hachureGap=6;" vertex="1" parent="1">
+        <mxGeometry x="270" y="101" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-dots-4" value="" style="rounded=1;whiteSpace=wrap;html=1;fillStyle=dots;fillColor=#82b366;strokeColor=#82b366;fillWeight=3;" vertex="1" parent="1">
+        <mxGeometry x="400" y="101" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-dots-5" value="" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fillStyle=dots;fillColor=#82b366;strokeColor=#82b366;hachureAngle=30;" vertex="1" parent="1">
+        <mxGeometry x="530" y="101" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-dots-6" value="" style="shape=cylinder3;whiteSpace=wrap;html=1;fillStyle=dots;fillColor=#82b366;strokeColor=#82b366;hachureGap=12;fillWeight=1;hachureAngle=-20;" vertex="1" parent="1">
+        <mxGeometry x="660" y="101" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-cross-hatch-1" value="" style="whiteSpace=wrap;html=1;fillStyle=cross-hatch;fillColor=#d79b00;strokeColor=#d79b00;" vertex="1" parent="1">
+        <mxGeometry x="10" y="191" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-cross-hatch-2" value="" style="ellipse;whiteSpace=wrap;html=1;fillStyle=cross-hatch;fillColor=#d79b00;strokeColor=#d79b00;strokeWidth=3;" vertex="1" parent="1">
+        <mxGeometry x="140" y="191" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-cross-hatch-3" value="" style="rhombus;whiteSpace=wrap;html=1;fillStyle=cross-hatch;fillColor=#d79b00;strokeColor=#d79b00;hachureGap=6;" vertex="1" parent="1">
+        <mxGeometry x="270" y="191" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-cross-hatch-4" value="" style="rounded=1;whiteSpace=wrap;html=1;fillStyle=cross-hatch;fillColor=#d79b00;strokeColor=#d79b00;fillWeight=3;" vertex="1" parent="1">
+        <mxGeometry x="400" y="191" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-cross-hatch-5" value="" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fillStyle=cross-hatch;fillColor=#d79b00;strokeColor=#d79b00;hachureAngle=30;" vertex="1" parent="1">
+        <mxGeometry x="530" y="191" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-cross-hatch-6" value="" style="shape=cylinder3;whiteSpace=wrap;html=1;fillStyle=cross-hatch;fillColor=#d79b00;strokeColor=#d79b00;hachureGap=12;fillWeight=1;hachureAngle=-20;" vertex="1" parent="1">
+        <mxGeometry x="660" y="191" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-dashed-1" value="" style="whiteSpace=wrap;html=1;fillStyle=dashed;fillColor=#b85450;strokeColor=#b85450;" vertex="1" parent="1">
+        <mxGeometry x="10" y="281" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-dashed-2" value="" style="ellipse;whiteSpace=wrap;html=1;fillStyle=dashed;fillColor=#b85450;strokeColor=#b85450;strokeWidth=3;" vertex="1" parent="1">
+        <mxGeometry x="140" y="281" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-dashed-3" value="" style="rhombus;whiteSpace=wrap;html=1;fillStyle=dashed;fillColor=#b85450;strokeColor=#b85450;hachureGap=6;" vertex="1" parent="1">
+        <mxGeometry x="270" y="281" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-dashed-4" value="" style="rounded=1;whiteSpace=wrap;html=1;fillStyle=dashed;fillColor=#b85450;strokeColor=#b85450;fillWeight=3;" vertex="1" parent="1">
+        <mxGeometry x="400" y="281" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-dashed-5" value="" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fillStyle=dashed;fillColor=#b85450;strokeColor=#b85450;hachureAngle=30;" vertex="1" parent="1">
+        <mxGeometry x="530" y="281" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-dashed-6" value="" style="shape=cylinder3;whiteSpace=wrap;html=1;fillStyle=dashed;fillColor=#b85450;strokeColor=#b85450;hachureGap=12;fillWeight=1;hachureAngle=-20;" vertex="1" parent="1">
+        <mxGeometry x="660" y="281" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-zigzag-line-1" value="" style="whiteSpace=wrap;html=1;fillStyle=zigzag-line;fillColor=#9673a6;strokeColor=#9673a6;" vertex="1" parent="1">
+        <mxGeometry x="10" y="371" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-zigzag-line-2" value="" style="ellipse;whiteSpace=wrap;html=1;fillStyle=zigzag-line;fillColor=#9673a6;strokeColor=#9673a6;strokeWidth=3;" vertex="1" parent="1">
+        <mxGeometry x="140" y="371" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-zigzag-line-3" value="" style="rhombus;whiteSpace=wrap;html=1;fillStyle=zigzag-line;fillColor=#9673a6;strokeColor=#9673a6;hachureGap=6;" vertex="1" parent="1">
+        <mxGeometry x="270" y="371" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-zigzag-line-4" value="" style="rounded=1;whiteSpace=wrap;html=1;fillStyle=zigzag-line;fillColor=#9673a6;strokeColor=#9673a6;fillWeight=3;" vertex="1" parent="1">
+        <mxGeometry x="400" y="371" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-zigzag-line-5" value="" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fillStyle=zigzag-line;fillColor=#9673a6;strokeColor=#9673a6;hachureAngle=30;" vertex="1" parent="1">
+        <mxGeometry x="530" y="371" width="110" height="70" as="geometry" />
+      </mxCell>
+      <mxCell id="p-zigzag-line-6" value="" style="shape=cylinder3;whiteSpace=wrap;html=1;fillStyle=zigzag-line;fillColor=#9673a6;strokeColor=#9673a6;hachureGap=12;fillWeight=1;hachureAngle=-20;" vertex="1" parent="1">
+        <mxGeometry x="660" y="371" width="110" height="70" as="geometry" />
+      </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

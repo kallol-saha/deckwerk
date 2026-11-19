@@ -1,4 +1,5 @@
 import { codeTypeSection } from './codeInspector.js';
+import { diagramFormatPanel } from './diagramFormat.js';
 import {
   MAX_VIDEO_SPEED, MIN_VIDEO_SPEED, STROKE_DASHES, STROKE_STYLES, videoSpeed, type Deck, type MediaEffect, type ShapeEl, type Slide, type SlideElement, type StrokeDash,
   type StrokeStyle,
@@ -549,6 +550,16 @@ export class Inspector {
       this.appendMorph();
       return;
     }
+    // Diagram cells only: draw.io's Format panel, whose Arrange tab takes the
+    // place of Geometry and Align (rotation and flip are style keys there).
+    if (selected.every((element) => element.type === 'vertex' || element.type === 'connector')) {
+      const cells = selected as Array<Extract<SlideElement, { type: 'vertex' | 'connector' }>>;
+      const kinds = new Set(cells.map((cell) => (cell.type === 'vertex' ? 'shape' : 'connector')));
+      this.host.appendChild(sectionTitle(cells.length === 1 ? [...kinds][0]
+        : `${cells.length} ${kinds.size === 1 ? `${[...kinds][0]}s` : 'diagram cells'}`));
+      this.host.appendChild(this.diagramSection(cells));
+      return;
+    }
     if (selected.length > 1) {
       this.host.appendChild(sectionTitle(`${selected.length} elements`));
       this.host.appendChild(this.alignSection());
@@ -586,6 +597,10 @@ export class Inspector {
           selected as Array<Extract<SlideElement, { type: 'image' | 'video' }>>,
         ));
       }
+      // A mixed selection: the diagram cells among it get draw.io's panel too.
+      const cells = selected.filter((element): element is Extract<SlideElement, { type: 'vertex' | 'connector' }> =>
+        element.type === 'vertex' || element.type === 'connector');
+      if (cells.length > 0) this.host.appendChild(this.diagramSection(cells));
       return;
     }
 
@@ -2075,36 +2090,13 @@ export class Inspector {
   }
 
   /**
-   * A draw.io cell: its style string as draw.io's Edit Style shows it, and
-   * its label. The style is the source of truth for the look, so editing it
-   * here is editing the diagram in draw.io's own vocabulary.
+   * draw.io cells: draw.io's Format panel (Style | Text | Arrange) for all of
+   * them at once, built in diagramFormat.ts. The style string is the source
+   * of truth for the look, so every control edits a key in it.
    */
-  private diagramSection(el: Extract<SlideElement, { type: 'vertex' | 'connector' }>): HTMLElement {
+  private diagramSection(cells: Array<Extract<SlideElement, { type: 'vertex' | 'connector' }>>): HTMLElement {
     const wrap = typeSections();
-    const kind = el.type === 'vertex' ? 'Shape' : 'Connector';
-    const style = optionSection(`Diagram ${kind.toLowerCase()}`, 'diagram-style-options', `draw.io cell ${el.cell}`);
-    const styleField = textAreaField('Edit Style (draw.io)', el.dio, (v) =>
-      this.store.updateSelected((e) => {
-        if (e.type === 'vertex' || e.type === 'connector') {
-          e.dio = v.trim().replace(/\s*\n\s*/g, '');
-          // The element box turns with the style's rotation, as draw.io's does.
-          if (e.type === 'vertex') {
-            const match = /(?:^|;)rotation=([-0-9.]+)/.exec(e.dio);
-            e.rot = match ? Number(match[1]) || 0 : 0;
-          }
-        }
-      }, { label: 'Edit style' }));
-    styleField.classList.add('diagram-style-field');
-    style.content.appendChild(styleField);
-    style.content.appendChild(textAreaField('Label', el.label, (v) =>
-      this.store.updateSelected((e) => {
-        if (e.type === 'vertex' || e.type === 'connector') e.label = v;
-      }, { label: 'Edit label' })));
-    if (el.type === 'connector') {
-      const ends = [el.source ? 'attached at the start' : 'loose at the start', el.target ? 'attached at the end' : 'loose at the end'];
-      style.content.appendChild(hint(`This connector is ${ends.join(' and ')}. It re-routes whenever a shape it is attached to moves.`));
-    }
-    wrap.appendChild(style.section);
+    wrap.appendChild(diagramFormatPanel({ store: this.store, cells }));
     return wrap;
   }
 
@@ -2975,7 +2967,7 @@ export class Inspector {
 
       case 'vertex':
       case 'connector':
-        return this.diagramSection(el);
+        return this.diagramSection([el]);
     }
   }
 

@@ -165,3 +165,64 @@ describe('diagram elements draw and stay attached', () => {
     expect(loosened.targetPoint).toEqual(end);
   });
 });
+
+describe('groups, containers and folding survive the .drawio file', () => {
+  const structure = () => import('../src/shared/diagram/structure.js');
+  const cellOf = (elements: readonly SlideElement[], cell: string) =>
+    elements.find((el) => (el.type === 'vertex' || el.type === 'connector') && el.cell === cell);
+  const asDeck = (slide: Slide) => ({ version: 1 as const, title: '', canvas: { w: 1920, h: 1080 }, slides: [slide] }) as unknown as Parameters<typeof withRoutedConnectors>[1];
+  async function reread(slide: Slide): Promise<SlideElement[]> {
+    const again = await readDrawio(await writeDrawio({ attributes: {}, pages: [elementsToPage(slide, 'd')] }));
+    return pageToElements(again.pages[0], { diagramId: 'd', placement: PLACEMENT, makeId }).elements;
+  }
+
+  it('ungroups and regroups a fixture group: same page, through the file', async () => {
+    PLACEMENT = PLACED;
+    const { groupCells, ungroupCells } = await structure();
+    const fixture = await loadDrawioFixture('structure-groups');
+    const { slide } = slideOf(fixture.document.pages[0]);
+    const original = elementsToPage(slide, 'd');
+    const g1 = cellOf(slide.elements, 'g1')!;
+    ungroupCells(slide, [g1.id]);
+    expect(cellOf(slide.elements, 'g1')).toBeUndefined();
+    expect(cellOf(slide.elements, 'g1-edge')!.type === 'connector' && (cellOf(slide.elements, 'g1-edge') as { parent: string }).parent).toBe('1');
+    const group = groupCells(slide, ['g1-a', 'g1-b'].map((c) => cellOf(slide.elements, c)!.id), makeId)!;
+    const page = elementsToPage(slide, 'd');
+    const geometryOf = (p: DiagramPage, id: string) => p.cells.find((c) => c.id === id)?.geometry;
+    expect(geometryOf(page, group.cell)).toEqual(geometryOf(original, 'g1'));
+    for (const id of ['g1-a', 'g1-b', 'g1-edge']) {
+      expect(page.cells.find((c) => c.id === id)?.parent).toBe(group.cell);
+      expect(geometryOf(page, id)).toEqual(geometryOf(original, id));
+    }
+    const back = await reread(slide);
+    for (const id of [group.cell, 'g1-a', 'g1-b']) {
+      const a = cellOf(back, id)!;
+      const b = cellOf(slide.elements, id)!;
+      expect([a.x, a.y, a.w, a.h].map((n) => Math.round(n * 1000) / 1000)).toEqual([b.x, b.y, b.w, b.h].map((n) => Math.round(n * 1000) / 1000));
+    }
+  });
+
+  it('collapses a fixture swimlane: written collapsed, read back concealed, connectors to the lane', async () => {
+    PLACEMENT = IDENTITY;
+    const { setCollapsed } = await structure();
+    const fixture = await loadDrawioFixture('structure-groups');
+    const { slide } = slideOf(fixture.document.pages[0]);
+    const draft = structuredClone(slide);
+    expect(setCollapsed(draft, cellOf(draft.elements, 's1')!.id, true)).toBe(true);
+    const collapsed = withRoutedConnectors(asDeck(slide), asDeck(draft)).slides[0];
+    const lane = elementsToPage(collapsed, 'd').cells.find((c) => c.id === 's1')!;
+    expect(lane.collapsed).toBe(true);
+    // "Lane", bold 12 px, startSize 30: draw.io's preferred size 70 x 30, top-left kept.
+    expect(lane.geometry).toMatchObject({ x: 320, y: 220, width: 70, height: 30, alternateBounds: { x: 320, y: 220, width: 220, height: 180 } });
+    const back = await reread(collapsed);
+    expect((cellOf(back, 's1-a') as { concealed?: boolean }).concealed).toBe(true);
+    expect((cellOf(back, 's1') as { collapsed?: boolean }).collapsed).toBe(true);
+    // The connector from C1b to S1a now ends on the collapsed lane's box.
+    const cross = cellOf(collapsed.elements, 'cross-c1-s1') as { route: Array<{ x: number; y: number }> };
+    const end = cross.route[cross.route.length - 1];
+    expect(end.x).toBeGreaterThanOrEqual(320 - 0.01);
+    expect(end.x).toBeLessThanOrEqual(390 + 0.01);
+    expect(end.y).toBeGreaterThanOrEqual(220 - 0.01);
+    expect(end.y).toBeLessThanOrEqual(250 + 0.01);
+  });
+});

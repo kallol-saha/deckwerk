@@ -1,8 +1,11 @@
 const { app, BrowserWindow } = require('electron');
 
-const url = process.argv[2];
-const port = process.argv[3] || '9222';
-const profileDir = process.argv[4];
+// The environment wins over the command line: on some Windows machines
+// Electron exits at once (code -1, no output) when its command line holds a
+// URL followed by another argument, so launchBrowser hands them over here.
+const url = process.env.DECKWERK_EVAL_URL || process.argv[2];
+const port = process.env.DECKWERK_EVAL_PORT || process.argv[3] || '9222';
+const profileDir = process.env.DECKWERK_EVAL_PROFILE || process.argv[4];
 if (!url) throw new Error('usage: electron eval-browser.cjs <url> <debug-port> [profile-dir]');
 if (profileDir) app.setPath('userData', profileDir);
 app.commandLine.appendSwitch('remote-debugging-port', port);

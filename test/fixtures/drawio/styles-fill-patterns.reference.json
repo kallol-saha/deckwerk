@@ -1,0 +1,3757 @@
+{
+  "fixture": "styles-fill-patterns.drawio",
+  "generator": {
+    "bundles": ["js/app.min.js", "js/stencils.min.js", "js/shapes-14-6-5.min.js"],
+    "chromium": "128.0.6613.186",
+    "drawio": "32.7.4",
+    "electron": "32.3.3",
+    "platform": "win32-x64"
+  },
+  "pages": [
+    {
+      "cells": [
+        {
+          "geometry": null,
+          "id": "0",
+          "kind": "root",
+          "label": "",
+          "order": 0,
+          "parent": null,
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "light-dark(#ffffff, var(--ge-dark-color, #121212))",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "perimeter": "rectanglePerimeter",
+            "shape": "label",
+            "strokeColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "verticalAlign": "middle"
+          },
+          "state": null,
+          "style": "",
+          "visible": true
+        },
+        {
+          "geometry": null,
+          "id": "1",
+          "kind": "layer",
+          "label": "",
+          "order": 1,
+          "parent": "0",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "light-dark(#ffffff, var(--ge-dark-color, #121212))",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "perimeter": "rectanglePerimeter",
+            "shape": "label",
+            "strokeColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "verticalAlign": "middle"
+          },
+          "state": null,
+          "style": "",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 10,
+            "y": 11
+          },
+          "id": "p-hatch-1",
+          "kind": "vertex",
+          "label": "",
+          "order": 2,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#6c8ebf",
+            "fillStyle": "hatch",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "html": 1,
+            "perimeter": "rectanglePerimeter",
+            "shape": "label",
+            "strokeColor": "#6c8ebf",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 10, "y": 11},
+            "perimeter": {
+              "name": "rectanglePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 120, "y": 46}, "toward": {"x": 605, "y": 46}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 120, "y": 68.782},
+                  "toward": {"x": 563.895, "y": 252.649}
+                },
+                {"angle": 45, "point": {"x": 100, "y": 81}, "toward": {"x": 446.838, "y": 427.838}},
+                {
+                  "angle": 67.5,
+                  "point": {"x": 79.497, "y": 81},
+                  "toward": {"x": 271.649, "y": 544.895}
+                },
+                {"angle": 90, "point": {"x": 65, "y": 81}, "toward": {"x": 65, "y": 586}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 50.503, "y": 81},
+                  "toward": {"x": -141.649, "y": 544.895}
+                },
+                {"angle": 135, "point": {"x": 30, "y": 81}, "toward": {"x": -316.838, "y": 427.838}},
+                {
+                  "angle": 157.5,
+                  "point": {"x": 10, "y": 68.782},
+                  "toward": {"x": -433.895, "y": 252.649}
+                },
+                {"angle": 180, "point": {"x": 10, "y": 46}, "toward": {"x": -475, "y": 46}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 10, "y": 23.218},
+                  "toward": {"x": -433.895, "y": -160.649}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 30, "y": 11},
+                  "toward": {"x": -316.838, "y": -335.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 50.503, "y": 11},
+                  "toward": {"x": -141.649, "y": -452.895}
+                },
+                {"angle": 270, "point": {"x": 65, "y": 11}, "toward": {"x": 65, "y": -494}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 79.497, "y": 11},
+                  "toward": {"x": 271.649, "y": -452.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 100, "y": 11},
+                  "toward": {"x": 446.838, "y": -335.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 120, "y": 23.218},
+                  "toward": {"x": 563.895, "y": -160.649}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 9.5, "y": 10.5},
+              "bounds": {"height": 70, "width": 110, "x": 10, "y": 11},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "label",
+              "name": "label",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 10,
+            "y": 11
+          },
+          "style": "whiteSpace=wrap;html=1;fillStyle=hatch;fillColor=#6c8ebf;strokeColor=#6c8ebf;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 140,
+            "y": 11
+          },
+          "id": "p-hatch-2",
+          "kind": "vertex",
+          "label": "",
+          "order": 3,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#6c8ebf",
+            "fillStyle": "hatch",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "html": 1,
+            "perimeter": "ellipsePerimeter",
+            "shape": "ellipse",
+            "strokeColor": "#6c8ebf",
+            "strokeWidth": 3,
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 140, "y": 11},
+            "perimeter": {
+              "name": "ellipsePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 250, "y": 46}, "toward": {"x": 735, "y": 46}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 241.114, "y": 65.075},
+                  "toward": {"x": 693.895, "y": 252.649}
+                },
+                {
+                  "angle": 45,
+                  "point": {"x": 224.528, "y": 75.528},
+                  "toward": {"x": 576.838, "y": 427.838}
+                },
+                {
+                  "angle": 67.5,
+                  "point": {"x": 209.001, "y": 79.847},
+                  "toward": {"x": 401.649, "y": 544.895}
+                },
+                {"angle": 90, "point": {"x": 195, "y": 81}, "toward": {"x": 195, "y": 586}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 180.999, "y": 79.847},
+                  "toward": {"x": -11.649, "y": 544.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 165.472, "y": 75.528},
+                  "toward": {"x": -186.838, "y": 427.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 148.886, "y": 65.075},
+                  "toward": {"x": -303.895, "y": 252.649}
+                },
+                {"angle": 180, "point": {"x": 140, "y": 46}, "toward": {"x": -345, "y": 46}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 148.886, "y": 26.925},
+                  "toward": {"x": -303.895, "y": -160.649}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 165.472, "y": 16.472},
+                  "toward": {"x": -186.838, "y": -335.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 180.999, "y": 12.153},
+                  "toward": {"x": -11.649, "y": -452.895}
+                },
+                {"angle": 270, "point": {"x": 195, "y": 11}, "toward": {"x": 195, "y": -494}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 209.001, "y": 12.153},
+                  "toward": {"x": 401.649, "y": -452.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 224.528, "y": 16.472},
+                  "toward": {"x": 576.838, "y": -335.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 241.114, "y": 26.925},
+                  "toward": {"x": 693.895, "y": -160.649}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 73, "width": 113, "x": 138.5, "y": 9.5},
+              "bounds": {"height": 70, "width": 110, "x": 140, "y": 11},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "ellipse",
+              "name": "ellipse",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 3
+            },
+            "text": null,
+            "width": 110,
+            "x": 140,
+            "y": 11
+          },
+          "style": "ellipse;whiteSpace=wrap;html=1;fillStyle=hatch;fillColor=#6c8ebf;strokeColor=#6c8ebf;strokeWidth=3;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 270,
+            "y": 11
+          },
+          "id": "p-hatch-3",
+          "kind": "vertex",
+          "label": "",
+          "order": 4,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#6c8ebf",
+            "fillStyle": "hatch",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "hachureGap": 6,
+            "html": 1,
+            "perimeter": "rhombusPerimeter",
+            "shape": "rhombus",
+            "strokeColor": "#6c8ebf",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 270, "y": 11},
+            "perimeter": {
+              "name": "rhombusPerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 380, "y": 46}, "toward": {"x": 865, "y": 46}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 358.315, "y": 59.8},
+                  "toward": {"x": 823.895, "y": 252.649}
+                },
+                {
+                  "angle": 45,
+                  "point": {"x": 346.389, "y": 67.389},
+                  "toward": {"x": 706.838, "y": 427.838}
+                },
+                {
+                  "angle": 67.5,
+                  "point": {"x": 336.473, "y": 73.699},
+                  "toward": {"x": 531.649, "y": 544.895}
+                },
+                {"angle": 90, "point": {"x": 325, "y": 81}, "toward": {"x": 325, "y": 586}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 313.527, "y": 73.699},
+                  "toward": {"x": 118.351, "y": 544.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 303.611, "y": 67.389},
+                  "toward": {"x": -56.838, "y": 427.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 291.685, "y": 59.8},
+                  "toward": {"x": -173.895, "y": 252.649}
+                },
+                {"angle": 180, "point": {"x": 270, "y": 46}, "toward": {"x": -215, "y": 46}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 291.685, "y": 32.2},
+                  "toward": {"x": -173.895, "y": -160.649}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 303.611, "y": 24.611},
+                  "toward": {"x": -56.838, "y": -335.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 313.527, "y": 18.301},
+                  "toward": {"x": 118.351, "y": -452.895}
+                },
+                {"angle": 270, "point": {"x": 325, "y": 11}, "toward": {"x": 325, "y": -494}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 336.473, "y": 18.301},
+                  "toward": {"x": 531.649, "y": -452.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 346.389, "y": 24.611},
+                  "toward": {"x": 706.838, "y": -335.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 358.315, "y": 32.2},
+                  "toward": {"x": 823.895, "y": -160.649}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 269.5, "y": 10.5},
+              "bounds": {"height": 70, "width": 110, "x": 270, "y": 11},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "rhombus",
+              "name": "rhombus",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 270,
+            "y": 11
+          },
+          "style": "rhombus;whiteSpace=wrap;html=1;fillStyle=hatch;fillColor=#6c8ebf;strokeColor=#6c8ebf;hachureGap=6;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 400,
+            "y": 11
+          },
+          "id": "p-hatch-4",
+          "kind": "vertex",
+          "label": "",
+          "order": 5,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#6c8ebf",
+            "fillStyle": "hatch",
+            "fillWeight": 3,
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "html": 1,
+            "perimeter": "rectanglePerimeter",
+            "rounded": 1,
+            "shape": "label",
+            "strokeColor": "#6c8ebf",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 400, "y": 11},
+            "perimeter": {
+              "name": "rectanglePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 510, "y": 46}, "toward": {"x": 995, "y": 46}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 510, "y": 68.782},
+                  "toward": {"x": 953.895, "y": 252.649}
+                },
+                {"angle": 45, "point": {"x": 490, "y": 81}, "toward": {"x": 836.838, "y": 427.838}},
+                {
+                  "angle": 67.5,
+                  "point": {"x": 469.497, "y": 81},
+                  "toward": {"x": 661.649, "y": 544.895}
+                },
+                {"angle": 90, "point": {"x": 455, "y": 81}, "toward": {"x": 455, "y": 586}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 440.503, "y": 81},
+                  "toward": {"x": 248.351, "y": 544.895}
+                },
+                {"angle": 135, "point": {"x": 420, "y": 81}, "toward": {"x": 73.162, "y": 427.838}},
+                {
+                  "angle": 157.5,
+                  "point": {"x": 400, "y": 68.782},
+                  "toward": {"x": -43.895, "y": 252.649}
+                },
+                {"angle": 180, "point": {"x": 400, "y": 46}, "toward": {"x": -85, "y": 46}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 400, "y": 23.218},
+                  "toward": {"x": -43.895, "y": -160.649}
+                },
+                {"angle": 225, "point": {"x": 420, "y": 11}, "toward": {"x": 73.162, "y": -335.838}},
+                {
+                  "angle": 247.5,
+                  "point": {"x": 440.503, "y": 11},
+                  "toward": {"x": 248.351, "y": -452.895}
+                },
+                {"angle": 270, "point": {"x": 455, "y": 11}, "toward": {"x": 455, "y": -494}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 469.497, "y": 11},
+                  "toward": {"x": 661.649, "y": -452.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 490, "y": 11},
+                  "toward": {"x": 836.838, "y": -335.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 510, "y": 23.218},
+                  "toward": {"x": 953.895, "y": -160.649}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 399.5, "y": 10.5},
+              "bounds": {"height": 70, "width": 110, "x": 400, "y": 11},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "label",
+              "name": "label",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 400,
+            "y": 11
+          },
+          "style": "rounded=1;whiteSpace=wrap;html=1;fillStyle=hatch;fillColor=#6c8ebf;strokeColor=#6c8ebf;fillWeight=3;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 530,
+            "y": 11
+          },
+          "id": "p-hatch-5",
+          "kind": "vertex",
+          "label": "",
+          "order": 6,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#6c8ebf",
+            "fillStyle": "hatch",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "hachureAngle": 30,
+            "html": 1,
+            "perimeter": "hexagonPerimeter2",
+            "shape": "hexagon",
+            "strokeColor": "#6c8ebf",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 530, "y": 11},
+            "perimeter": {
+              "name": "hexagonPerimeter2",
+              "probes": [
+                {"angle": 0, "point": {"x": 640, "y": 46}, "toward": {"x": 1125, "y": 46}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 626.495, "y": 63.188},
+                  "toward": {"x": 1083.895, "y": 252.649}
+                },
+                {
+                  "angle": 45,
+                  "point": {"x": 615.8, "y": 76.8},
+                  "toward": {"x": 966.838, "y": 427.838}
+                },
+                {
+                  "angle": 67.5,
+                  "point": {"x": 599.497, "y": 81},
+                  "toward": {"x": 791.649, "y": 544.895}
+                },
+                {"angle": 90, "point": {"x": 585, "y": 81}, "toward": {"x": 585, "y": 586}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 570.503, "y": 81},
+                  "toward": {"x": 378.351, "y": 544.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 554.2, "y": 76.8},
+                  "toward": {"x": 203.162, "y": 427.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 543.505, "y": 63.188},
+                  "toward": {"x": 86.105, "y": 252.649}
+                },
+                {"angle": 180, "point": {"x": 530, "y": 46}, "toward": {"x": 45, "y": 46}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 543.505, "y": 28.812},
+                  "toward": {"x": 86.105, "y": -160.649}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 554.2, "y": 15.2},
+                  "toward": {"x": 203.162, "y": -335.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 570.503, "y": 11},
+                  "toward": {"x": 378.351, "y": -452.895}
+                },
+                {"angle": 270, "point": {"x": 585, "y": 11}, "toward": {"x": 585, "y": -494}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 599.497, "y": 11},
+                  "toward": {"x": 791.649, "y": -452.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 615.8, "y": 15.2},
+                  "toward": {"x": 966.838, "y": -335.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 626.495, "y": 28.812},
+                  "toward": {"x": 1083.895, "y": -160.649}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 529.5, "y": 10.5},
+              "bounds": {"height": 70, "width": 110, "x": 530, "y": 11},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "hexagon",
+              "name": "hexagon",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 530,
+            "y": 11
+          },
+          "style": "shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fillStyle=hatch;fillColor=#6c8ebf;strokeColor=#6c8ebf;hachureAngle=30;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 660,
+            "y": 11
+          },
+          "id": "p-hatch-6",
+          "kind": "vertex",
+          "label": "",
+          "order": 7,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#6c8ebf",
+            "fillStyle": "hatch",
+            "fillWeight": 1,
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "hachureAngle": -20,
+            "hachureGap": 12,
+            "html": 1,
+            "perimeter": "rectanglePerimeter",
+            "shape": "cylinder3",
+            "strokeColor": "#6c8ebf",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 660, "y": 11},
+            "perimeter": {
+              "name": "rectanglePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 770, "y": 46}, "toward": {"x": 1255, "y": 46}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 770, "y": 68.782},
+                  "toward": {"x": 1213.895, "y": 252.649}
+                },
+                {"angle": 45, "point": {"x": 750, "y": 81}, "toward": {"x": 1096.838, "y": 427.838}},
+                {
+                  "angle": 67.5,
+                  "point": {"x": 729.497, "y": 81},
+                  "toward": {"x": 921.649, "y": 544.895}
+                },
+                {"angle": 90, "point": {"x": 715, "y": 81}, "toward": {"x": 715, "y": 586}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 700.503, "y": 81},
+                  "toward": {"x": 508.351, "y": 544.895}
+                },
+                {"angle": 135, "point": {"x": 680, "y": 81}, "toward": {"x": 333.162, "y": 427.838}},
+                {
+                  "angle": 157.5,
+                  "point": {"x": 660, "y": 68.782},
+                  "toward": {"x": 216.105, "y": 252.649}
+                },
+                {"angle": 180, "point": {"x": 660, "y": 46}, "toward": {"x": 175, "y": 46}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 660, "y": 23.218},
+                  "toward": {"x": 216.105, "y": -160.649}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 680, "y": 11},
+                  "toward": {"x": 333.162, "y": -335.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 700.503, "y": 11},
+                  "toward": {"x": 508.351, "y": -452.895}
+                },
+                {"angle": 270, "point": {"x": 715, "y": 11}, "toward": {"x": 715, "y": -494}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 729.497, "y": 11},
+                  "toward": {"x": 921.649, "y": -452.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 750, "y": 11},
+                  "toward": {"x": 1096.838, "y": -335.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 770, "y": 23.218},
+                  "toward": {"x": 1213.895, "y": -160.649}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 659.5, "y": 10.5},
+              "bounds": {"height": 70, "width": 110, "x": 660, "y": 11},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "cylinder3",
+              "name": "cylinder3",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 660,
+            "y": 11
+          },
+          "style": "shape=cylinder3;whiteSpace=wrap;html=1;fillStyle=hatch;fillColor=#6c8ebf;strokeColor=#6c8ebf;hachureGap=12;fillWeight=1;hachureAngle=-20;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 10,
+            "y": 101
+          },
+          "id": "p-dots-1",
+          "kind": "vertex",
+          "label": "",
+          "order": 8,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#82b366",
+            "fillStyle": "dots",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "html": 1,
+            "perimeter": "rectanglePerimeter",
+            "shape": "label",
+            "strokeColor": "#82b366",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 10, "y": 101},
+            "perimeter": {
+              "name": "rectanglePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 120, "y": 136}, "toward": {"x": 605, "y": 136}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 120, "y": 158.782},
+                  "toward": {"x": 563.895, "y": 342.649}
+                },
+                {"angle": 45, "point": {"x": 100, "y": 171}, "toward": {"x": 446.838, "y": 517.838}},
+                {
+                  "angle": 67.5,
+                  "point": {"x": 79.497, "y": 171},
+                  "toward": {"x": 271.649, "y": 634.895}
+                },
+                {"angle": 90, "point": {"x": 65, "y": 171}, "toward": {"x": 65, "y": 676}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 50.503, "y": 171},
+                  "toward": {"x": -141.649, "y": 634.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 30, "y": 171},
+                  "toward": {"x": -316.838, "y": 517.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 10, "y": 158.782},
+                  "toward": {"x": -433.895, "y": 342.649}
+                },
+                {"angle": 180, "point": {"x": 10, "y": 136}, "toward": {"x": -475, "y": 136}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 10, "y": 113.218},
+                  "toward": {"x": -433.895, "y": -70.649}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 30, "y": 101},
+                  "toward": {"x": -316.838, "y": -245.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 50.503, "y": 101},
+                  "toward": {"x": -141.649, "y": -362.895}
+                },
+                {"angle": 270, "point": {"x": 65, "y": 101}, "toward": {"x": 65, "y": -404}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 79.497, "y": 101},
+                  "toward": {"x": 271.649, "y": -362.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 100, "y": 101},
+                  "toward": {"x": 446.838, "y": -245.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 120, "y": 113.218},
+                  "toward": {"x": 563.895, "y": -70.649}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 9.5, "y": 100.5},
+              "bounds": {"height": 70, "width": 110, "x": 10, "y": 101},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "label",
+              "name": "label",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 10,
+            "y": 101
+          },
+          "style": "whiteSpace=wrap;html=1;fillStyle=dots;fillColor=#82b366;strokeColor=#82b366;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 140,
+            "y": 101
+          },
+          "id": "p-dots-2",
+          "kind": "vertex",
+          "label": "",
+          "order": 9,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#82b366",
+            "fillStyle": "dots",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "html": 1,
+            "perimeter": "ellipsePerimeter",
+            "shape": "ellipse",
+            "strokeColor": "#82b366",
+            "strokeWidth": 3,
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 140, "y": 101},
+            "perimeter": {
+              "name": "ellipsePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 250, "y": 136}, "toward": {"x": 735, "y": 136}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 241.114, "y": 155.075},
+                  "toward": {"x": 693.895, "y": 342.649}
+                },
+                {
+                  "angle": 45,
+                  "point": {"x": 224.528, "y": 165.528},
+                  "toward": {"x": 576.838, "y": 517.838}
+                },
+                {
+                  "angle": 67.5,
+                  "point": {"x": 209.001, "y": 169.847},
+                  "toward": {"x": 401.649, "y": 634.895}
+                },
+                {"angle": 90, "point": {"x": 195, "y": 171}, "toward": {"x": 195, "y": 676}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 180.999, "y": 169.847},
+                  "toward": {"x": -11.649, "y": 634.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 165.472, "y": 165.528},
+                  "toward": {"x": -186.838, "y": 517.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 148.886, "y": 155.075},
+                  "toward": {"x": -303.895, "y": 342.649}
+                },
+                {"angle": 180, "point": {"x": 140, "y": 136}, "toward": {"x": -345, "y": 136}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 148.886, "y": 116.925},
+                  "toward": {"x": -303.895, "y": -70.649}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 165.472, "y": 106.472},
+                  "toward": {"x": -186.838, "y": -245.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 180.999, "y": 102.153},
+                  "toward": {"x": -11.649, "y": -362.895}
+                },
+                {"angle": 270, "point": {"x": 195, "y": 101}, "toward": {"x": 195, "y": -404}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 209.001, "y": 102.153},
+                  "toward": {"x": 401.649, "y": -362.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 224.528, "y": 106.472},
+                  "toward": {"x": 576.838, "y": -245.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 241.114, "y": 116.925},
+                  "toward": {"x": 693.895, "y": -70.649}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 73, "width": 113, "x": 138.5, "y": 99.5},
+              "bounds": {"height": 70, "width": 110, "x": 140, "y": 101},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "ellipse",
+              "name": "ellipse",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 3
+            },
+            "text": null,
+            "width": 110,
+            "x": 140,
+            "y": 101
+          },
+          "style": "ellipse;whiteSpace=wrap;html=1;fillStyle=dots;fillColor=#82b366;strokeColor=#82b366;strokeWidth=3;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 270,
+            "y": 101
+          },
+          "id": "p-dots-3",
+          "kind": "vertex",
+          "label": "",
+          "order": 10,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#82b366",
+            "fillStyle": "dots",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "hachureGap": 6,
+            "html": 1,
+            "perimeter": "rhombusPerimeter",
+            "shape": "rhombus",
+            "strokeColor": "#82b366",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 270, "y": 101},
+            "perimeter": {
+              "name": "rhombusPerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 380, "y": 136}, "toward": {"x": 865, "y": 136}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 358.315, "y": 149.8},
+                  "toward": {"x": 823.895, "y": 342.649}
+                },
+                {
+                  "angle": 45,
+                  "point": {"x": 346.389, "y": 157.389},
+                  "toward": {"x": 706.838, "y": 517.838}
+                },
+                {
+                  "angle": 67.5,
+                  "point": {"x": 336.473, "y": 163.699},
+                  "toward": {"x": 531.649, "y": 634.895}
+                },
+                {"angle": 90, "point": {"x": 325, "y": 171}, "toward": {"x": 325, "y": 676}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 313.527, "y": 163.699},
+                  "toward": {"x": 118.351, "y": 634.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 303.611, "y": 157.389},
+                  "toward": {"x": -56.838, "y": 517.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 291.685, "y": 149.8},
+                  "toward": {"x": -173.895, "y": 342.649}
+                },
+                {"angle": 180, "point": {"x": 270, "y": 136}, "toward": {"x": -215, "y": 136}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 291.685, "y": 122.2},
+                  "toward": {"x": -173.895, "y": -70.649}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 303.611, "y": 114.611},
+                  "toward": {"x": -56.838, "y": -245.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 313.527, "y": 108.301},
+                  "toward": {"x": 118.351, "y": -362.895}
+                },
+                {"angle": 270, "point": {"x": 325, "y": 101}, "toward": {"x": 325, "y": -404}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 336.473, "y": 108.301},
+                  "toward": {"x": 531.649, "y": -362.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 346.389, "y": 114.611},
+                  "toward": {"x": 706.838, "y": -245.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 358.315, "y": 122.2},
+                  "toward": {"x": 823.895, "y": -70.649}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 269.5, "y": 100.5},
+              "bounds": {"height": 70, "width": 110, "x": 270, "y": 101},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "rhombus",
+              "name": "rhombus",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 270,
+            "y": 101
+          },
+          "style": "rhombus;whiteSpace=wrap;html=1;fillStyle=dots;fillColor=#82b366;strokeColor=#82b366;hachureGap=6;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 400,
+            "y": 101
+          },
+          "id": "p-dots-4",
+          "kind": "vertex",
+          "label": "",
+          "order": 11,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#82b366",
+            "fillStyle": "dots",
+            "fillWeight": 3,
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "html": 1,
+            "perimeter": "rectanglePerimeter",
+            "rounded": 1,
+            "shape": "label",
+            "strokeColor": "#82b366",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 400, "y": 101},
+            "perimeter": {
+              "name": "rectanglePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 510, "y": 136}, "toward": {"x": 995, "y": 136}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 510, "y": 158.782},
+                  "toward": {"x": 953.895, "y": 342.649}
+                },
+                {"angle": 45, "point": {"x": 490, "y": 171}, "toward": {"x": 836.838, "y": 517.838}},
+                {
+                  "angle": 67.5,
+                  "point": {"x": 469.497, "y": 171},
+                  "toward": {"x": 661.649, "y": 634.895}
+                },
+                {"angle": 90, "point": {"x": 455, "y": 171}, "toward": {"x": 455, "y": 676}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 440.503, "y": 171},
+                  "toward": {"x": 248.351, "y": 634.895}
+                },
+                {"angle": 135, "point": {"x": 420, "y": 171}, "toward": {"x": 73.162, "y": 517.838}},
+                {
+                  "angle": 157.5,
+                  "point": {"x": 400, "y": 158.782},
+                  "toward": {"x": -43.895, "y": 342.649}
+                },
+                {"angle": 180, "point": {"x": 400, "y": 136}, "toward": {"x": -85, "y": 136}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 400, "y": 113.218},
+                  "toward": {"x": -43.895, "y": -70.649}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 420, "y": 101},
+                  "toward": {"x": 73.162, "y": -245.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 440.503, "y": 101},
+                  "toward": {"x": 248.351, "y": -362.895}
+                },
+                {"angle": 270, "point": {"x": 455, "y": 101}, "toward": {"x": 455, "y": -404}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 469.497, "y": 101},
+                  "toward": {"x": 661.649, "y": -362.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 490, "y": 101},
+                  "toward": {"x": 836.838, "y": -245.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 510, "y": 113.218},
+                  "toward": {"x": 953.895, "y": -70.649}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 399.5, "y": 100.5},
+              "bounds": {"height": 70, "width": 110, "x": 400, "y": 101},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "label",
+              "name": "label",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 400,
+            "y": 101
+          },
+          "style": "rounded=1;whiteSpace=wrap;html=1;fillStyle=dots;fillColor=#82b366;strokeColor=#82b366;fillWeight=3;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 530,
+            "y": 101
+          },
+          "id": "p-dots-5",
+          "kind": "vertex",
+          "label": "",
+          "order": 12,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#82b366",
+            "fillStyle": "dots",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "hachureAngle": 30,
+            "html": 1,
+            "perimeter": "hexagonPerimeter2",
+            "shape": "hexagon",
+            "strokeColor": "#82b366",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 530, "y": 101},
+            "perimeter": {
+              "name": "hexagonPerimeter2",
+              "probes": [
+                {"angle": 0, "point": {"x": 640, "y": 136}, "toward": {"x": 1125, "y": 136}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 626.495, "y": 153.188},
+                  "toward": {"x": 1083.895, "y": 342.649}
+                },
+                {
+                  "angle": 45,
+                  "point": {"x": 615.8, "y": 166.8},
+                  "toward": {"x": 966.838, "y": 517.838}
+                },
+                {
+                  "angle": 67.5,
+                  "point": {"x": 599.497, "y": 171},
+                  "toward": {"x": 791.649, "y": 634.895}
+                },
+                {"angle": 90, "point": {"x": 585, "y": 171}, "toward": {"x": 585, "y": 676}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 570.503, "y": 171},
+                  "toward": {"x": 378.351, "y": 634.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 554.2, "y": 166.8},
+                  "toward": {"x": 203.162, "y": 517.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 543.505, "y": 153.188},
+                  "toward": {"x": 86.105, "y": 342.649}
+                },
+                {"angle": 180, "point": {"x": 530, "y": 136}, "toward": {"x": 45, "y": 136}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 543.505, "y": 118.812},
+                  "toward": {"x": 86.105, "y": -70.649}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 554.2, "y": 105.2},
+                  "toward": {"x": 203.162, "y": -245.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 570.503, "y": 101},
+                  "toward": {"x": 378.351, "y": -362.895}
+                },
+                {"angle": 270, "point": {"x": 585, "y": 101}, "toward": {"x": 585, "y": -404}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 599.497, "y": 101},
+                  "toward": {"x": 791.649, "y": -362.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 615.8, "y": 105.2},
+                  "toward": {"x": 966.838, "y": -245.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 626.495, "y": 118.812},
+                  "toward": {"x": 1083.895, "y": -70.649}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 529.5, "y": 100.5},
+              "bounds": {"height": 70, "width": 110, "x": 530, "y": 101},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "hexagon",
+              "name": "hexagon",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 530,
+            "y": 101
+          },
+          "style": "shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fillStyle=dots;fillColor=#82b366;strokeColor=#82b366;hachureAngle=30;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 660,
+            "y": 101
+          },
+          "id": "p-dots-6",
+          "kind": "vertex",
+          "label": "",
+          "order": 13,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#82b366",
+            "fillStyle": "dots",
+            "fillWeight": 1,
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "hachureAngle": -20,
+            "hachureGap": 12,
+            "html": 1,
+            "perimeter": "rectanglePerimeter",
+            "shape": "cylinder3",
+            "strokeColor": "#82b366",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 660, "y": 101},
+            "perimeter": {
+              "name": "rectanglePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 770, "y": 136}, "toward": {"x": 1255, "y": 136}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 770, "y": 158.782},
+                  "toward": {"x": 1213.895, "y": 342.649}
+                },
+                {
+                  "angle": 45,
+                  "point": {"x": 750, "y": 171},
+                  "toward": {"x": 1096.838, "y": 517.838}
+                },
+                {
+                  "angle": 67.5,
+                  "point": {"x": 729.497, "y": 171},
+                  "toward": {"x": 921.649, "y": 634.895}
+                },
+                {"angle": 90, "point": {"x": 715, "y": 171}, "toward": {"x": 715, "y": 676}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 700.503, "y": 171},
+                  "toward": {"x": 508.351, "y": 634.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 680, "y": 171},
+                  "toward": {"x": 333.162, "y": 517.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 660, "y": 158.782},
+                  "toward": {"x": 216.105, "y": 342.649}
+                },
+                {"angle": 180, "point": {"x": 660, "y": 136}, "toward": {"x": 175, "y": 136}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 660, "y": 113.218},
+                  "toward": {"x": 216.105, "y": -70.649}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 680, "y": 101},
+                  "toward": {"x": 333.162, "y": -245.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 700.503, "y": 101},
+                  "toward": {"x": 508.351, "y": -362.895}
+                },
+                {"angle": 270, "point": {"x": 715, "y": 101}, "toward": {"x": 715, "y": -404}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 729.497, "y": 101},
+                  "toward": {"x": 921.649, "y": -362.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 750, "y": 101},
+                  "toward": {"x": 1096.838, "y": -245.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 770, "y": 113.218},
+                  "toward": {"x": 1213.895, "y": -70.649}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 659.5, "y": 100.5},
+              "bounds": {"height": 70, "width": 110, "x": 660, "y": 101},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "cylinder3",
+              "name": "cylinder3",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 660,
+            "y": 101
+          },
+          "style": "shape=cylinder3;whiteSpace=wrap;html=1;fillStyle=dots;fillColor=#82b366;strokeColor=#82b366;hachureGap=12;fillWeight=1;hachureAngle=-20;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 10,
+            "y": 191
+          },
+          "id": "p-cross-hatch-1",
+          "kind": "vertex",
+          "label": "",
+          "order": 14,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#d79b00",
+            "fillStyle": "cross-hatch",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "html": 1,
+            "perimeter": "rectanglePerimeter",
+            "shape": "label",
+            "strokeColor": "#d79b00",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 10, "y": 191},
+            "perimeter": {
+              "name": "rectanglePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 120, "y": 226}, "toward": {"x": 605, "y": 226}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 120, "y": 248.782},
+                  "toward": {"x": 563.895, "y": 432.649}
+                },
+                {"angle": 45, "point": {"x": 100, "y": 261}, "toward": {"x": 446.838, "y": 607.838}},
+                {
+                  "angle": 67.5,
+                  "point": {"x": 79.497, "y": 261},
+                  "toward": {"x": 271.649, "y": 724.895}
+                },
+                {"angle": 90, "point": {"x": 65, "y": 261}, "toward": {"x": 65, "y": 766}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 50.503, "y": 261},
+                  "toward": {"x": -141.649, "y": 724.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 30, "y": 261},
+                  "toward": {"x": -316.838, "y": 607.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 10, "y": 248.782},
+                  "toward": {"x": -433.895, "y": 432.649}
+                },
+                {"angle": 180, "point": {"x": 10, "y": 226}, "toward": {"x": -475, "y": 226}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 10, "y": 203.218},
+                  "toward": {"x": -433.895, "y": 19.351}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 30, "y": 191},
+                  "toward": {"x": -316.838, "y": -155.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 50.503, "y": 191},
+                  "toward": {"x": -141.649, "y": -272.895}
+                },
+                {"angle": 270, "point": {"x": 65, "y": 191}, "toward": {"x": 65, "y": -314}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 79.497, "y": 191},
+                  "toward": {"x": 271.649, "y": -272.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 100, "y": 191},
+                  "toward": {"x": 446.838, "y": -155.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 120, "y": 203.218},
+                  "toward": {"x": 563.895, "y": 19.351}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 9.5, "y": 190.5},
+              "bounds": {"height": 70, "width": 110, "x": 10, "y": 191},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "label",
+              "name": "label",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 10,
+            "y": 191
+          },
+          "style": "whiteSpace=wrap;html=1;fillStyle=cross-hatch;fillColor=#d79b00;strokeColor=#d79b00;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 140,
+            "y": 191
+          },
+          "id": "p-cross-hatch-2",
+          "kind": "vertex",
+          "label": "",
+          "order": 15,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#d79b00",
+            "fillStyle": "cross-hatch",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "html": 1,
+            "perimeter": "ellipsePerimeter",
+            "shape": "ellipse",
+            "strokeColor": "#d79b00",
+            "strokeWidth": 3,
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 140, "y": 191},
+            "perimeter": {
+              "name": "ellipsePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 250, "y": 226}, "toward": {"x": 735, "y": 226}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 241.114, "y": 245.075},
+                  "toward": {"x": 693.895, "y": 432.649}
+                },
+                {
+                  "angle": 45,
+                  "point": {"x": 224.528, "y": 255.528},
+                  "toward": {"x": 576.838, "y": 607.838}
+                },
+                {
+                  "angle": 67.5,
+                  "point": {"x": 209.001, "y": 259.847},
+                  "toward": {"x": 401.649, "y": 724.895}
+                },
+                {"angle": 90, "point": {"x": 195, "y": 261}, "toward": {"x": 195, "y": 766}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 180.999, "y": 259.847},
+                  "toward": {"x": -11.649, "y": 724.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 165.472, "y": 255.528},
+                  "toward": {"x": -186.838, "y": 607.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 148.886, "y": 245.075},
+                  "toward": {"x": -303.895, "y": 432.649}
+                },
+                {"angle": 180, "point": {"x": 140, "y": 226}, "toward": {"x": -345, "y": 226}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 148.886, "y": 206.925},
+                  "toward": {"x": -303.895, "y": 19.351}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 165.472, "y": 196.472},
+                  "toward": {"x": -186.838, "y": -155.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 180.999, "y": 192.153},
+                  "toward": {"x": -11.649, "y": -272.895}
+                },
+                {"angle": 270, "point": {"x": 195, "y": 191}, "toward": {"x": 195, "y": -314}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 209.001, "y": 192.153},
+                  "toward": {"x": 401.649, "y": -272.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 224.528, "y": 196.472},
+                  "toward": {"x": 576.838, "y": -155.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 241.114, "y": 206.925},
+                  "toward": {"x": 693.895, "y": 19.351}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 73, "width": 113, "x": 138.5, "y": 189.5},
+              "bounds": {"height": 70, "width": 110, "x": 140, "y": 191},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "ellipse",
+              "name": "ellipse",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 3
+            },
+            "text": null,
+            "width": 110,
+            "x": 140,
+            "y": 191
+          },
+          "style": "ellipse;whiteSpace=wrap;html=1;fillStyle=cross-hatch;fillColor=#d79b00;strokeColor=#d79b00;strokeWidth=3;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 270,
+            "y": 191
+          },
+          "id": "p-cross-hatch-3",
+          "kind": "vertex",
+          "label": "",
+          "order": 16,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#d79b00",
+            "fillStyle": "cross-hatch",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "hachureGap": 6,
+            "html": 1,
+            "perimeter": "rhombusPerimeter",
+            "shape": "rhombus",
+            "strokeColor": "#d79b00",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 270, "y": 191},
+            "perimeter": {
+              "name": "rhombusPerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 380, "y": 226}, "toward": {"x": 865, "y": 226}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 358.315, "y": 239.8},
+                  "toward": {"x": 823.895, "y": 432.649}
+                },
+                {
+                  "angle": 45,
+                  "point": {"x": 346.389, "y": 247.389},
+                  "toward": {"x": 706.838, "y": 607.838}
+                },
+                {
+                  "angle": 67.5,
+                  "point": {"x": 336.473, "y": 253.699},
+                  "toward": {"x": 531.649, "y": 724.895}
+                },
+                {"angle": 90, "point": {"x": 325, "y": 261}, "toward": {"x": 325, "y": 766}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 313.527, "y": 253.699},
+                  "toward": {"x": 118.351, "y": 724.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 303.611, "y": 247.389},
+                  "toward": {"x": -56.838, "y": 607.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 291.685, "y": 239.8},
+                  "toward": {"x": -173.895, "y": 432.649}
+                },
+                {"angle": 180, "point": {"x": 270, "y": 226}, "toward": {"x": -215, "y": 226}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 291.685, "y": 212.2},
+                  "toward": {"x": -173.895, "y": 19.351}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 303.611, "y": 204.611},
+                  "toward": {"x": -56.838, "y": -155.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 313.527, "y": 198.301},
+                  "toward": {"x": 118.351, "y": -272.895}
+                },
+                {"angle": 270, "point": {"x": 325, "y": 191}, "toward": {"x": 325, "y": -314}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 336.473, "y": 198.301},
+                  "toward": {"x": 531.649, "y": -272.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 346.389, "y": 204.611},
+                  "toward": {"x": 706.838, "y": -155.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 358.315, "y": 212.2},
+                  "toward": {"x": 823.895, "y": 19.351}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 269.5, "y": 190.5},
+              "bounds": {"height": 70, "width": 110, "x": 270, "y": 191},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "rhombus",
+              "name": "rhombus",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 270,
+            "y": 191
+          },
+          "style": "rhombus;whiteSpace=wrap;html=1;fillStyle=cross-hatch;fillColor=#d79b00;strokeColor=#d79b00;hachureGap=6;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 400,
+            "y": 191
+          },
+          "id": "p-cross-hatch-4",
+          "kind": "vertex",
+          "label": "",
+          "order": 17,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#d79b00",
+            "fillStyle": "cross-hatch",
+            "fillWeight": 3,
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "html": 1,
+            "perimeter": "rectanglePerimeter",
+            "rounded": 1,
+            "shape": "label",
+            "strokeColor": "#d79b00",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 400, "y": 191},
+            "perimeter": {
+              "name": "rectanglePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 510, "y": 226}, "toward": {"x": 995, "y": 226}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 510, "y": 248.782},
+                  "toward": {"x": 953.895, "y": 432.649}
+                },
+                {"angle": 45, "point": {"x": 490, "y": 261}, "toward": {"x": 836.838, "y": 607.838}},
+                {
+                  "angle": 67.5,
+                  "point": {"x": 469.497, "y": 261},
+                  "toward": {"x": 661.649, "y": 724.895}
+                },
+                {"angle": 90, "point": {"x": 455, "y": 261}, "toward": {"x": 455, "y": 766}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 440.503, "y": 261},
+                  "toward": {"x": 248.351, "y": 724.895}
+                },
+                {"angle": 135, "point": {"x": 420, "y": 261}, "toward": {"x": 73.162, "y": 607.838}},
+                {
+                  "angle": 157.5,
+                  "point": {"x": 400, "y": 248.782},
+                  "toward": {"x": -43.895, "y": 432.649}
+                },
+                {"angle": 180, "point": {"x": 400, "y": 226}, "toward": {"x": -85, "y": 226}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 400, "y": 203.218},
+                  "toward": {"x": -43.895, "y": 19.351}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 420, "y": 191},
+                  "toward": {"x": 73.162, "y": -155.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 440.503, "y": 191},
+                  "toward": {"x": 248.351, "y": -272.895}
+                },
+                {"angle": 270, "point": {"x": 455, "y": 191}, "toward": {"x": 455, "y": -314}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 469.497, "y": 191},
+                  "toward": {"x": 661.649, "y": -272.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 490, "y": 191},
+                  "toward": {"x": 836.838, "y": -155.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 510, "y": 203.218},
+                  "toward": {"x": 953.895, "y": 19.351}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 399.5, "y": 190.5},
+              "bounds": {"height": 70, "width": 110, "x": 400, "y": 191},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "label",
+              "name": "label",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 400,
+            "y": 191
+          },
+          "style": "rounded=1;whiteSpace=wrap;html=1;fillStyle=cross-hatch;fillColor=#d79b00;strokeColor=#d79b00;fillWeight=3;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 530,
+            "y": 191
+          },
+          "id": "p-cross-hatch-5",
+          "kind": "vertex",
+          "label": "",
+          "order": 18,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#d79b00",
+            "fillStyle": "cross-hatch",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "hachureAngle": 30,
+            "html": 1,
+            "perimeter": "hexagonPerimeter2",
+            "shape": "hexagon",
+            "strokeColor": "#d79b00",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 530, "y": 191},
+            "perimeter": {
+              "name": "hexagonPerimeter2",
+              "probes": [
+                {"angle": 0, "point": {"x": 640, "y": 226}, "toward": {"x": 1125, "y": 226}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 626.495, "y": 243.188},
+                  "toward": {"x": 1083.895, "y": 432.649}
+                },
+                {
+                  "angle": 45,
+                  "point": {"x": 615.8, "y": 256.8},
+                  "toward": {"x": 966.838, "y": 607.838}
+                },
+                {
+                  "angle": 67.5,
+                  "point": {"x": 599.497, "y": 261},
+                  "toward": {"x": 791.649, "y": 724.895}
+                },
+                {"angle": 90, "point": {"x": 585, "y": 261}, "toward": {"x": 585, "y": 766}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 570.503, "y": 261},
+                  "toward": {"x": 378.351, "y": 724.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 554.2, "y": 256.8},
+                  "toward": {"x": 203.162, "y": 607.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 543.505, "y": 243.188},
+                  "toward": {"x": 86.105, "y": 432.649}
+                },
+                {"angle": 180, "point": {"x": 530, "y": 226}, "toward": {"x": 45, "y": 226}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 543.505, "y": 208.812},
+                  "toward": {"x": 86.105, "y": 19.351}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 554.2, "y": 195.2},
+                  "toward": {"x": 203.162, "y": -155.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 570.503, "y": 191},
+                  "toward": {"x": 378.351, "y": -272.895}
+                },
+                {"angle": 270, "point": {"x": 585, "y": 191}, "toward": {"x": 585, "y": -314}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 599.497, "y": 191},
+                  "toward": {"x": 791.649, "y": -272.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 615.8, "y": 195.2},
+                  "toward": {"x": 966.838, "y": -155.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 626.495, "y": 208.812},
+                  "toward": {"x": 1083.895, "y": 19.351}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 529.5, "y": 190.5},
+              "bounds": {"height": 70, "width": 110, "x": 530, "y": 191},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "hexagon",
+              "name": "hexagon",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 530,
+            "y": 191
+          },
+          "style": "shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fillStyle=cross-hatch;fillColor=#d79b00;strokeColor=#d79b00;hachureAngle=30;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 660,
+            "y": 191
+          },
+          "id": "p-cross-hatch-6",
+          "kind": "vertex",
+          "label": "",
+          "order": 19,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#d79b00",
+            "fillStyle": "cross-hatch",
+            "fillWeight": 1,
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "hachureAngle": -20,
+            "hachureGap": 12,
+            "html": 1,
+            "perimeter": "rectanglePerimeter",
+            "shape": "cylinder3",
+            "strokeColor": "#d79b00",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 660, "y": 191},
+            "perimeter": {
+              "name": "rectanglePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 770, "y": 226}, "toward": {"x": 1255, "y": 226}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 770, "y": 248.782},
+                  "toward": {"x": 1213.895, "y": 432.649}
+                },
+                {
+                  "angle": 45,
+                  "point": {"x": 750, "y": 261},
+                  "toward": {"x": 1096.838, "y": 607.838}
+                },
+                {
+                  "angle": 67.5,
+                  "point": {"x": 729.497, "y": 261},
+                  "toward": {"x": 921.649, "y": 724.895}
+                },
+                {"angle": 90, "point": {"x": 715, "y": 261}, "toward": {"x": 715, "y": 766}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 700.503, "y": 261},
+                  "toward": {"x": 508.351, "y": 724.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 680, "y": 261},
+                  "toward": {"x": 333.162, "y": 607.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 660, "y": 248.782},
+                  "toward": {"x": 216.105, "y": 432.649}
+                },
+                {"angle": 180, "point": {"x": 660, "y": 226}, "toward": {"x": 175, "y": 226}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 660, "y": 203.218},
+                  "toward": {"x": 216.105, "y": 19.351}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 680, "y": 191},
+                  "toward": {"x": 333.162, "y": -155.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 700.503, "y": 191},
+                  "toward": {"x": 508.351, "y": -272.895}
+                },
+                {"angle": 270, "point": {"x": 715, "y": 191}, "toward": {"x": 715, "y": -314}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 729.497, "y": 191},
+                  "toward": {"x": 921.649, "y": -272.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 750, "y": 191},
+                  "toward": {"x": 1096.838, "y": -155.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 770, "y": 203.218},
+                  "toward": {"x": 1213.895, "y": 19.351}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 659.5, "y": 190.5},
+              "bounds": {"height": 70, "width": 110, "x": 660, "y": 191},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "cylinder3",
+              "name": "cylinder3",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 660,
+            "y": 191
+          },
+          "style": "shape=cylinder3;whiteSpace=wrap;html=1;fillStyle=cross-hatch;fillColor=#d79b00;strokeColor=#d79b00;hachureGap=12;fillWeight=1;hachureAngle=-20;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 10,
+            "y": 281
+          },
+          "id": "p-dashed-1",
+          "kind": "vertex",
+          "label": "",
+          "order": 20,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#b85450",
+            "fillStyle": "dashed",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "html": 1,
+            "perimeter": "rectanglePerimeter",
+            "shape": "label",
+            "strokeColor": "#b85450",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 10, "y": 281},
+            "perimeter": {
+              "name": "rectanglePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 120, "y": 316}, "toward": {"x": 605, "y": 316}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 120, "y": 338.782},
+                  "toward": {"x": 563.895, "y": 522.649}
+                },
+                {"angle": 45, "point": {"x": 100, "y": 351}, "toward": {"x": 446.838, "y": 697.838}},
+                {
+                  "angle": 67.5,
+                  "point": {"x": 79.497, "y": 351},
+                  "toward": {"x": 271.649, "y": 814.895}
+                },
+                {"angle": 90, "point": {"x": 65, "y": 351}, "toward": {"x": 65, "y": 856}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 50.503, "y": 351},
+                  "toward": {"x": -141.649, "y": 814.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 30, "y": 351},
+                  "toward": {"x": -316.838, "y": 697.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 10, "y": 338.782},
+                  "toward": {"x": -433.895, "y": 522.649}
+                },
+                {"angle": 180, "point": {"x": 10, "y": 316}, "toward": {"x": -475, "y": 316}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 10, "y": 293.218},
+                  "toward": {"x": -433.895, "y": 109.351}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 30, "y": 281},
+                  "toward": {"x": -316.838, "y": -65.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 50.503, "y": 281},
+                  "toward": {"x": -141.649, "y": -182.895}
+                },
+                {"angle": 270, "point": {"x": 65, "y": 281}, "toward": {"x": 65, "y": -224}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 79.497, "y": 281},
+                  "toward": {"x": 271.649, "y": -182.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 100, "y": 281},
+                  "toward": {"x": 446.838, "y": -65.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 120, "y": 293.218},
+                  "toward": {"x": 563.895, "y": 109.351}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 9.5, "y": 280.5},
+              "bounds": {"height": 70, "width": 110, "x": 10, "y": 281},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "label",
+              "name": "label",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 10,
+            "y": 281
+          },
+          "style": "whiteSpace=wrap;html=1;fillStyle=dashed;fillColor=#b85450;strokeColor=#b85450;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 140,
+            "y": 281
+          },
+          "id": "p-dashed-2",
+          "kind": "vertex",
+          "label": "",
+          "order": 21,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#b85450",
+            "fillStyle": "dashed",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "html": 1,
+            "perimeter": "ellipsePerimeter",
+            "shape": "ellipse",
+            "strokeColor": "#b85450",
+            "strokeWidth": 3,
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 140, "y": 281},
+            "perimeter": {
+              "name": "ellipsePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 250, "y": 316}, "toward": {"x": 735, "y": 316}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 241.114, "y": 335.075},
+                  "toward": {"x": 693.895, "y": 522.649}
+                },
+                {
+                  "angle": 45,
+                  "point": {"x": 224.528, "y": 345.528},
+                  "toward": {"x": 576.838, "y": 697.838}
+                },
+                {
+                  "angle": 67.5,
+                  "point": {"x": 209.001, "y": 349.847},
+                  "toward": {"x": 401.649, "y": 814.895}
+                },
+                {"angle": 90, "point": {"x": 195, "y": 351}, "toward": {"x": 195, "y": 856}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 180.999, "y": 349.847},
+                  "toward": {"x": -11.649, "y": 814.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 165.472, "y": 345.528},
+                  "toward": {"x": -186.838, "y": 697.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 148.886, "y": 335.075},
+                  "toward": {"x": -303.895, "y": 522.649}
+                },
+                {"angle": 180, "point": {"x": 140, "y": 316}, "toward": {"x": -345, "y": 316}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 148.886, "y": 296.925},
+                  "toward": {"x": -303.895, "y": 109.351}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 165.472, "y": 286.472},
+                  "toward": {"x": -186.838, "y": -65.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 180.999, "y": 282.153},
+                  "toward": {"x": -11.649, "y": -182.895}
+                },
+                {"angle": 270, "point": {"x": 195, "y": 281}, "toward": {"x": 195, "y": -224}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 209.001, "y": 282.153},
+                  "toward": {"x": 401.649, "y": -182.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 224.528, "y": 286.472},
+                  "toward": {"x": 576.838, "y": -65.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 241.114, "y": 296.925},
+                  "toward": {"x": 693.895, "y": 109.351}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 73, "width": 113, "x": 138.5, "y": 279.5},
+              "bounds": {"height": 70, "width": 110, "x": 140, "y": 281},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "ellipse",
+              "name": "ellipse",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 3
+            },
+            "text": null,
+            "width": 110,
+            "x": 140,
+            "y": 281
+          },
+          "style": "ellipse;whiteSpace=wrap;html=1;fillStyle=dashed;fillColor=#b85450;strokeColor=#b85450;strokeWidth=3;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 270,
+            "y": 281
+          },
+          "id": "p-dashed-3",
+          "kind": "vertex",
+          "label": "",
+          "order": 22,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#b85450",
+            "fillStyle": "dashed",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "hachureGap": 6,
+            "html": 1,
+            "perimeter": "rhombusPerimeter",
+            "shape": "rhombus",
+            "strokeColor": "#b85450",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 270, "y": 281},
+            "perimeter": {
+              "name": "rhombusPerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 380, "y": 316}, "toward": {"x": 865, "y": 316}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 358.315, "y": 329.8},
+                  "toward": {"x": 823.895, "y": 522.649}
+                },
+                {
+                  "angle": 45,
+                  "point": {"x": 346.389, "y": 337.389},
+                  "toward": {"x": 706.838, "y": 697.838}
+                },
+                {
+                  "angle": 67.5,
+                  "point": {"x": 336.473, "y": 343.699},
+                  "toward": {"x": 531.649, "y": 814.895}
+                },
+                {"angle": 90, "point": {"x": 325, "y": 351}, "toward": {"x": 325, "y": 856}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 313.527, "y": 343.699},
+                  "toward": {"x": 118.351, "y": 814.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 303.611, "y": 337.389},
+                  "toward": {"x": -56.838, "y": 697.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 291.685, "y": 329.8},
+                  "toward": {"x": -173.895, "y": 522.649}
+                },
+                {"angle": 180, "point": {"x": 270, "y": 316}, "toward": {"x": -215, "y": 316}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 291.685, "y": 302.2},
+                  "toward": {"x": -173.895, "y": 109.351}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 303.611, "y": 294.611},
+                  "toward": {"x": -56.838, "y": -65.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 313.527, "y": 288.301},
+                  "toward": {"x": 118.351, "y": -182.895}
+                },
+                {"angle": 270, "point": {"x": 325, "y": 281}, "toward": {"x": 325, "y": -224}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 336.473, "y": 288.301},
+                  "toward": {"x": 531.649, "y": -182.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 346.389, "y": 294.611},
+                  "toward": {"x": 706.838, "y": -65.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 358.315, "y": 302.2},
+                  "toward": {"x": 823.895, "y": 109.351}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 269.5, "y": 280.5},
+              "bounds": {"height": 70, "width": 110, "x": 270, "y": 281},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "rhombus",
+              "name": "rhombus",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 270,
+            "y": 281
+          },
+          "style": "rhombus;whiteSpace=wrap;html=1;fillStyle=dashed;fillColor=#b85450;strokeColor=#b85450;hachureGap=6;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 400,
+            "y": 281
+          },
+          "id": "p-dashed-4",
+          "kind": "vertex",
+          "label": "",
+          "order": 23,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#b85450",
+            "fillStyle": "dashed",
+            "fillWeight": 3,
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "html": 1,
+            "perimeter": "rectanglePerimeter",
+            "rounded": 1,
+            "shape": "label",
+            "strokeColor": "#b85450",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 400, "y": 281},
+            "perimeter": {
+              "name": "rectanglePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 510, "y": 316}, "toward": {"x": 995, "y": 316}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 510, "y": 338.782},
+                  "toward": {"x": 953.895, "y": 522.649}
+                },
+                {"angle": 45, "point": {"x": 490, "y": 351}, "toward": {"x": 836.838, "y": 697.838}},
+                {
+                  "angle": 67.5,
+                  "point": {"x": 469.497, "y": 351},
+                  "toward": {"x": 661.649, "y": 814.895}
+                },
+                {"angle": 90, "point": {"x": 455, "y": 351}, "toward": {"x": 455, "y": 856}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 440.503, "y": 351},
+                  "toward": {"x": 248.351, "y": 814.895}
+                },
+                {"angle": 135, "point": {"x": 420, "y": 351}, "toward": {"x": 73.162, "y": 697.838}},
+                {
+                  "angle": 157.5,
+                  "point": {"x": 400, "y": 338.782},
+                  "toward": {"x": -43.895, "y": 522.649}
+                },
+                {"angle": 180, "point": {"x": 400, "y": 316}, "toward": {"x": -85, "y": 316}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 400, "y": 293.218},
+                  "toward": {"x": -43.895, "y": 109.351}
+                },
+                {"angle": 225, "point": {"x": 420, "y": 281}, "toward": {"x": 73.162, "y": -65.838}},
+                {
+                  "angle": 247.5,
+                  "point": {"x": 440.503, "y": 281},
+                  "toward": {"x": 248.351, "y": -182.895}
+                },
+                {"angle": 270, "point": {"x": 455, "y": 281}, "toward": {"x": 455, "y": -224}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 469.497, "y": 281},
+                  "toward": {"x": 661.649, "y": -182.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 490, "y": 281},
+                  "toward": {"x": 836.838, "y": -65.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 510, "y": 293.218},
+                  "toward": {"x": 953.895, "y": 109.351}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 399.5, "y": 280.5},
+              "bounds": {"height": 70, "width": 110, "x": 400, "y": 281},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "label",
+              "name": "label",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 400,
+            "y": 281
+          },
+          "style": "rounded=1;whiteSpace=wrap;html=1;fillStyle=dashed;fillColor=#b85450;strokeColor=#b85450;fillWeight=3;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 530,
+            "y": 281
+          },
+          "id": "p-dashed-5",
+          "kind": "vertex",
+          "label": "",
+          "order": 24,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#b85450",
+            "fillStyle": "dashed",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "hachureAngle": 30,
+            "html": 1,
+            "perimeter": "hexagonPerimeter2",
+            "shape": "hexagon",
+            "strokeColor": "#b85450",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 530, "y": 281},
+            "perimeter": {
+              "name": "hexagonPerimeter2",
+              "probes": [
+                {"angle": 0, "point": {"x": 640, "y": 316}, "toward": {"x": 1125, "y": 316}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 626.495, "y": 333.188},
+                  "toward": {"x": 1083.895, "y": 522.649}
+                },
+                {
+                  "angle": 45,
+                  "point": {"x": 615.8, "y": 346.8},
+                  "toward": {"x": 966.838, "y": 697.838}
+                },
+                {
+                  "angle": 67.5,
+                  "point": {"x": 599.497, "y": 351},
+                  "toward": {"x": 791.649, "y": 814.895}
+                },
+                {"angle": 90, "point": {"x": 585, "y": 351}, "toward": {"x": 585, "y": 856}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 570.503, "y": 351},
+                  "toward": {"x": 378.351, "y": 814.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 554.2, "y": 346.8},
+                  "toward": {"x": 203.162, "y": 697.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 543.505, "y": 333.188},
+                  "toward": {"x": 86.105, "y": 522.649}
+                },
+                {"angle": 180, "point": {"x": 530, "y": 316}, "toward": {"x": 45, "y": 316}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 543.505, "y": 298.812},
+                  "toward": {"x": 86.105, "y": 109.351}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 554.2, "y": 285.2},
+                  "toward": {"x": 203.162, "y": -65.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 570.503, "y": 281},
+                  "toward": {"x": 378.351, "y": -182.895}
+                },
+                {"angle": 270, "point": {"x": 585, "y": 281}, "toward": {"x": 585, "y": -224}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 599.497, "y": 281},
+                  "toward": {"x": 791.649, "y": -182.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 615.8, "y": 285.2},
+                  "toward": {"x": 966.838, "y": -65.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 626.495, "y": 298.812},
+                  "toward": {"x": 1083.895, "y": 109.351}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 529.5, "y": 280.5},
+              "bounds": {"height": 70, "width": 110, "x": 530, "y": 281},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "hexagon",
+              "name": "hexagon",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 530,
+            "y": 281
+          },
+          "style": "shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fillStyle=dashed;fillColor=#b85450;strokeColor=#b85450;hachureAngle=30;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 660,
+            "y": 281
+          },
+          "id": "p-dashed-6",
+          "kind": "vertex",
+          "label": "",
+          "order": 25,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#b85450",
+            "fillStyle": "dashed",
+            "fillWeight": 1,
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "hachureAngle": -20,
+            "hachureGap": 12,
+            "html": 1,
+            "perimeter": "rectanglePerimeter",
+            "shape": "cylinder3",
+            "strokeColor": "#b85450",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 660, "y": 281},
+            "perimeter": {
+              "name": "rectanglePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 770, "y": 316}, "toward": {"x": 1255, "y": 316}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 770, "y": 338.782},
+                  "toward": {"x": 1213.895, "y": 522.649}
+                },
+                {
+                  "angle": 45,
+                  "point": {"x": 750, "y": 351},
+                  "toward": {"x": 1096.838, "y": 697.838}
+                },
+                {
+                  "angle": 67.5,
+                  "point": {"x": 729.497, "y": 351},
+                  "toward": {"x": 921.649, "y": 814.895}
+                },
+                {"angle": 90, "point": {"x": 715, "y": 351}, "toward": {"x": 715, "y": 856}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 700.503, "y": 351},
+                  "toward": {"x": 508.351, "y": 814.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 680, "y": 351},
+                  "toward": {"x": 333.162, "y": 697.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 660, "y": 338.782},
+                  "toward": {"x": 216.105, "y": 522.649}
+                },
+                {"angle": 180, "point": {"x": 660, "y": 316}, "toward": {"x": 175, "y": 316}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 660, "y": 293.218},
+                  "toward": {"x": 216.105, "y": 109.351}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 680, "y": 281},
+                  "toward": {"x": 333.162, "y": -65.838}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 700.503, "y": 281},
+                  "toward": {"x": 508.351, "y": -182.895}
+                },
+                {"angle": 270, "point": {"x": 715, "y": 281}, "toward": {"x": 715, "y": -224}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 729.497, "y": 281},
+                  "toward": {"x": 921.649, "y": -182.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 750, "y": 281},
+                  "toward": {"x": 1096.838, "y": -65.838}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 770, "y": 293.218},
+                  "toward": {"x": 1213.895, "y": 109.351}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 659.5, "y": 280.5},
+              "bounds": {"height": 70, "width": 110, "x": 660, "y": 281},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "cylinder3",
+              "name": "cylinder3",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 660,
+            "y": 281
+          },
+          "style": "shape=cylinder3;whiteSpace=wrap;html=1;fillStyle=dashed;fillColor=#b85450;strokeColor=#b85450;hachureGap=12;fillWeight=1;hachureAngle=-20;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 10,
+            "y": 371
+          },
+          "id": "p-zigzag-line-1",
+          "kind": "vertex",
+          "label": "",
+          "order": 26,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#9673a6",
+            "fillStyle": "zigzag-line",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "html": 1,
+            "perimeter": "rectanglePerimeter",
+            "shape": "label",
+            "strokeColor": "#9673a6",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 10, "y": 371},
+            "perimeter": {
+              "name": "rectanglePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 120, "y": 406}, "toward": {"x": 605, "y": 406}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 120, "y": 428.782},
+                  "toward": {"x": 563.895, "y": 612.649}
+                },
+                {"angle": 45, "point": {"x": 100, "y": 441}, "toward": {"x": 446.838, "y": 787.838}},
+                {
+                  "angle": 67.5,
+                  "point": {"x": 79.497, "y": 441},
+                  "toward": {"x": 271.649, "y": 904.895}
+                },
+                {"angle": 90, "point": {"x": 65, "y": 441}, "toward": {"x": 65, "y": 946}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 50.503, "y": 441},
+                  "toward": {"x": -141.649, "y": 904.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 30, "y": 441},
+                  "toward": {"x": -316.838, "y": 787.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 10, "y": 428.782},
+                  "toward": {"x": -433.895, "y": 612.649}
+                },
+                {"angle": 180, "point": {"x": 10, "y": 406}, "toward": {"x": -475, "y": 406}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 10, "y": 383.218},
+                  "toward": {"x": -433.895, "y": 199.351}
+                },
+                {"angle": 225, "point": {"x": 30, "y": 371}, "toward": {"x": -316.838, "y": 24.162}},
+                {
+                  "angle": 247.5,
+                  "point": {"x": 50.503, "y": 371},
+                  "toward": {"x": -141.649, "y": -92.895}
+                },
+                {"angle": 270, "point": {"x": 65, "y": 371}, "toward": {"x": 65, "y": -134}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 79.497, "y": 371},
+                  "toward": {"x": 271.649, "y": -92.895}
+                },
+                {"angle": 315, "point": {"x": 100, "y": 371}, "toward": {"x": 446.838, "y": 24.162}},
+                {
+                  "angle": 337.5,
+                  "point": {"x": 120, "y": 383.218},
+                  "toward": {"x": 563.895, "y": 199.351}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 9.5, "y": 370.5},
+              "bounds": {"height": 70, "width": 110, "x": 10, "y": 371},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "label",
+              "name": "label",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 10,
+            "y": 371
+          },
+          "style": "whiteSpace=wrap;html=1;fillStyle=zigzag-line;fillColor=#9673a6;strokeColor=#9673a6;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 140,
+            "y": 371
+          },
+          "id": "p-zigzag-line-2",
+          "kind": "vertex",
+          "label": "",
+          "order": 27,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#9673a6",
+            "fillStyle": "zigzag-line",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "html": 1,
+            "perimeter": "ellipsePerimeter",
+            "shape": "ellipse",
+            "strokeColor": "#9673a6",
+            "strokeWidth": 3,
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 140, "y": 371},
+            "perimeter": {
+              "name": "ellipsePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 250, "y": 406}, "toward": {"x": 735, "y": 406}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 241.114, "y": 425.075},
+                  "toward": {"x": 693.895, "y": 612.649}
+                },
+                {
+                  "angle": 45,
+                  "point": {"x": 224.528, "y": 435.528},
+                  "toward": {"x": 576.838, "y": 787.838}
+                },
+                {
+                  "angle": 67.5,
+                  "point": {"x": 209.001, "y": 439.847},
+                  "toward": {"x": 401.649, "y": 904.895}
+                },
+                {"angle": 90, "point": {"x": 195, "y": 441}, "toward": {"x": 195, "y": 946}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 180.999, "y": 439.847},
+                  "toward": {"x": -11.649, "y": 904.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 165.472, "y": 435.528},
+                  "toward": {"x": -186.838, "y": 787.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 148.886, "y": 425.075},
+                  "toward": {"x": -303.895, "y": 612.649}
+                },
+                {"angle": 180, "point": {"x": 140, "y": 406}, "toward": {"x": -345, "y": 406}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 148.886, "y": 386.925},
+                  "toward": {"x": -303.895, "y": 199.351}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 165.472, "y": 376.472},
+                  "toward": {"x": -186.838, "y": 24.162}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 180.999, "y": 372.153},
+                  "toward": {"x": -11.649, "y": -92.895}
+                },
+                {"angle": 270, "point": {"x": 195, "y": 371}, "toward": {"x": 195, "y": -134}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 209.001, "y": 372.153},
+                  "toward": {"x": 401.649, "y": -92.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 224.528, "y": 376.472},
+                  "toward": {"x": 576.838, "y": 24.162}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 241.114, "y": 386.925},
+                  "toward": {"x": 693.895, "y": 199.351}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 73, "width": 113, "x": 138.5, "y": 369.5},
+              "bounds": {"height": 70, "width": 110, "x": 140, "y": 371},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "ellipse",
+              "name": "ellipse",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 3
+            },
+            "text": null,
+            "width": 110,
+            "x": 140,
+            "y": 371
+          },
+          "style": "ellipse;whiteSpace=wrap;html=1;fillStyle=zigzag-line;fillColor=#9673a6;strokeColor=#9673a6;strokeWidth=3;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 270,
+            "y": 371
+          },
+          "id": "p-zigzag-line-3",
+          "kind": "vertex",
+          "label": "",
+          "order": 28,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#9673a6",
+            "fillStyle": "zigzag-line",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "hachureGap": 6,
+            "html": 1,
+            "perimeter": "rhombusPerimeter",
+            "shape": "rhombus",
+            "strokeColor": "#9673a6",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 270, "y": 371},
+            "perimeter": {
+              "name": "rhombusPerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 380, "y": 406}, "toward": {"x": 865, "y": 406}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 358.315, "y": 419.8},
+                  "toward": {"x": 823.895, "y": 612.649}
+                },
+                {
+                  "angle": 45,
+                  "point": {"x": 346.389, "y": 427.389},
+                  "toward": {"x": 706.838, "y": 787.838}
+                },
+                {
+                  "angle": 67.5,
+                  "point": {"x": 336.473, "y": 433.699},
+                  "toward": {"x": 531.649, "y": 904.895}
+                },
+                {"angle": 90, "point": {"x": 325, "y": 441}, "toward": {"x": 325, "y": 946}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 313.527, "y": 433.699},
+                  "toward": {"x": 118.351, "y": 904.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 303.611, "y": 427.389},
+                  "toward": {"x": -56.838, "y": 787.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 291.685, "y": 419.8},
+                  "toward": {"x": -173.895, "y": 612.649}
+                },
+                {"angle": 180, "point": {"x": 270, "y": 406}, "toward": {"x": -215, "y": 406}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 291.685, "y": 392.2},
+                  "toward": {"x": -173.895, "y": 199.351}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 303.611, "y": 384.611},
+                  "toward": {"x": -56.838, "y": 24.162}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 313.527, "y": 378.301},
+                  "toward": {"x": 118.351, "y": -92.895}
+                },
+                {"angle": 270, "point": {"x": 325, "y": 371}, "toward": {"x": 325, "y": -134}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 336.473, "y": 378.301},
+                  "toward": {"x": 531.649, "y": -92.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 346.389, "y": 384.611},
+                  "toward": {"x": 706.838, "y": 24.162}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 358.315, "y": 392.2},
+                  "toward": {"x": 823.895, "y": 199.351}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 269.5, "y": 370.5},
+              "bounds": {"height": 70, "width": 110, "x": 270, "y": 371},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "rhombus",
+              "name": "rhombus",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 270,
+            "y": 371
+          },
+          "style": "rhombus;whiteSpace=wrap;html=1;fillStyle=zigzag-line;fillColor=#9673a6;strokeColor=#9673a6;hachureGap=6;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 400,
+            "y": 371
+          },
+          "id": "p-zigzag-line-4",
+          "kind": "vertex",
+          "label": "",
+          "order": 29,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#9673a6",
+            "fillStyle": "zigzag-line",
+            "fillWeight": 3,
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "html": 1,
+            "perimeter": "rectanglePerimeter",
+            "rounded": 1,
+            "shape": "label",
+            "strokeColor": "#9673a6",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 400, "y": 371},
+            "perimeter": {
+              "name": "rectanglePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 510, "y": 406}, "toward": {"x": 995, "y": 406}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 510, "y": 428.782},
+                  "toward": {"x": 953.895, "y": 612.649}
+                },
+                {"angle": 45, "point": {"x": 490, "y": 441}, "toward": {"x": 836.838, "y": 787.838}},
+                {
+                  "angle": 67.5,
+                  "point": {"x": 469.497, "y": 441},
+                  "toward": {"x": 661.649, "y": 904.895}
+                },
+                {"angle": 90, "point": {"x": 455, "y": 441}, "toward": {"x": 455, "y": 946}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 440.503, "y": 441},
+                  "toward": {"x": 248.351, "y": 904.895}
+                },
+                {"angle": 135, "point": {"x": 420, "y": 441}, "toward": {"x": 73.162, "y": 787.838}},
+                {
+                  "angle": 157.5,
+                  "point": {"x": 400, "y": 428.782},
+                  "toward": {"x": -43.895, "y": 612.649}
+                },
+                {"angle": 180, "point": {"x": 400, "y": 406}, "toward": {"x": -85, "y": 406}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 400, "y": 383.218},
+                  "toward": {"x": -43.895, "y": 199.351}
+                },
+                {"angle": 225, "point": {"x": 420, "y": 371}, "toward": {"x": 73.162, "y": 24.162}},
+                {
+                  "angle": 247.5,
+                  "point": {"x": 440.503, "y": 371},
+                  "toward": {"x": 248.351, "y": -92.895}
+                },
+                {"angle": 270, "point": {"x": 455, "y": 371}, "toward": {"x": 455, "y": -134}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 469.497, "y": 371},
+                  "toward": {"x": 661.649, "y": -92.895}
+                },
+                {"angle": 315, "point": {"x": 490, "y": 371}, "toward": {"x": 836.838, "y": 24.162}},
+                {
+                  "angle": 337.5,
+                  "point": {"x": 510, "y": 383.218},
+                  "toward": {"x": 953.895, "y": 199.351}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 399.5, "y": 370.5},
+              "bounds": {"height": 70, "width": 110, "x": 400, "y": 371},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "label",
+              "name": "label",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 400,
+            "y": 371
+          },
+          "style": "rounded=1;whiteSpace=wrap;html=1;fillStyle=zigzag-line;fillColor=#9673a6;strokeColor=#9673a6;fillWeight=3;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 530,
+            "y": 371
+          },
+          "id": "p-zigzag-line-5",
+          "kind": "vertex",
+          "label": "",
+          "order": 30,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#9673a6",
+            "fillStyle": "zigzag-line",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "hachureAngle": 30,
+            "html": 1,
+            "perimeter": "hexagonPerimeter2",
+            "shape": "hexagon",
+            "strokeColor": "#9673a6",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 530, "y": 371},
+            "perimeter": {
+              "name": "hexagonPerimeter2",
+              "probes": [
+                {"angle": 0, "point": {"x": 640, "y": 406}, "toward": {"x": 1125, "y": 406}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 626.495, "y": 423.188},
+                  "toward": {"x": 1083.895, "y": 612.649}
+                },
+                {
+                  "angle": 45,
+                  "point": {"x": 615.8, "y": 436.8},
+                  "toward": {"x": 966.838, "y": 787.838}
+                },
+                {
+                  "angle": 67.5,
+                  "point": {"x": 599.497, "y": 441},
+                  "toward": {"x": 791.649, "y": 904.895}
+                },
+                {"angle": 90, "point": {"x": 585, "y": 441}, "toward": {"x": 585, "y": 946}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 570.503, "y": 441},
+                  "toward": {"x": 378.351, "y": 904.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 554.2, "y": 436.8},
+                  "toward": {"x": 203.162, "y": 787.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 543.505, "y": 423.188},
+                  "toward": {"x": 86.105, "y": 612.649}
+                },
+                {"angle": 180, "point": {"x": 530, "y": 406}, "toward": {"x": 45, "y": 406}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 543.505, "y": 388.812},
+                  "toward": {"x": 86.105, "y": 199.351}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 554.2, "y": 375.2},
+                  "toward": {"x": 203.162, "y": 24.162}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 570.503, "y": 371},
+                  "toward": {"x": 378.351, "y": -92.895}
+                },
+                {"angle": 270, "point": {"x": 585, "y": 371}, "toward": {"x": 585, "y": -134}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 599.497, "y": 371},
+                  "toward": {"x": 791.649, "y": -92.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 615.8, "y": 375.2},
+                  "toward": {"x": 966.838, "y": 24.162}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 626.495, "y": 388.812},
+                  "toward": {"x": 1083.895, "y": 199.351}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 529.5, "y": 370.5},
+              "bounds": {"height": 70, "width": 110, "x": 530, "y": 371},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "hexagon",
+              "name": "hexagon",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 530,
+            "y": 371
+          },
+          "style": "shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fillStyle=zigzag-line;fillColor=#9673a6;strokeColor=#9673a6;hachureAngle=30;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 70,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 110,
+            "x": 660,
+            "y": 371
+          },
+          "id": "p-zigzag-line-6",
+          "kind": "vertex",
+          "label": "",
+          "order": 31,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#9673a6",
+            "fillStyle": "zigzag-line",
+            "fillWeight": 1,
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "hachureAngle": -20,
+            "hachureGap": 12,
+            "html": 1,
+            "perimeter": "rectanglePerimeter",
+            "shape": "cylinder3",
+            "strokeColor": "#9673a6",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 70,
+            "origin": {"x": 660, "y": 371},
+            "perimeter": {
+              "name": "rectanglePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 770, "y": 406}, "toward": {"x": 1255, "y": 406}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 770, "y": 428.782},
+                  "toward": {"x": 1213.895, "y": 612.649}
+                },
+                {
+                  "angle": 45,
+                  "point": {"x": 750, "y": 441},
+                  "toward": {"x": 1096.838, "y": 787.838}
+                },
+                {
+                  "angle": 67.5,
+                  "point": {"x": 729.497, "y": 441},
+                  "toward": {"x": 921.649, "y": 904.895}
+                },
+                {"angle": 90, "point": {"x": 715, "y": 441}, "toward": {"x": 715, "y": 946}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 700.503, "y": 441},
+                  "toward": {"x": 508.351, "y": 904.895}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 680, "y": 441},
+                  "toward": {"x": 333.162, "y": 787.838}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 660, "y": 428.782},
+                  "toward": {"x": 216.105, "y": 612.649}
+                },
+                {"angle": 180, "point": {"x": 660, "y": 406}, "toward": {"x": 175, "y": 406}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 660, "y": 383.218},
+                  "toward": {"x": 216.105, "y": 199.351}
+                },
+                {"angle": 225, "point": {"x": 680, "y": 371}, "toward": {"x": 333.162, "y": 24.162}},
+                {
+                  "angle": 247.5,
+                  "point": {"x": 700.503, "y": 371},
+                  "toward": {"x": 508.351, "y": -92.895}
+                },
+                {"angle": 270, "point": {"x": 715, "y": 371}, "toward": {"x": 715, "y": -134}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 729.497, "y": 371},
+                  "toward": {"x": 921.649, "y": -92.895}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 750, "y": 371},
+                  "toward": {"x": 1096.838, "y": 24.162}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 770, "y": 383.218},
+                  "toward": {"x": 1213.895, "y": 199.351}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 71, "width": 111, "x": 659.5, "y": 370.5},
+              "bounds": {"height": 70, "width": 110, "x": 660, "y": 371},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "cylinder3",
+              "name": "cylinder3",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 110,
+            "x": 660,
+            "y": 371
+          },
+          "style": "shape=cylinder3;whiteSpace=wrap;html=1;fillStyle=zigzag-line;fillColor=#9673a6;strokeColor=#9673a6;hachureGap=12;fillWeight=1;hachureAngle=-20;",
+          "visible": true
+        }
+      ],
+      "graphBounds": {"height": 433, "width": 761, "x": 9.5, "y": 9.5},
+      "id": "page-patterns",
+      "index": 0,
+      "model": {
+        "arrows": "1",
+        "connect": "1",
+        "dx": "0",
+        "dy": "0",
+        "fold": "1",
+        "grid": "1",
+        "gridSize": "10",
+        "guides": "1",
+        "math": "0",
+        "page": "1",
+        "pageHeight": "1100",
+        "pageScale": "1",
+        "pageWidth": "850",
+        "shadow": "0",
+        "tooltips": "1"
+      },
+      "name": "Fill patterns",
+      "png": {
+        "background": "#ffffff",
+        "file": "styles-fill-patterns.0.png",
+        "height": 908,
+        "scale": 2,
+        "width": 1564
+      },
+      "svg": {
+        "background": null,
+        "border": 10,
+        "file": "styles-fill-patterns.0.svg",
+        "height": 454,
+        "scale": 1,
+        "translate": {"x": 0, "y": 0},
+        "width": 782
+      }
+    }
+  ]
+}

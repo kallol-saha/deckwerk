@@ -26,6 +26,9 @@ export interface CanvasState {
   gradientAlpha: number;
   gradientDirection: string | null;
   fillStyle: string | null;
+  hachureGap: StyleNumber;
+  fillWeight: StyleNumber;
+  hachureAngle: StyleNumber;
   strokeColor: string | null;
   strokeWidth: number;
   dashed: boolean;
@@ -44,12 +47,47 @@ export interface CanvasState {
   rotationCy: number;
   /** SVG transform for rotation and flips, as mxSvgCanvas2D keeps it. */
   transform: string;
+  fontColor: string | null;
+  fontSize: number;
+  fontFamily: string;
+  fontStyle: number;
 }
+
+/** A style value read as draw.io parses it (a number for numeric strings), or null. */
+export type StyleNumber = string | number | null;
+
+/** mxConstants.DEFAULT_FONTFAMILY, DEFAULT_FONTSIZE and LINE_HEIGHT. */
+export const DEFAULT_FONTFAMILY = 'Arial,Helvetica';
+export const DEFAULT_FONTSIZE = 11;
+const LINE_HEIGHT = 1.2;
 
 export const SHADOW_COLOR = '#000000';
 export const SHADOW_OPACITY = 0.25;
 export const SHADOW_OFFSET_X = 2;
 export const SHADOW_OFFSET_Y = 3;
+
+/**
+ * What replaces the path and paint calls of a canvas for hand-drawn styles
+ * (draw.io installs these as canvas methods; the original methods run
+ * while `passThrough` is set).
+ */
+export interface HandJiggle {
+  passThrough: boolean;
+  begin(): void;
+  end(): void;
+  moveTo(x: number, y: number): void;
+  lineTo(x: number, y: number): void;
+  quadTo(x1: number, y1: number, x2: number, y2: number): void;
+  curveTo(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number): void;
+  arcTo(rx: number, ry: number, angle: number, largeArcFlag: number, sweepFlag: number, x: number, y: number): void;
+  close(): void;
+  rect(x: number, y: number, w: number, h: number): void;
+  roundrect(x: number, y: number, w: number, h: number, dx: number, dy: number): void;
+  ellipse(x: number, y: number, w: number, h: number): void;
+  fill(): void;
+  stroke(): void;
+  fillAndStroke(): void;
+}
 
 interface PendingNode {
   tag: 'path' | 'rect' | 'ellipse';
@@ -158,7 +196,8 @@ export function arcToCurves(
 
 export class SvgCanvas {
   state: CanvasState;
-  private states: CanvasState[] = [];
+  /** The saved states (mxAbstractCanvas2D.states); stencils reset it after unbalanced saves. */
+  states: CanvasState[] = [];
   private path: Array<string | number> | null = null;
   private node: PendingNode | null = null;
   lastX = 0;
@@ -168,12 +207,28 @@ export class SvgCanvas {
   private groupOpen: string[] = [];
   private defs: string[] = [];
   private gradients = new Map<string, string>();
+  private patterns = new Map<string, string>();
+  /**
+   * mxSvgCanvas2D.viewTranslate: where the diagram's origin is in the
+   * painted coordinates' units (draw.io units), so fill patterns line up
+   * across cells; null anchors them at the canvas origin.
+   */
+  viewTranslate: { x: number; y: number } | null = null;
   private refCount = 0;
   /** Prefix for ids in `<defs>`, so several canvases can share a page. */
   readonly idPrefix: string;
-  /** mxSvgCanvas2D.minStrokeWidth. */
-  minStrokeWidth = 1;
+  /**
+   * mxSvgCanvas2D.minStrokeWidth: 0.1, as draw.io's Graph sets for every shape
+   * and export (cellRenderer.minSvgStrokeWidth), so thin strokes stay thin.
+   */
+  minStrokeWidth = 0.1;
   pointerEvents = false;
+  /**
+   * draw.io's canvas.handJiggle: while set and not passing through, the
+   * path and paint calls go to it (the sketch style redraws them with
+   * rough.js, see sketch.ts), which paints back through this canvas.
+   */
+  handJiggle: HandJiggle | null = null;
 
   constructor(options: { idPrefix?: string } = {}) {
     this.idPrefix = options.idPrefix ?? 'dg';
@@ -185,7 +240,7 @@ export class SvgCanvas {
       dx: 0, dy: 0, scale: 1,
       alpha: 1, fillAlpha: 1, strokeAlpha: 1,
       fillColor: null, gradientFillAlpha: 1, gradientColor: null, gradientAlpha: 1, gradientDirection: null,
-      fillStyle: null,
+      fillStyle: null, hachureGap: null, fillWeight: null, hachureAngle: null,
       strokeColor: null, strokeWidth: 1,
       dashed: false, dashPattern: '3 3', fixDash: false,
       lineCap: 'flat', lineJoin: 'miter', miterLimit: 10,
@@ -193,6 +248,7 @@ export class SvgCanvas {
       shadowDx: SHADOW_OFFSET_X, shadowDy: SHADOW_OFFSET_Y,
       rotation: 0, rotationCx: 0, rotationCy: 0,
       transform: '',
+      fontColor: '#000000', fontSize: DEFAULT_FONTSIZE, fontFamily: DEFAULT_FONTFAMILY, fontStyle: 0,
     };
   }
 
@@ -253,8 +309,15 @@ export class SvgCanvas {
     this.state.gradientColor = null;
   }
 
-  setFillStyle(value: string | null): void {
+  /**
+   * mxAbstractCanvas2D.setFillStyle: the fill style and the optional hachure
+   * gap, fill weight and hachure angle of the pattern fill styles.
+   */
+  setFillStyle(value: string | null, hachureGap?: StyleNumber, fillWeight?: StyleNumber, hachureAngle?: StyleNumber): void {
     this.state.fillStyle = value === 'none' ? null : value;
+    this.state.hachureGap = hachureGap ?? null;
+    this.state.fillWeight = fillWeight ?? null;
+    this.state.hachureAngle = hachureAngle ?? null;
   }
 
   setGradient(
@@ -283,6 +346,14 @@ export class SvgCanvas {
   setLineJoin(value: string): void { this.state.lineJoin = value; }
   setMiterLimit(value: number): void { this.state.miterLimit = value; }
 
+  setFontColor(value: string | null): void {
+    this.state.fontColor = value === 'none' ? null : value;
+  }
+
+  setFontSize(value: number | string): void { this.state.fontSize = parseFloat(String(value)); }
+  setFontFamily(value: string): void { this.state.fontFamily = value; }
+  setFontStyle(value: number | string | null): void { this.state.fontStyle = value == null ? 0 : Number(value); }
+
   setShadow(enabled: boolean): void { this.state.shadow = enabled; }
   setShadowColor(value: string | null): void { this.state.shadowColor = value === 'none' ? null : value; }
   setShadowAlpha(value: number): void { this.state.shadowAlpha = value; }
@@ -305,31 +376,77 @@ export class SvgCanvas {
     }
   }
 
+  /** The active hand jiggle (sketch=1), if it takes the path and paint calls now. */
+  private jiggle(): HandJiggle | null {
+    const j = this.handJiggle;
+    return j != null && !j.passThrough ? j : null;
+  }
+
   begin(): void {
+    const j = this.jiggle();
+    if (j != null) {
+      j.begin();
+      return;
+    }
     this.lastX = 0;
     this.lastY = 0;
     this.path = [];
     this.node = { tag: 'path', attrs: {} };
   }
 
-  moveTo(x: number, y: number): void { this.addOp('M', x, y); }
-  lineTo(x: number, y: number): void { this.addOp('L', x, y); }
-  quadTo(x1: number, y1: number, x2: number, y2: number): void { this.addOp('Q', x1, y1, x2, y2); }
+  moveTo(x: number, y: number): void {
+    const j = this.jiggle();
+    if (j != null) j.moveTo(x, y);
+    else this.addOp('M', x, y);
+  }
+
+  lineTo(x: number, y: number): void {
+    const j = this.jiggle();
+    if (j != null) j.lineTo(x, y);
+    else this.addOp('L', x, y);
+  }
+
+  quadTo(x1: number, y1: number, x2: number, y2: number): void {
+    const j = this.jiggle();
+    if (j != null) j.quadTo(x1, y1, x2, y2);
+    else this.addOp('Q', x1, y1, x2, y2);
+  }
+
   curveTo(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number): void {
-    this.addOp('C', x1, y1, x2, y2, x3, y3);
+    const j = this.jiggle();
+    if (j != null) j.curveTo(x1, y1, x2, y2, x3, y3);
+    else this.addOp('C', x1, y1, x2, y2, x3, y3);
   }
 
   arcTo(rx: number, ry: number, angle: number, largeArcFlag: number, sweepFlag: number, x: number, y: number): void {
+    const j = this.jiggle();
+    if (j != null) {
+      j.arcTo(rx, ry, angle, largeArcFlag, sweepFlag, x, y);
+      return;
+    }
     const curves = arcToCurves(this.lastX, this.lastY, rx, ry, angle, largeArcFlag, sweepFlag, x, y);
     for (let i = 0; i + 5 < curves.length; i += 6) {
       this.curveTo(curves[i], curves[i + 1], curves[i + 2], curves[i + 3], curves[i + 4], curves[i + 5]);
     }
   }
 
-  close(): void { this.addOp('Z'); }
-  end(): void { /* nothing to flush */ }
+  close(): void {
+    const j = this.jiggle();
+    if (j != null) j.close();
+    else this.addOp('Z');
+  }
+
+  end(): void {
+    const j = this.jiggle();
+    if (j != null) j.end();
+  }
 
   rect(x: number, y: number, w: number, h: number): void {
+    const j = this.jiggle();
+    if (j != null) {
+      j.rect(x, y, w, h);
+      return;
+    }
     const s = this.state;
     this.path = null;
     this.node = {
@@ -344,6 +461,11 @@ export class SvgCanvas {
   }
 
   roundrect(x: number, y: number, w: number, h: number, dx: number, dy: number): void {
+    const j = this.jiggle();
+    if (j != null) {
+      j.roundrect(x, y, w, h, dx, dy);
+      return;
+    }
     this.rect(x, y, w, h);
     if (!this.node) return;
     if (dx > 0) this.node.attrs.rx = fmt(dx * this.state.scale);
@@ -351,6 +473,11 @@ export class SvgCanvas {
   }
 
   ellipse(x: number, y: number, w: number, h: number): void {
+    const j = this.jiggle();
+    if (j != null) {
+      j.ellipse(x, y, w, h);
+      return;
+    }
     const s = this.state;
     this.path = null;
     this.node = {
@@ -390,11 +517,74 @@ export class SvgCanvas {
     this.emit(`<image ${attrs.join(' ')}/>`);
   }
 
+  /**
+   * mxSvgCanvas2D.text for plain text (mxSvgCanvas2D.plainText): one
+   * `<text>` per line at the anchor point, aligned by text-anchor and by
+   * offsetting the first baseline. HTML, wrapping and clipping are not
+   * supported (stencils and shapes paint plain, unwrapped text).
+   */
+  text(x: number, y: number, w: number, h: number, str: string | null, align: string | null, valign: string | null,
+    _wrap?: boolean, _format?: string, overflow?: string | null, _clip?: boolean, rotation?: number | null): void {
+    if (str == null) return;
+    const s = this.state;
+    x += s.dx;
+    y += s.dy;
+    rotation = rotation ?? 0;
+    const size = s.fontSize;
+    let tr = s.transform || '';
+    if (rotation !== 0) tr += `rotate(${rotation},${fmt(x * s.scale)},${fmt(y * s.scale)})`;
+    const anchor = align === 'right' ? 'end' : align === 'center' ? 'middle' : 'start';
+    const attrs: string[] = [];
+    if (s.fontColor != null) attrs.push(`fill="${escapeAttr(resolveColor(s.fontColor) ?? s.fontColor)}"`);
+    attrs.push(`font-family="${escapeAttr(s.fontFamily)}"`);
+    if ((s.fontStyle & 1) === 1) attrs.push('font-weight="bold"');
+    if ((s.fontStyle & 2) === 2) attrs.push('font-style="italic"');
+    const decoration: string[] = [];
+    if ((s.fontStyle & 4) === 4) decoration.push('underline');
+    if ((s.fontStyle & 8) === 8) decoration.push('line-through');
+    if (decoration.length > 0) attrs.push(`text-decoration="${decoration.join(' ')}"`);
+    attrs.push('pointer-events="none"', `text-anchor="${anchor}"`);
+    if (tr.length > 0) attrs.push(`transform="${tr}"`);
+    if (s.alpha < 1) attrs.push(`opacity="${s.alpha}"`);
+    attrs.push(`font-size="${fmt(size * s.scale)}px"`);
+
+    const lines = str.split('\n');
+    const lh = Math.round(size * LINE_HEIGHT);
+    const textHeight = size + (lines.length - 1) * lh;
+    let cy = y + size - 1;
+    if (valign === 'middle') cy -= overflow === 'fill' ? h / 2 : textHeight / 2;
+    else if (valign === 'bottom') cy -= overflow === 'fill' ? h : textHeight + 1;
+    let body = '';
+    for (const line of lines) {
+      // Workaround for bounding box of empty lines and spaces
+      if (line.length > 0 && line.trim().length > 0) {
+        body += `<text x="${fmt(x * s.scale)}" y="${fmt(cy * s.scale)}">${escapeAttr(line)}</text>`;
+      }
+      cy += lh;
+    }
+    void w;
+    if (body.length > 0) this.emit(`<g ${attrs.join(' ')}>${body}</g>`);
+  }
+
   // --- painting -------------------------------------------------------------
 
-  stroke(): void { this.addNode(false, true); }
-  fill(): void { this.addNode(true, false); }
-  fillAndStroke(): void { this.addNode(true, true); }
+  stroke(): void {
+    const j = this.jiggle();
+    if (j != null) j.stroke();
+    else this.addNode(false, true);
+  }
+
+  fill(): void {
+    const j = this.jiggle();
+    if (j != null) j.fill();
+    else this.addNode(true, false);
+  }
+
+  fillAndStroke(): void {
+    const j = this.jiggle();
+    if (j != null) j.fillAndStroke();
+    else this.addNode(true, true);
+  }
 
   private currentStrokeWidth(): number {
     return Math.max(this.minStrokeWidth, Math.max(0.01, fmt(this.state.strokeWidth * this.state.scale)));
@@ -442,6 +632,85 @@ export class SvgCanvas {
     return id;
   }
 
+  /**
+   * mxSvgCanvas2D.getFillPattern: the id of a `<pattern>` for the fill
+   * style (hatch, dots, cross-hatch, dashed, zigzag-line), or null for
+   * styles without one (they fill solid). hachureGap, fillWeight and
+   * hachureAngle override the spacing, line width and angle derived from
+   * the stroke width. The tiles are anchored at the diagram's origin (see
+   * viewTranslate).
+   */
+  private fillPatternId(type: string, strokeSize: number, color: string, scale: number,
+    hachureGap: StyleNumber, fillWeight: StyleNumber, hachureAngle: StyleNumber): string | null {
+    // Validates overrides from untrusted styles where -1, auto and
+    // non-numeric values mean unset. The gap is clamped to a minimum
+    // of 1 to avoid degenerate patterns.
+    let gap: number | null = parseFloat(String(hachureGap));
+    gap = (!Number.isFinite(gap) || gap <= 0) ? null : Math.max(1, gap);
+    let weight: number | null = parseFloat(String(fillWeight));
+    weight = (!Number.isFinite(weight) || weight <= 0) ? null : weight;
+    let angle: number | null = parseFloat(String(hachureAngle));
+    angle = !Number.isFinite(angle) ? null : angle;
+
+    // If any pattern property is set then the unset properties use the
+    // rough.js automatic values so that the same style looks similar in
+    // sketch and normal mode. If no property is set, the legacy pattern
+    // geometry derived from the stroke width is used unchanged.
+    if (gap != null || weight != null || angle != null) {
+      gap = gap ?? Math.max(1, strokeSize * 4);
+      weight = weight ?? strokeSize / 2;
+      angle = angle ?? -41;
+    }
+
+    let content: string;
+    let size: number;
+    const stroke = escapeAttr(color);
+    if (type === 'hatch' || type === 'dashed') {
+      const baseSW = weight ?? strokeSize * 1.5;
+      size = fmt(gap ?? 10 + baseSW);
+      // A weight is set if any pattern property is used and is the visible
+      // stripe width so the stroke is drawn centered in the tile
+      const x = weight != null ? size / 2 : 0;
+      const y1 = type === 'dashed' ? size / 4 : 0;
+      const y2 = type === 'dashed' ? 3 * size / 4 : size;
+      content = `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="${stroke}" stroke-width="${baseSW}"/>`;
+    } else if (type === 'zigzag' || type === 'zigzag-line') {
+      const baseSW = weight ?? strokeSize * 1.5;
+      size = fmt(gap ?? 10 + baseSW);
+      const s14 = size / 4;
+      const s34 = 3 * size / 4;
+      content = `<path d="M ${s14} 0 L ${s34} 0 L ${s14} ${size} L ${s34} ${size}" stroke="${stroke}" stroke-width="${baseSW}" fill="none"/>`;
+    } else if (type === 'cross-hatch') {
+      const baseSW = weight ?? strokeSize * 0.5;
+      size = fmt(gap ?? 1.5 * (10 + baseSW));
+      content = `<rect x="0" y="0" width="${size}" height="${size}" stroke="${stroke}" stroke-width="${baseSW}" fill="none"/>`;
+    } else if (type === 'dots') {
+      size = fmt(gap ?? 10 + strokeSize);
+      // The weight is the dot diameter (rough.js convention), at most the tile
+      const radius = weight != null ? Math.min(weight / 2, size / 2) : size / 4;
+      content = `<circle cx="${size / 2}" cy="${size / 2}" r="${radius}" stroke="none" fill="${stroke}"/>`;
+    } else {
+      return null;
+    }
+
+    // Anchors the pattern at the diagram's origin and rotates the vertical
+    // base strokes of the pattern so they run at the given hachure angle
+    // (rough.js convention, 0 means horizontal)
+    const vt = this.viewTranslate;
+    const tx = vt != null ? fmt(vt.x * scale) : 0;
+    const ty = vt != null ? fmt(vt.y * scale) : 0;
+    const rotation = angle != null ? 90 + angle : 45;
+    const transform = `translate(${tx},${ty})${type !== 'dots' ? ` rotate(${rotation})` : ''} scale(${scale})`;
+    const markup = `<pattern patternUnits="userSpaceOnUse" width="${size}" height="${size}" x="0" y="0" patternTransform="${transform}">${content}</pattern>`;
+    let id = this.patterns.get(markup);
+    if (id == null) {
+      id = `${this.idPrefix}-p${++this.refCount}`;
+      this.patterns.set(markup, id);
+      this.defs.push(markup.replace('<pattern ', `<pattern id="${id}" `));
+    }
+    return id;
+  }
+
   /** mxSvgCanvas2D.addNode: fill, stroke, transform, then the markup. */
   private addNode(filled: boolean, stroked: boolean): void {
     const node = this.node;
@@ -460,6 +729,11 @@ export class SvgCanvas {
         attrs.fill = `url(#${this.gradientId(s.fillColor, s.gradientColor, s.gradientFillAlpha, s.gradientAlpha, s.gradientDirection)})`;
       } else {
         attrs.fill = s.fillColor.toLowerCase() === 'none' ? 'none' : s.fillColor.toLowerCase();
+        // mxSvgCanvas2D.updateFill: pattern fill styles (hatch, dots, …)
+        const baseStrokeWidth = Math.max(this.minStrokeWidth, Math.max(0.01, fmt(s.strokeWidth)));
+        const pattern = (s.fillStyle == null || s.fillStyle === 'auto' || s.fillStyle === 'solid' || attrs.fill === 'none')
+          ? null : this.fillPatternId(s.fillStyle, baseStrokeWidth, attrs.fill, s.scale, s.hachureGap, s.fillWeight, s.hachureAngle);
+        if (pattern != null) attrs.fill = `url(#${pattern})`;
       }
       hasFill = attrs.fill !== 'none';
     } else {

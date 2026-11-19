@@ -6,11 +6,14 @@
  *   diagram apply  [deck] <f.drawio> --slide <s> [--page <n|name>] [--diagram <id>] [--scale <s>]
  *   diagram import [deck] <f.drawio> [--after <s>] [--scale <s>]
  *   diagram list   [deck] [--slide <s>]
+ *   diagram build  [deck] --slide <s> [--diagram <id>] [--cells a,b,…] [--order auto|reading|flow]
  *
  * export writes the slide's diagram as a `.drawio` file; edit it (by hand,
  * in draw.io desktop, or as an agent) and apply it back: cells are matched
  * by their draw.io id, so what you did not touch keeps its builds and
- * pairings. import adds one new slide per page.
+ * pairings. import adds one new slide per page. The file's animation (its
+ * draw.io steps) is the diagram's builds, both ways; build makes builds that
+ * reveal the diagram cell by cell, every one on a click.
  */
 
 import { readFile, writeFile } from 'node:fs/promises';
@@ -19,10 +22,14 @@ import type { AgentOperation } from '@shared/agent.js';
 import type { Deck, Slide } from '@shared/deck.js';
 import { makeId } from '@shared/geometry.js';
 import { diagramPageOperations, drawioToSlides, pickPage } from '@shared/diagram/apply.js';
+import { buildDiagramInOrder } from '@shared/diagram/animation.js';
 import { slideDiagramIds, slideToDrawio } from '@shared/diagram/convert.js';
-import { readDrawio, writeDrawio } from '@shared/diagram/drawioFile.js';
+import { writeDrawio } from '@shared/diagram/drawioFile.js';
+import { readDiagramFile } from '@shared/diagram/figureExport.js';
+import { inflateDiagramChunk } from '@shared/diagram/figureInflate.js';
 import { labelText } from '@shared/diagram/label.js';
 import { resolveStyle } from '@shared/diagram/style.js';
+import { diagramAddCommand, diagramLayoutCommand, diagramStyleCommand } from './diagramAgentCli.js';
 
 export interface DiagramCliIo {
   cwd: string;
@@ -43,7 +50,8 @@ interface Parsed {
   positional: string[];
 }
 
-const VALUED = new Set(['slide', 'diagram', 'output', 'page', 'scale', 'after', 'label']);
+const VALUED = new Set(['slide', 'diagram', 'output', 'page', 'scale', 'after', 'label', 'cells', 'order',
+  'vertex-effect', 'connector-effect', 'vertex-duration', 'connector-duration']);
 
 function parse(argv: string[]): Parsed {
   const flags = new Map<string, string | true>();
@@ -87,16 +95,37 @@ const USAGE = `usage:
   slide-agent diagram export [deck] --slide <s> [--diagram <id>] [--output <f.drawio>] [--compressed]
   slide-agent diagram apply  [deck] <f.drawio> --slide <s> [--page <n|name>] [--diagram <id>] [--scale <s>]
   slide-agent diagram import [deck] <f.drawio> [--after <s>] [--scale <s>]
-  slide-agent diagram list   [deck] [--slide <s>]`;
+  slide-agent diagram list   [deck] [--slide <s>]
+  slide-agent diagram build  [deck] --slide <s> [--diagram <id>] [--cells <id,id,…>] [--order auto|reading|flow]
+                             [--vertex-effect dissolve|wipe|pop|appear] [--vertex-duration <ms>]
+                             [--connector-effect wipe|dissolve|pop|appear] [--connector-duration <ms>]
+  slide-agent diagram add    [deck] --slide <s> [--vertex '<spec>']… [--edge '<spec>']… [--json <file>]
+                             [--layout <algo> [--direction …]] [--scale <s>] [--origin x,y]
+  slide-agent diagram style  [deck] --slide <s> --cells <id,…|*> [--set key=value]… [--unset key]…
+                             [--label <text>] [--style <raw style>] [--keep-waypoints]
+  slide-agent diagram layout [deck] --slide <s> --algo layered|tree|radial|organic|circle
+                             [--direction right|down|left|up] [--spacing <n>] [--layer-spacing <n>]
+                             [--cells <id,…>] [--parent <cell>] [--corners keep|straight|rounded|curved]
+                             [--at x,y] [--elk key=value]…
+
+  specs: --vertex 'id=enc label="Encoder" style="rounded=1;fillColor=#dae8fc" x=100 y=100 w=120 h=60'
+         --vertex 'id=db shape=library:Cylinder x=300 y=100'
+         --edge   'id=e1 from=enc to=db style="endArrow=classic"'
+  (draw.io units, relative to the diagram origin; slide-agent docs diagrams has every key)`;
 
 export async function diagramCommand(argv: string[], io: DiagramCliIo, deps: DiagramCliDeps): Promise<number> {
   const [sub, ...rest] = argv;
+  // The agent toolkit (diagramAgentCli.ts) parses its own repeated flags.
+  if (sub === 'style') return diagramStyleCommand(rest, io, deps);
+  if (sub === 'add') return diagramAddCommand(rest, io, deps);
+  if (sub === 'layout') return diagramLayoutCommand(rest, io, deps);
   const parsed = parse(rest);
   switch (sub) {
     case 'export': return exportCommand(parsed, io, deps);
     case 'apply': return applyCommand(parsed, io, deps);
     case 'import': return importCommand(parsed, io, deps);
     case 'list': return listCommand(parsed, io, deps);
+    case 'build': return buildCommand(parsed, io, deps);
     default:
       io.err(`${sub ? `Unknown diagram command: ${sub}\n\n` : ''}${USAGE}`);
       return 2;
@@ -131,7 +160,7 @@ async function applyCommand(parsed: Parsed, io: DiagramCliIo, deps: DiagramCliDe
   const deckDir = deps.resolveDeckDir(deckArg);
   const deck = await deps.loadDeck(deckDir);
   const { slide } = slideFor(deck, parsed.flags.get('slide') as string | undefined, deps);
-  const doc = await readDrawio(await readFile(resolve(io.cwd, fileArg), 'utf8'));
+  const doc = await readDiagramFile(new Uint8Array(await readFile(resolve(io.cwd, fileArg))), inflateDiagramChunk);
   const diagramFlag = parsed.flags.get('diagram');
   const diagramId = typeof diagramFlag === 'string' ? diagramFlag : undefined;
   const meta = diagramId ? slide.diagrams?.[diagramId] : undefined;
@@ -163,7 +192,7 @@ async function importCommand(parsed: Parsed, io: DiagramCliIo, deps: DiagramCliD
   if (!fileArg) throw deps.usageError('diagram import needs a .drawio file.');
   const deckDir = deps.resolveDeckDir(deckArg);
   const deck = await deps.loadDeck(deckDir);
-  const doc = await readDrawio(await readFile(resolve(io.cwd, fileArg), 'utf8'));
+  const doc = await readDiagramFile(new Uint8Array(await readFile(resolve(io.cwd, fileArg))), inflateDiagramChunk);
   const scaleFlag = parsed.flags.get('scale');
   const scale = typeof scaleFlag === 'string' ? Number(scaleFlag) : undefined;
   const slides = drawioToSlides(doc, deck.canvas, makeId, scale ? { scale } : {});
@@ -215,6 +244,54 @@ async function listCommand(parsed: Parsed, io: DiagramCliIo, deps: DiagramCliDep
   }
   io.out(`${JSON.stringify(out, null, 2)}\n`);
   return 0;
+}
+
+/**
+ * diagram build: one appear build per cell, each on its own click —
+ * vertices in order along the connectors (or reading order), each connector
+ * drawn along its route once both its ends are in. Earlier builds of those
+ * cells are replaced. One undoable change.
+ */
+async function buildCommand(parsed: Parsed, _io: DiagramCliIo, deps: DiagramCliDeps): Promise<number> {
+  known('build', parsed, ['slide', 'diagram', 'cells', 'order', 'label', 'vertex-effect', 'connector-effect', 'vertex-duration', 'connector-duration'], deps);
+  const deckDir = deps.resolveDeckDir(parsed.positional[0]);
+  const deck = await deps.loadDeck(deckDir);
+  const { slide } = slideFor(deck, parsed.flags.get('slide') as string | undefined, deps);
+  const diagram = parsed.flags.get('diagram');
+  const wanted = typeof parsed.flags.get('cells') === 'string'
+    ? new Set((parsed.flags.get('cells') as string).split(',').map((s) => s.trim()).filter(Boolean)) : null;
+  const cells = slide.elements.filter((el) => (el.type === 'vertex' || el.type === 'connector')
+    && (typeof diagram !== 'string' || el.diagram === diagram)
+    && (!wanted || wanted.has(el.cell) || wanted.has(el.id)));
+  if (cells.length === 0) throw deps.usageError(`Slide ${slide.id} has no such diagram cells.`);
+  const order = parsed.flags.get('order');
+  if (order !== undefined && order !== 'auto' && order !== 'reading' && order !== 'flow') throw deps.usageError('--order is auto, reading or flow.');
+  const effect = (name: string) => {
+    const value = parsed.flags.get(name);
+    if (value === undefined) return undefined;
+    if (value !== 'appear' && value !== 'dissolve' && value !== 'wipe' && value !== 'pop') throw deps.usageError(`--${name} is appear, dissolve, wipe or pop.`);
+    return value;
+  };
+  const ms = (name: string) => {
+    const value = parsed.flags.get(name);
+    if (value === undefined) return undefined;
+    const n = Number(value);
+    if (!(n >= 0)) throw deps.usageError(`--${name} is a number of milliseconds.`);
+    return n;
+  };
+  const timeline = buildDiagramInOrder(slide, new Set(cells.map((el) => el.id)), makeId, {
+    order: order as 'auto' | 'reading' | 'flow' | undefined,
+    vertexEffect: effect('vertex-effect'), connectorEffect: effect('connector-effect'),
+    vertexDuration: ms('vertex-duration'), connectorDuration: ms('connector-duration'),
+  });
+  const label = typeof parsed.flags.get('label') === 'string' ? parsed.flags.get('label') as string : 'Build diagram in order';
+  const byId = new Map(cells.map((el) => [el.id, el]));
+  return deps.applyOperations(deckDir, label, [
+    { op: 'setSlideProperties', slideId: slide.id, slide: { id: slide.id, timeline } },
+  ], {
+    slide: slide.id,
+    builds: timeline.filter((e) => byId.has(e.action.target)).map((e) => (byId.get(e.action.target) as { cell: string }).cell),
+  });
 }
 
 function round(n: number): number {

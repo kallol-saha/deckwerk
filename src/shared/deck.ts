@@ -628,6 +628,8 @@ export const DiagramMetaSchema = z.object({
   model: z.record(z.string()).default({}),
   /** The root cell id. */
   root: z.string().default('0'),
+  /** The root cell's `<object>`: the page's custom properties (draw.io's Edit Data with nothing selected). */
+  rootObject: DiagramObjectSchema.nullable().optional(),
   /** Layers, bottom first. */
   layers: z.array(z.object({
     cell: z.string(),
@@ -690,6 +692,14 @@ export const ActionSchema = z.object({
     'jiggle',
     'pop',
     'lines',
+    // draw.io's animation steps (shared/diagram/animation.ts): an opacity
+    // change (draw.io's fadeTo and opacity), a connector's flow animation
+    // starting or stopping, a cell's outline lit up for a moment, and a step
+    // DeckWerk does not play, kept so that it is written back to the file.
+    'opacity',
+    'flow',
+    'highlight',
+    'drawio',
   ]),
   target: Id,
   /**
@@ -707,9 +717,23 @@ export const ActionSchema = z.object({
    * the lines it names: `"appear"` (default) reveals them, `"highlight"`
    * tints them and `"dim"` fades every other line. A highlight or a dim holds
    * until the block's next one replaces it, or a reveal ends it.
+   *
+   * On `appear` or `disappear` of a diagram cell (`vertex`, `connector`),
+   * `"wipe"` is draw.io's wipe: a connector draws on along its route with its
+   * arrowhead at the tip, a vertex grows in from its left edge; `"pop"` on a
+   * vertex is draw.io's spring. On `opacity`, the opacity (0–1) the element
+   * goes to, over `duration` (an element that is hidden comes into view at
+   * it); `appear` and `disappear` leave it unchanged. On `flow` (a connector),
+   * `"start"`, `"stop"` or `"toggle"` its moving dashes. On `highlight`, the
+   * outline's opacity in percent (null: 100). On `drawio`, the draw.io step,
+   * as JSON, that DeckWerk keeps without playing.
    */
   value: z.union([z.number(), z.string()]).nullable().default(null),
-  /** Milliseconds an animated build takes (`"draw"`, `"dissolve"`, `"blur"`, `"pop"`). */
+  /**
+   * Milliseconds an animated build takes (`"draw"`, `"dissolve"`, `"blur"`,
+   * `"pop"`, `"wipe"`, `opacity`). On `highlight`, how long the outline
+   * shows before it fades.
+   */
   duration: z.number().min(0).optional(),
   /** On a `"pop"`: the size it grows from, as a fraction of its own (default 0.6). */
   popFrom: z.number().min(0).max(1).optional(),
@@ -731,8 +755,8 @@ export const ActionSchema = z.object({
    */
   lines: z.string().regex(/^\d+(?:-\d+)?(?:,\d+(?:-\d+)?)*$/).optional(),
   /**
-   * The colour a `terms` action with value `"color"` paints its terms, or a
-   * `lines` highlight tints its lines.
+   * The colour a `terms` action with value `"color"` paints its terms, a
+   * `lines` highlight tints its lines, or a `highlight` draws its outline in.
    */
   color: z.string().optional(),
   /** How far a `pulse` (default 1.6) or a `pop` (default 1.3) enlarges its target at the peak. */

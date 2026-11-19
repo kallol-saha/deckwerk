@@ -12,7 +12,9 @@ import {
 import { shapeSvg } from './shapeSvg.js';
 import { bakeEndpointFlips, canonicalOrientation, elementTransform, orientationFromMatrix, sameOrientation } from './flip.js';
 import { codeElementFromNode, codeElementToHtml, lineBuildsFromNode } from './codeHtml.js';
-import { diagramElementFromNode, diagramElementToHtml } from './diagram/diagramHtml.js';
+import {
+  diagramElementFromNode, diagramElementToHtml, diagramRecordsAttr, diagramRecordsFromSection, keptDiagramRecords,
+} from './diagram/diagramHtml.js';
 import { formatLineBuilds } from './codeBlocks.js';
 import { CODE_AUTHORING_CSS } from './codeBlocks.js';
 import { applyTableColumnWidths } from './paragraphs.js';
@@ -104,6 +106,8 @@ export interface MeasuredSlide {
   background: { color: string | null; image: string | null };
   morphFromPrevious: boolean;
   morphDuration?: number;
+  /** `data-diagrams` on the section: the slide's draw.io diagram records, URI-encoded JSON. */
+  diagrams?: string;
   /** `data-layout` on the section: one of the deck's fixed layouts. */
   layout?: string;
   /** With `layout`: the section set its own background inline. */
@@ -864,6 +868,11 @@ export function carrySlideState(previous: Slide, compiled: Slide, base?: SlideBa
     if (next.skipped === undefined && previous.skipped !== undefined) next.skipped = previous.skipped;
   }
   if (!next.comments?.length && previous.comments?.length) next.comments = structuredClone(previous.comments);
+  // A section without its data-diagrams keeps the slide's records for the diagrams its cells still use.
+  if (next.diagrams === undefined) {
+    const kept = keptDiagramRecords(previous, next.elements);
+    if (kept) next.diagrams = kept;
+  }
   // A page can say "true" but never an explicit "false": an absent attribute
   // and a stored `false` mean the same, and the stored form is the deck's.
   if (next.morphFromPrevious === undefined && previous.morphFromPrevious === false) next.morphFromPrevious = false;
@@ -1662,6 +1671,7 @@ export function slideFromMeasured(
     background: measured.background,
     ...(measured.morphFromPrevious ? { morphFromPrevious: true } : {}),
     ...(measured.morphDuration !== undefined ? { morphDuration: measured.morphDuration } : {}),
+    ...diagramRecordsFromSection(measured.diagrams, elements),
     elements,
     timeline,
   };
@@ -2083,8 +2093,9 @@ function trimCollapsible(html: string): string {
  * Builds have no CSS analogue, so they ride on data attributes rather than in
  * a side-channel the author has to keep in sync with the markup.
  */
-function isEffectName(value: unknown): value is 'draw' | 'dissolve' | 'blur' | 'pop' {
-  return value === 'draw' || value === 'dissolve' || value === 'blur' || value === 'pop';
+function isEffectName(value: unknown): value is 'draw' | 'dissolve' | 'blur' | 'pop' | 'wipe' {
+  // `wipe`: draw.io's wipe on a diagram cell (a connector draws on along its route).
+  return value === 'draw' || value === 'dissolve' || value === 'blur' || value === 'pop' || value === 'wipe';
 }
 
 export function buildFromNode(
@@ -2101,7 +2112,7 @@ export function buildFromNode(
   // `data-build-effect` draws a line or arrow in ("draw") or fades anything in
   // ("dissolve"); its time rides beside it.
   const effect = node.dataset.buildEffect;
-  const animated = effect === 'draw' || effect === 'dissolve' || effect === 'blur' || effect === 'pop';
+  const animated = isEffectName(effect);
   const duration = Number(node.dataset.buildDuration);
   return {
     id: `${elementId}-build-${index + 1}`,
@@ -2185,6 +2196,7 @@ export function slideToHtml(slide: Slide, canvas: { w: number; h: number }): str
     + (slide.skipped ? ' data-skipped="true"' : '')
     + (slide.morphFromPrevious ? ' data-morph-from-previous="true"' : '')
     + (slide.morphDuration !== undefined ? ` data-morph-duration="${slide.morphDuration}"` : '')
+    + diagramRecordsAttr(slide)
     + `${background}>\n${body}\n</section>\n`;
 }
 

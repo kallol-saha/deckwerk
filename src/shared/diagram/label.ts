@@ -70,12 +70,15 @@ function hasValue(value: string | null | undefined): value is string {
  */
 export function vertexLabelSvg(style: Style, value: string, bounds: Rect, scale: number, options?: VertexLabelOptions): string {
   if (!hasValue(value) || !labelEnabled(style)) return '';
-  return paintLabel(vertexLabelGeometry(style, bounds, scale, options), style, value);
+  return paintLabel(vertexLabelGeometry(style, bounds, scale, options), style, value,
+    { width: bounds.width / scale, height: bounds.height / scale },
+    { math: options?.math, textFallback: options?.textFallback });
 }
 
 export function edgeLabelSvg(style: Style, value: string, anchor: Point, scale: number, options?: EdgeLabelOptions): string {
   if (!hasValue(value) || !labelEnabled(style)) return '';
-  return paintLabel(edgeLabelGeometry(style, anchor, scale, options), style, value);
+  return paintLabel(edgeLabelGeometry(style, anchor, scale, options), style, value, undefined,
+    { math: options?.math, textFallback: options?.textFallback });
 }
 
 /**

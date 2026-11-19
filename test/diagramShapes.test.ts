@@ -55,10 +55,13 @@ describe('shape registry', () => {
     }
   });
 
-  it('treats stencils as unknown and paints them as rectangles', () => {
-    expect(isKnownShape('mxgraph.basic.star')).toBe(false);
+  it('paints XML stencils, and unknown names as rectangles', () => {
+    expect(isKnownShape('mxgraph.basic.star')).toBe(true);
+    expect(isKnownShape('mxgraph.flowchart.decision')).toBe(true);
     expect(isKnownShape('constructor')).toBe(false);
-    expect(v('shape=mxgraph.basic.star;')).toBe('<rect x="0" y="0" width="120" height="60" fill="#ffffff" stroke="#000000"/>');
+    expect(isKnownShape('mxgraph.unknown.shape')).toBe(false);
+    expect(v('shape=mxgraph.flowchart.decision;')).toBe('<path d="M 60 0 L 120 30 L 60 60 L 0 30 Z" fill="#ffffff" stroke="#000000"/>');
+    expect(v('shape=mxgraph.unknown.shape;')).toBe('<rect x="0" y="0" width="120" height="60" fill="#ffffff" stroke="#000000"/>');
   });
 
   it('paints every vertex shape at several sizes and with every variant', () => {
@@ -72,7 +75,12 @@ describe('shape registry', () => {
       for (const variant of variants) {
         for (const [w, h] of sizes) {
           const svg = v(`shape=${name};${VERTEX_EXTRA[name] ?? ''}${variant}`, w, h);
-          expect(svg, `${name} ${variant} ${w}x${h}`).toMatch(/<(path|rect|ellipse|image) /);
+          // Library shapes (mxgraph.*) and the tables may paint nothing at
+          // some sizes, as in draw.io (eg. a battery stack narrower than one
+          // cell); diagramShapesDrawio.test.ts compares them with draw.io
+          if (!name.startsWith('mxgraph.') && !['table', 'tableRow', 'tableLine'].includes(name)) {
+            expect(svg, `${name} ${variant} ${w}x${h}`).toMatch(/<(path|rect|ellipse|image) /);
+          }
           expect(svg, `${name} ${variant} ${w}x${h}`).not.toMatch(/NaN|Infinity|undefined/);
         }
       }
@@ -423,7 +431,9 @@ describe('connection constraints', () => {
     expect(shapeConstraints(resolveStyle('ellipse;', 'vertex'))).toHaveLength(8);
     expect(shapeConstraints(resolveStyle('shape=cylinder3;', 'vertex'))).toHaveLength(16);
     expect(shapeConstraints(resolveStyle('triangle;', 'vertex'))?.[3]).toEqual({ x: 0.5, y: 0, perimeter: true, dx: 0, dy: 0 });
-    expect(shapeConstraints(resolveStyle('shape=mxgraph.basic.star;', 'vertex'))).toHaveLength(16);
+    // A stencil's own connection points (basic.xml's star has 6); an unknown name is a rectangle
+    expect(shapeConstraints(resolveStyle('shape=mxgraph.basic.star;', 'vertex'))).toHaveLength(6);
+    expect(shapeConstraints(resolveStyle('shape=mxgraph.unknown.shape;', 'vertex'))).toHaveLength(16);
     expect(shapeConstraints(resolveStyle('shape=isoRectangle;', 'vertex'))).toEqual([]);
     expect(shapeConstraints(resolveStyle('shape=umlLifeline;', 'vertex'))).toBeNull();
     expect(shapeConstraints(resolveStyle('shape=umlBoundary;', 'vertex'))).toBeNull();

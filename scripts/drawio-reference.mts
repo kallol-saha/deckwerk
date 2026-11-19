@@ -95,6 +95,9 @@ function pageHtml(webapp: string, harnessPath: string): string {
     // js/export.js (desktop): every shape is preloaded, so no eval-based lazy loading.
     '<script>mxStencilRegistry.allowEval = false;</script>',
     ...BUNDLES.slice(1).map((src) => `<script src="${src}"></script>`),
+    // Math typesetting (App.js calls this at startup): MathJax from math4/es5,
+    // loaded before the first page with math="1" (see the runner).
+    '<script>Editor.initMath();</script>',
     `<script src="${pathToFileURL(harnessPath).href}"></script>`,
     '</head><body style="margin:0"></body></html>',
   ].join('\n');
@@ -353,6 +356,8 @@ const HARNESS = String.raw`
       graph.foldingEnabled = false;
       graph.setEnabled(false);
       graph.setBackgroundImage(null);
+      // Editor.setGraphXml: math="1" typesets labels (getSvg runs MathJax).
+      graph.mathEnabled = modelNode.getAttribute('math') == '1';
       new mxCodec(modelNode.ownerDocument).decode(modelNode, graph.getModel());
       graph.view.scaleAndTranslate(1, 0, 0);
 
@@ -482,6 +487,10 @@ app.whenReady().then(async () => {
   const version = await win.webContents.executeJavaScript('drawioReference.version()');
   for (const fixture of job.fixtures) {
     const text = readFileSync(fixture.path, 'utf8');
+    // MathJax is loaded once, before the first fixture that typesets.
+    if (/\bmath="1"/.test(text)) {
+      await win.webContents.executeJavaScript('new Promise(function (r) { Editor.loadMath(r); })');
+    }
     const result = await win.webContents.executeJavaScript('drawioReference.run(' + JSON.stringify(text) + ', ' + job.border + ')');
     if (!result.ok) throw new Error(fixture.name + ': ' + result.error);
     writeFileSync(fixture.resultPath, JSON.stringify(result.value));

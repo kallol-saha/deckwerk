@@ -5,20 +5,24 @@
  * mxgraph/src/util/mxSvgCanvas2D.js (text, createDiv, addForeignObject,
  * updateTextNodes, createCss, getTextCss, plainText, updateFont,
  * addTextBackground, getStringBoundingBox, getTextBackgroundBounds,
- * createClip, setClip).
+ * createClip, setClip), with js/grapheditor/Graph.js's mxText.paint
+ * override for shapeInside text flow (see ./shapeInside.ts).
  * Copyright (c) 2006-2024, JGraph Ltd / draw.io AG, Apache License 2.0.
  * Modified for DeckWerk: writes the SVG as a string (no DOM); the
  * foreignObject is placed at the label (mxSvgCanvas2D.placeForeignObjects,
  * as draw.io does when it paints in model units) so it works inside an SVG
  * of any size; plain-text backgrounds are sized from font metrics instead
- * of getBBox; no title, links, pointer events or SVG text conversion.
+ * of getBBox; no title, links, pointer events or SVG text conversion (a
+ * convertToSvg label gets the HTML text flow).
  */
 
 import { colorWithAlpha, fmt } from '../canvas.js';
 import type { Style } from '../types.js';
 import type { LabelGeometry } from './bounds.js';
-import { escapeAttr, escapeText, htmlEntities, replaceTrailingNewlines, sanitizeLabelHtml } from './html.js';
+import { escapeAttr, escapeText, htmlEntities, htmlToText, replaceTrailingNewlines, sanitizeLabelHtml } from './html.js';
 import { FONT_ASCENT, FONT_DESCENT, textWidth } from './metrics.js';
+import { shapeInsideLabel } from './shapeInside.js';
+import { typesetLabelMath } from '../mathLabel.js';
 import {
   actualTextDirection, alignmentPoint, FONT_BOLD, FONT_ITALIC, FONT_STRIKETHROUGH, FONT_UNDERLINE,
   FONT_UNDERLINE_DOTTED, LINE_HEIGHT, numberValue, parseCssFontFamily, safeColor, truthy, WORD_WRAP,
@@ -91,9 +95,14 @@ function textShadowFilter(style: Style, scale: number): string | null {
 /**
  * mxText.paint into an SVG string: the label of `g` (from
  * vertexLabelGeometry/edgeLabelGeometry) as draw.io's text node, a <g>
- * holding the foreignObject (HTML labels) or the <text> lines.
+ * holding the foreignObject (HTML labels) or the <text> lines. `cell` is
+ * the unscaled size of a vertex: its HTML label flows inside the shape
+ * when the style asks for it (shapeInside=1; Graph.js's mxText.paint).
  */
-export function paintLabel(g: LabelGeometry, style: Style, raw: string): string {
+export function paintLabel(
+  g: LabelGeometry, style: Style, raw: string, cell?: { width: number; height: number },
+  options?: { math?: boolean; textFallback?: boolean },
+): string {
   const t = g.text;
   const s = g.scale;
   const value = paintedValue(t, raw);
@@ -103,8 +112,25 @@ export function paintLabel(g: LabelGeometry, style: Style, raw: string): string 
   const h = g.height / s;
   const state = textState(t, s);
   const dir = actualTextDirection(t.textDirection, value);
-  const body = t.html
-    ? htmlText(x, y, w, h, withLineBreaks(value), t, g.rotation, dir, state)
+  let html = t.html ? value : null;
+  if (html != null && cell != null) {
+    const flow = shapeInsideLabel(style, html, cell.width, cell.height, {
+      background: t.background, border: t.border, labelPadding: t.labelPadding,
+    });
+    if (flow != null) {
+      html = flow.html;
+      // The flow paints the label background around the text instead
+      if (flow.background) {
+        state.fontBackgroundColor = null;
+        state.fontBorderColor = null;
+      }
+    }
+  }
+  // With math="1", the TeX in an HTML label is typeset as MathJax does it in
+  // draw.io; for a standalone SVG the label gets draw.io's <text> fallback.
+  const alt = html != null && options?.textFallback ? alternateContent(x, y, w, h, value, t, state) : null;
+  const body = html != null
+    ? htmlText(x, y, w, h, options?.math ? typesetLabelMath(withLineBreaks(html)) : withLineBreaks(html), t, g.rotation, dir, state, alt)
     : plainText(x, y, w, h, value, t, g.rotation, dir, state);
   const filter = textShadowFilter(style, s);
   return `<g${filter ? ` style="${escapeAttr(`filter: ${filter};`)}"` : ''}>${body}</g>`;
@@ -222,7 +248,7 @@ function textDecoration(fontStyle: number): string[] {
 /** mxSvgCanvas2D.text for format=html: createDiv + addForeignObject + updateTextNodes. */
 function htmlText(
   x: number, y: number, w: number, h: number, html: string, t: TextProps, rotation: number,
-  dir: TextDirection, state: TextState,
+  dir: TextDirection, state: TextState, alt: string | null = null,
 ): string {
   const s = state.scale;
   const { align, valign } = t;
@@ -261,10 +287,83 @@ function htmlText(
   if (rotation !== 0) transform += `rotate(${rotation} ${fmt(x)} ${fmt(y)})`;
   const gAttrs = (transform ? ` transform="${transform}"` : '') + (state.alpha !== 1 ? ` opacity="${state.alpha}"` : '');
   const dirAttr = dir != null && !vertical ? ` dir="${dir}"` : '';
-  return `<g${gAttrs}><foreignObject style="overflow: visible; text-align: left;" pointer-events="none" ${fo}>`
+  // addForeignObject: alternate content for viewers without foreignObject.
+  const required = alt != null ? ' requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"' : '';
+  const object = `<foreignObject style="overflow: visible; text-align: left;" pointer-events="none" ${fo}${required}>`
     + `<div xmlns="http://www.w3.org/1999/xhtml"${dirAttr} style="${escapeAttr(div)}">`
     + `<div style="${escapeAttr(item)}"><div style="${escapeAttr(css.block)}">${html}</div></div>`
-    + '</div></foreignObject></g>';
+    + '</div></foreignObject>';
+  return `<g${gAttrs}>${alt != null ? `<switch>${object}${alt}</switch>` : object}</g>`;
+}
+
+/**
+ * mxSvgCanvas2D.createAlternateContent with getAlternateTextLines and
+ * Graph's getAlternateText: the label's text as SVG <text>, for viewers
+ * that cannot show a foreignObject (Inkscape, Illustrator, LaTeX
+ * packages). Wrapped and truncated with Helvetica's widths (metrics.ts)
+ * where draw.io measures with a canvas.
+ */
+function alternateContent(x: number, y: number, w: number, h: number, value: string, t: TextProps, state: TextState): string | null {
+  const size = state.fontSize;
+  if (!(size > 0)) return null;
+  // extractTextWithWhitespace: line breaks for <br>, block edges and newlines.
+  const text = htmlToText(value.replace(/\n/g, '<br>'));
+  const bold = (state.fontStyle & FONT_BOLD) === FONT_BOLD;
+  const measure = (s: string) => textWidth(s, size, bold);
+  let lines = text.split(/\r\n|\r|\n/);
+  const doWrap = (t.wrap || t.overflow === 'fill' || t.overflow === 'width') && w > 0;
+  const maxWidth = w + FOREIGN_OBJECT_PADDING;
+  if (doWrap) {
+    const wrapped: string[] = [];
+    for (const source of lines) {
+      let line = '';
+      for (const word of source.split(/\s+/)) {
+        if (word.length === 0) continue;
+        const next = line.length > 0 ? `${line} ${word}` : word;
+        if (line.length > 0 && measure(next) > maxWidth) {
+          wrapped.push(line);
+          line = word;
+        } else {
+          line = next;
+        }
+      }
+      wrapped.push(line);
+    }
+    lines = wrapped;
+  }
+  const lh = Math.round(LINE_HEIGHT * size);
+  if ((t.clipped || t.overflow === 'fill') && h > 0) {
+    const visible = Math.max(1, Math.floor(h / lh));
+    if (lines.length > visible) {
+      lines = lines.slice(0, visible);
+      lines[lines.length - 1] += '...';
+    }
+  }
+  if (t.clipped && !doWrap && w > 0) {
+    lines = lines.map((line) => {
+      if (measure(line) <= maxWidth) return line;
+      let index = line.length - 1;
+      while (index > 1 && measure(`${line.substring(0, index)}...`) > maxWidth) index--;
+      return `${line.substring(0, index).trim()}...`;
+    });
+  }
+  const { align, valign } = t;
+  const dy = valign === 'top' ? 1 : valign === 'bottom' ? 0 : 0.3;
+  const anchor = align === 'right' ? 'end' : align === 'left' ? 'start' : 'middle';
+  const x0 = Math.round(x);
+  const y0 = y + dy * size - (valign === 'top' ? 0 : valign === 'bottom' ? (lines.length - 1) * lh : (lines.length - 1) * lh / 2);
+  const color = state.fontColor ?? 'transparent';
+  const attrs = [`x="${x0}"`, `y="${Math.round(y0)}"`, `fill="${escapeAttr(color === 'transparent' ? 'none' : color)}"`,
+    `font-family="${escapeAttr(parseCssFontFamily(state.fontFamily))}"`, `font-size="${Math.round(size)}px"`];
+  if (anchor !== 'start') attrs.push(`text-anchor="${anchor}"`);
+  if (bold) attrs.push('font-weight="bold"');
+  if ((state.fontStyle & FONT_ITALIC) === FONT_ITALIC) attrs.push('font-style="italic"');
+  const deco = textDecoration(state.fontStyle);
+  if (deco.length > 0) attrs.push(`text-decoration="${deco.join(' ')}"`);
+  const body = lines.length > 1
+    ? lines.map((line, i) => `<tspan x="${x0}" y="${Math.round(y0 + i * lh)}">${escapeText(line)}</tspan>`).join('')
+    : escapeText(lines[0] ?? '');
+  return `<text ${attrs.join(' ')}>${body}</text>`;
 }
 
 // --- plain labels: mxSvgCanvas2D.plainText ---------------------------------------------

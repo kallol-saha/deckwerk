@@ -12,6 +12,7 @@
 import type {
   ConnectorEl, ConnectorLabel, DiagramMeta, Slide, SlideElement, VertexEl,
 } from '../deck.js';
+import { buildsToAnimation } from './animation.js';
 import { rerouted } from './element.js';
 import {
   absoluteBounds, cellIndex, cellLabel,
@@ -278,6 +279,9 @@ export function pageToElements(
     pageId: page.id,
     model: { ...page.model },
     root: rootId,
+    // draw.io keeps the page's animation on the root cell's object; it is
+    // kept once, as `animation` (animation.ts reads it as builds).
+    ...(rootObjectWithout(root?.object, 'animation') ? { rootObject: rootObjectWithout(root?.object, 'animation')! } : {}),
     layers: layerCells.map((c) => ({
       cell: c.id,
       label: cellLabel(c),
@@ -288,7 +292,8 @@ export function pageToElements(
     })),
     origin,
     scale,
-    ...(page.model.animation ? { animation: page.model.animation } : {}),
+    ...(root?.object?.attrs.animation ?? page.model.animation
+      ? { animation: root?.object?.attrs.animation ?? page.model.animation } : {}),
     ...(options.fileAttributes ? { fileAttributes: options.fileAttributes } : {}),
     ...(Object.keys(page.extra).length > 0 ? { pageAttributes: { ...page.extra } } : {}),
   };
@@ -330,7 +335,10 @@ export function slideDiagramIds(slide: Pick<Slide, 'elements' | 'diagrams'>): st
  * draw.io page coordinates (parent-relative), in paint order with parents
  * before their children.
  */
-export function elementsToPage(slide: Pick<Slide, 'elements' | 'diagrams'>, diagramId: string): DiagramPage {
+export function elementsToPage(
+  slide: Pick<Slide, 'elements' | 'diagrams'> & { timeline?: Slide['timeline'] },
+  diagramId: string,
+): DiagramPage {
   const meta = slide.diagrams?.[diagramId] ?? DEFAULT_META;
   const { origin } = meta;
   const cells = slide.elements
@@ -364,7 +372,15 @@ export function elementsToPage(slide: Pick<Slide, 'elements' | 'diagrams'>, diag
     id, parent, kind, value: '', style: '', source: null, target: null,
     visible: true, collapsed: false, connectable: true, geometry: null, object: null, extra: {},
   });
-  out.push(blank(meta.root, null, 'root'));
+  // The animation: the slide's builds on the diagram's cells, as draw.io
+  // steps, on the root cell as draw.io keeps it (or on the model, where an
+  // older file had it).
+  const animation = buildsToAnimation(slide, diagramId);
+  const onModel = meta.model.animation != null;
+  const rootObject = !onModel && animation
+    ? { tag: meta.rootObject?.tag ?? 'UserObject', attrs: { label: '', ...(meta.rootObject?.attrs ?? {}), animation } }
+    : meta.rootObject ?? null;
+  out.push({ ...blank(meta.root, null, 'root'), object: rootObject });
   for (const layer of meta.layers) {
     out.push({
       ...blank(layer.cell, meta.root, 'layer'),
@@ -491,7 +507,10 @@ export function elementsToPage(slide: Pick<Slide, 'elements' | 'diagrams'>, diag
   for (const cell of out) place(cell, new Set());
 
   const model = { ...meta.model };
-  if (meta.animation) model.animation = meta.animation;
+  if (onModel) {
+    if (animation) model.animation = animation;
+    else delete model.animation;
+  }
   return {
     id: meta.pageId ?? diagramId,
     name: meta.name,
@@ -502,10 +521,18 @@ export function elementsToPage(slide: Pick<Slide, 'elements' | 'diagrams'>, diag
 }
 
 /** Every diagram on a slide as one draw.io document, a page each. */
-export function slideToDrawio(slide: Pick<Slide, 'elements' | 'diagrams'>, diagramIds = slideDiagramIds(slide)): DrawioDocument {
+export function slideToDrawio(slide: Pick<Slide, 'elements' | 'diagrams'> & { timeline?: Slide['timeline'] }, diagramIds = slideDiagramIds(slide)): DrawioDocument {
   const first = diagramIds[0] != null ? slide.diagrams?.[diagramIds[0]] : undefined;
   return {
     attributes: { ...(first?.fileAttributes ?? {}) },
     pages: diagramIds.map((id) => elementsToPage(slide, id)),
   };
+}
+
+function rootObjectWithout(object: DiagramCell['object'] | undefined, key: string): DiagramCell['object'] {
+  if (!object) return null;
+  const { [key]: _drop, ...attrs } = object.attrs;
+  // A root object that only carried the animation (and an empty label) is not kept.
+  if (Object.keys(attrs).every((k) => k === 'label' && attrs.label === '')) return null;
+  return { tag: object.tag, attrs };
 }

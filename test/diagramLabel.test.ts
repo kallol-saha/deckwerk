@@ -5,6 +5,12 @@ import {
   edgeLabelGeometry, edgeLabelLayout, edgeLabelSvg, labelText, sanitizeLabelHtml, vertexLabelGeometry,
   vertexLabelLayout, vertexLabelSvg,
 } from '../src/shared/diagram/label.js';
+import {
+  computeShapeInsideFontSize, computeShapeInsideSpacer, createShapeInsideBackground, createShapeInsideValue,
+  isShapeInsideEnabled, measureShapeInsideFlow, shapeInsideBands, shapeInsideBox, shapeInsideFloats, shapeInsideGrow,
+  shapeInsideOutline, shapeInsidePadding, shapeInsideTriangleDirection, type ShapeInsideOutline,
+} from '../src/shared/diagram/label/shapeInside.js';
+import { polygonExcludedInterval } from '../src/shared/diagram/label/shapeInsideFlow.js';
 import { createCss } from '../src/shared/diagram/label/svg.js';
 import { resolveStyle } from '../src/shared/diagram/style.js';
 import type { Point, Rect } from '../src/shared/diagram/types.js';
@@ -620,5 +626,288 @@ describe('labelText', () => {
     expect(labelText(vertex(''), 'a <b>\r\nc')).toBe('a <b>\nc');
     expect(labelText(vertex('whiteSpace=wrap;'), '<b>x</b>')).toBe('<b>x</b>');
     expect(labelText(vertex('html=1;'), '')).toBe('');
+  });
+});
+
+// --- shapeInside=1: text flow inside the shape (label/shapeInside.ts) ---------------------------
+
+describe('shapeInside geometry (Graph.shapeInsideOutlines, getShapeInsideBox, …)', () => {
+  it('is enabled only for wrapped labels in their default place without overflow handling', () => {
+    const on = 'ellipse;whiteSpace=wrap;html=1;shapeInside=1;';
+    expect(isShapeInsideEnabled(vertex(on))).toBe(true);
+    expect(isShapeInsideEnabled(vertex('ellipse;whiteSpace=wrap;shapeInside=1;'))).toBe(true);
+    expect(isShapeInsideEnabled(vertex('ellipse;html=1;shapeInside=1;'))).toBe(false);
+    expect(isShapeInsideEnabled(vertex('ellipse;whiteSpace=wrap;html=1;shapeInside=0;'))).toBe(false);
+    for (const extra of ['horizontal=0;', 'overflow=hidden;', 'overflow=fill;', 'labelWidth=40;', 'labelPosition=left;', 'verticalLabelPosition=top;']) {
+      expect(isShapeInsideEnabled(vertex(on + extra)), extra).toBe(false);
+    }
+    expect(isShapeInsideEnabled(vertex(`${on}horizontal=1;overflow=visible;`))).toBe(true);
+  });
+
+  it('reads shapeInsidePadding as a safe, non-negative number (2 by default)', () => {
+    expect(shapeInsidePadding(vertex(''))).toBe(2);
+    expect(shapeInsidePadding(vertex('shapeInsidePadding=5.5;'))).toBe(5.5);
+    expect(shapeInsidePadding(vertex('shapeInsidePadding=0;'))).toBe(0);
+    expect(shapeInsidePadding(vertex('shapeInsidePadding=-3;'))).toBe(2);
+    expect(shapeInsidePadding(vertex('shapeInsidePadding=x;'))).toBe(2);
+  });
+
+  it('lays the content out in the label box grown by the foreignObject padding', () => {
+    expect(shapeInsideBox(vertex(''), 120, 80)).toEqual({ x: 1, y: 2, width: 118, height: 76 });
+    expect(shapeInsideBox(vertex('spacing=4;spacingLeft=6;spacingBottom=1;'), 120, 80)).toEqual({ x: 9, y: 4, width: 108, height: 71 });
+    // top alignment moves the box down by the base spacing (5)
+    expect(shapeInsideBox(vertex('verticalAlign=top;'), 120, 80)).toEqual({ x: 1, y: 7, width: 118, height: 71 });
+    expect(shapeInsideBox(vertex(''), 2, 2)).toEqual({ x: 1, y: 2, width: 1, height: 1 });
+  });
+
+  it('describes each half of the label by the region outside the shape', () => {
+    expect(shapeInsideOutline(vertex('rhombus;'), 80, 80)).toEqual({
+      left: [[0, 0], [0.5, 0], [0, 0.5], [0.5, 1], [0, 1]],
+      right: [[1, 0], [0.5, 0], [1, 0.5], [0.5, 1], [1, 1]],
+    });
+    const ellipse = shapeInsideOutline(vertex('ellipse;'), 120, 80);
+    expect(ellipse?.left).toHaveLength(23);
+    expect(ellipse?.left?.[11]).toEqual([0, 0.5]);
+    expect(ellipse?.right?.[11]).toEqual([1, 0.5]);
+    // fixedSize: 20px of 120 on each slanted side
+    expect(shapeInsideOutline(vertex('shape=hexagon;fixedSize=1;'), 120, 80)?.left).toEqual([[0, 0], [1 / 6, 0], [0, 0.5], [1 / 6, 1], [0, 1]]);
+    expect(shapeInsideOutline(vertex('shape=hexagon;'), 120, 80)?.left?.[1]).toEqual([0.25, 0]);
+    expect(shapeInsideOutline(vertex('shape=hexagon;direction=north;size=0.2;'), 120, 100)?.left?.[2]).toEqual([0, 0.2]);
+    expect(shapeInsideOutline(vertex('shape=parallelogram;'), 100, 60)).toEqual({ left: [[0, 0], [0.2, 0], [0, 1]], right: [[1, 0], [1, 1], [0.8, 1]] });
+    expect(shapeInsideOutline(vertex('shape=parallelogram;flipH=1;'), 100, 60)).toEqual({ left: [[0, 0], [0, 1], [0.2, 1]], right: [[1, 0], [0.8, 0], [1, 1]] });
+    expect(shapeInsideOutline(vertex('shape=trapezoid;flipV=1;'), 100, 60)?.left).toEqual([[0, 1], [0.2, 1], [0, 0]]);
+    expect(shapeInsideOutline(vertex('shape=or;'), 60, 80)?.left).toBeNull();
+    expect(shapeInsideOutline(vertex('shape=or;flipH=1;'), 60, 80)?.right).toBeNull();
+    expect(shapeInsideOutline(vertex('shape=xor;'), 60, 80)?.left).toHaveLength(25);
+    expect(shapeInsideOutline(vertex('shape=dataStorage;'), 100, 80)?.left?.[1]).toEqual([0.1, 0]);
+    expect(shapeInsideOutline(vertex('shape=step;flipH=1;'), 100, 80)?.right).toEqual([[1, 0], [0.8, 0.5], [1, 1]]);
+  });
+
+  it('turns the triangle\'s flow with its direction and flips', () => {
+    expect(shapeInsideTriangleDirection(vertex('triangle;'))).toBe('east');
+    expect(shapeInsideTriangleDirection(vertex('triangle;flipH=1;'))).toBe('west');
+    expect(shapeInsideTriangleDirection(vertex('triangle;direction=north;'))).toBe('north');
+    // north/south swap the flip axes
+    expect(shapeInsideTriangleDirection(vertex('triangle;direction=north;flipH=1;'))).toBe('south');
+    expect(shapeInsideTriangleDirection(vertex('triangle;direction=north;flipV=1;'))).toBe('north');
+    expect(shapeInsideOutline(vertex('triangle;direction=south;'), 80, 60)).toEqual({
+      left: [[0, 1], [0.5, 1], [0, 0]], right: [[1, 1], [0.5, 1], [1, 0]],
+    });
+  });
+
+  it('supports only the shapes and parameters draw.io supports', () => {
+    expect(shapeInsideOutline(vertex(''), 120, 80)).toBeNull();
+    expect(shapeInsideOutline(vertex('shape=cloud;'), 120, 80)).toBeNull();
+    expect(shapeInsideOutline(vertex('shape=constructor;'), 120, 80)).toBeNull();
+    expect(shapeInsideOutline(vertex('shape=__proto__;'), 120, 80)).toBeNull();
+    expect(shapeInsideOutline(vertex('ellipse;'), 0, 80)).toBeNull();
+    expect(shapeInsideOutline(vertex('shape=parallelogram;direction=south;'), 120, 80)).toBeNull();
+    expect(shapeInsideOutline(vertex('shape=trapezoid;direction=west;'), 120, 80)).toBeNull();
+    expect(shapeInsideOutline(vertex('shape=step;size=0.6;'), 120, 80)).toBeNull();
+    expect(shapeInsideOutline(vertex('shape=hexagon;fixedSize=1;size=70;'), 120, 80)).not.toBeNull();
+    // shapeInsideShape picks another shape's flow
+    expect(shapeInsideOutline(vertex('shape=cloud;shapeInsideShape=rhombus;'), 80, 80)?.left).toHaveLength(5);
+    expect(shapeInsideFloats(vertex('rhombus;whiteSpace=wrap;shapeInside=1;'), 80, 80)).not.toBeNull();
+    expect(shapeInsideFloats(vertex('rhombus;whiteSpace=wrap;'), 80, 80)).toBeNull();
+  });
+
+  it('gives the interior of the shape at each height for the SVG label conversion', () => {
+    expect(shapeInsideBands(vertex('rhombus;'), 80, 80)?.(0.25)).toEqual([0.25, 0.75]);
+    expect(shapeInsideBands(vertex('ellipse;'), 80, 80)?.(0.5)).toEqual([0, 1]);
+    expect(shapeInsideBands(vertex('triangle;'), 80, 80)?.(0.25)).toEqual([0, 0.5]);
+    expect(shapeInsideBands(vertex('triangle;direction=north;'), 80, 80)?.(0)).toEqual([0.5, 0.5]);
+    expect(shapeInsideBands(vertex('shape=parallelogram;'), 100, 80)?.(1)).toEqual([0, 0.8]);
+    expect(shapeInsideBands(vertex('shape=or;flipH=1;'), 60, 80)?.(0.5)).toEqual([0, 1]);
+    expect(shapeInsideBands(vertex('shape=step;'), 100, 80)?.(0.5)).toEqual([0.2, 1]);
+    expect(shapeInsideBands(vertex('shape=cloud;'), 100, 80)).toBeNull();
+  });
+});
+
+/** draw.io's shapeInside labels in test/fixtures/drawio/shapes-general.0.svg: the flow wrapper and its cell. */
+function shapeInsideReferences(): Array<{ value: string; wrapper: string; style: string; w: number; h: number }> {
+  const svg = readFileSync(resolve(__dirname, 'fixtures/drawio/shapes-general.0.svg'), 'utf8');
+  const reference = JSON.parse(readFileSync(referenceJsonPath('shapes-general'), 'utf8')) as DrawioReference;
+  const cells = reference.pages[0].cells;
+  const out: Array<{ value: string; wrapper: string; style: string; w: number; h: number }> = [];
+  for (const m of svg.matchAll(/(<div style="float:left;text-decoration:inherit;.*?<\/div>)<\/div><\/div><\/div><\/foreignObject>/gs)) {
+    const wrapper = m[1];
+    const value = /([^<>]*)<\/div>$/.exec(wrapper)?.[1] ?? '';
+    const cell = cells.find((c) => c.label === value && c.style.includes('shapeInside=1'));
+    if (!cell?.state) throw new Error(`no cell for ${value}`);
+    out.push({ value, wrapper, style: cell.style, w: cell.state.width, h: cell.state.height });
+  }
+  return out;
+}
+
+describe('shapeInside markup (Graph.createShapeInsideValue)', () => {
+  const refs = shapeInsideReferences();
+
+  it('finds draw.io\'s eleven flowed labels', () => {
+    expect(refs.map((r) => r.value)).toEqual(['Ellipse', 'Circle', 'Diamond', 'Parallelogram', 'Hexagon', 'Triangle',
+      'Step', 'Trapezoid', 'Or', 'And', 'Data']);
+  });
+
+  it('writes the floats, polygons and spacer draw.io writes', () => {
+    for (const r of refs) {
+      const style = vertex(r.style);
+      const outline = shapeInsideFloats(style, r.w, r.h);
+      expect(outline, r.value).not.toBeNull();
+      const box = shapeInsideBox(style, r.w, r.h);
+      // The spacer and clip draw.io measured for this label.
+      const spacer = Number(/style="height:(\d+)px;pointer-events:none;"/.exec(r.wrapper)?.[1] ?? 0);
+      const floatHeight = Number(/float:(?:left|right);width:\d+px;height:(\d+)px/.exec(r.wrapper)?.[1]);
+      const clip = floatHeight < box.height ? floatHeight : null;
+      const ours = createShapeInsideValue(outline as ShapeInsideOutline, box, spacer, r.w, r.h, r.value,
+        shapeInsidePadding(style), 'middle', clip, null);
+      expect(ours, r.value).toBe(r.wrapper);
+    }
+  });
+
+  it('aligns the flow where draw.io\'s measurement did (computeShapeInsideSpacer)', () => {
+    const misses: string[] = [];
+    for (const r of refs) {
+      const style = vertex(r.style);
+      const outline = shapeInsideFloats(style, r.w, r.h) as ShapeInsideOutline;
+      const box = shapeInsideBox(style, r.w, r.h);
+      const align = computeShapeInsideSpacer(r.value, style, outline, box, r.w, r.h);
+      const ours = createShapeInsideValue(outline, box, align.spacer, r.w, r.h, r.value, shapeInsidePadding(style),
+        'middle', align.clip, null);
+      if (ours !== r.wrapper) misses.push(`${r.value}: ${JSON.stringify(align)}\n  draw.io ${r.wrapper}\n  ours    ${ours}`);
+    }
+    expect(misses).toEqual([]);
+  });
+
+  it('grows the wrapper for overflow and offsets the floats by it', () => {
+    const outline = shapeInsideOutline(vertex('rhombus;'), 80, 80) as ShapeInsideOutline;
+    const box = shapeInsideBox(vertex(''), 80, 80);
+    const value = createShapeInsideValue(outline, box, -10, 80, 80, 'x', 2, 'middle', null, null);
+    expect(value).toMatch(/^<div style="float:left;text-decoration:inherit;width:78px;height:96px;">/);
+    expect(value).toContain('height:86px;shape-outside:polygon(');
+    expect(value).not.toContain('style="height:');
+    expect(shapeInsideGrow(-10, 'bottom')).toBe(10);
+    expect(shapeInsideGrow(5, 'middle')).toBe(0);
+  });
+
+  it('paints the label background behind the flowed text', () => {
+    const flow = { top: 30, bottom: 44, left: 20.4, right: 60.6, lines: [[30, 44]] as Array<[number, number]> };
+    expect(createShapeInsideBackground(flow, { top: 1, right: 2, bottom: 3, left: 4 }, '#ffff00', null)).toBe(
+      '<div data-shape-inside="1" data-shape-inside-background="1" contenteditable="false" style="position:absolute;'
+      + 'z-index:-1;box-sizing:border-box;pointer-events:none;left:16px;top:29px;width:46px;height:18px;background-color: #ffff00;"></div>');
+    expect(createShapeInsideBackground(flow, null, null, 'red')).toContain('border-style:solid;border-width:1px;left:20px;top:30px;width:40px;height:14px;border-color: red;');
+    expect(createShapeInsideBackground(null, null, 'red', null)).toBeNull();
+  });
+});
+
+describe('shapeInside flow without a DOM (label/shapeInsideFlow.ts)', () => {
+  const LOREM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit';
+
+  /**
+   * draw.io's computeShapeInsideSpacer and measureShapeInsideFlow, taken
+   * from Graph.js and run in Electron 32.3.3 (Chromium 128, the browser of
+   * the reference generator) on win32, gave these spacers and clips.
+   */
+  const MEASURED: Array<[string, string, number, number, { spacer: number; clip: number | null }]> = [
+    ['ellipse;', LOREM, 120, 80, { spacer: 9, clip: null }],
+    ['ellipse;', 'The quick brown fox jumps over the lazy dog and keeps running far away', 160, 100, { spacer: 27, clip: null }],
+    ['rhombus;', LOREM, 120, 80, { spacer: -19, clip: null }],
+    ['rhombus;', `${LOREM} sed do eiusmod tempor incididunt`, 80, 80, { spacer: -59, clip: null }],
+    ['triangle;direction=north;', 'A triangle with some text in it', 120, 100, { spacer: 16, clip: null }],
+    ['shape=parallelogram;fixedSize=1;', LOREM, 120, 60, { spacer: -1, clip: null }],
+    ['shape=xor;', 'Exclusive or gate', 60, 80, { spacer: -21, clip: null }],
+    ['shape=or;', 'And gate with text', 60, 80, { spacer: 24, clip: null }],
+    ['ellipse;verticalAlign=top;', LOREM, 120, 80, { spacer: 0, clip: null }],
+    ['ellipse;verticalAlign=bottom;', LOREM, 120, 80, { spacer: 10, clip: null }],
+    ['rhombus;verticalAlign=bottom;', 'Is it done yet?', 120, 80, { spacer: 39, clip: null }],
+    ['ellipse;fontSize=14;fontStyle=1;', LOREM, 140, 90, { spacer: 6, clip: null }],
+    ['ellipse;', 'Hello <b>bold world</b><br>second line here', 120, 80, { spacer: 24, clip: null }],
+    ['ellipse;', 'Supercalifragilisticexpialidocious', 80, 80, { spacer: 31, clip: 0 }],
+    ['ellipse;shapeInsidePadding=6;', LOREM, 120, 80, { spacer: 0, clip: null }],
+  ];
+
+  it('aligns multi-line flows where draw.io measured them in Chromium', () => {
+    const misses: string[] = [];
+    for (const [extra, raw, w, h, want] of MEASURED) {
+      const style = vertex(`${extra}whiteSpace=wrap;html=1;shapeInside=1;`);
+      const outline = shapeInsideFloats(style, w, h) as ShapeInsideOutline;
+      const got = computeShapeInsideSpacer(sanitizeLabelHtml(raw), style, outline, shapeInsideBox(style, w, h), w, h);
+      if (got.spacer !== want.spacer || got.clip !== want.clip) misses.push(`${extra} ${raw}: ${JSON.stringify(got)} vs ${JSON.stringify(want)}`);
+    }
+    expect(misses).toEqual([]);
+  });
+
+  it('lays lines out as Chromium does next to the shape-outside floats', () => {
+    const style = vertex('ellipse;whiteSpace=wrap;html=1;shapeInside=1;');
+    const outline = shapeInsideFloats(style, 120, 80) as ShapeInsideOutline;
+    const flow = measureShapeInsideFlow(LOREM, style, outline, shapeInsideBox(style, 120, 80), 0, 120, 80);
+    // Chromium: top 2 (the first line moved down 2px to fit), lines 14px of text every 14.390625px
+    expect(flow?.top).toBe(2);
+    expect(flow?.lines.map(([a, b]) => [Math.round(a * 100) / 100, Math.round(b * 100) / 100]))
+      .toEqual([[2, 16], [16.39, 30.39], [30.78, 44.78], [45.17, 59.17]]);
+    expect(flow?.left).toBeCloseTo(11.3, 0);
+    expect(flow?.right).toBeCloseTo(106.69, 0);
+    // A word that fits next to the shapes nowhere goes below the floats
+    const word = vertex('ellipse;whiteSpace=wrap;html=1;shapeInside=1;');
+    const below = measureShapeInsideFlow('Supercalifragilisticexpialidocious', word, shapeInsideFloats(word, 80, 80) as ShapeInsideOutline,
+      shapeInsideBox(word, 80, 80), 0, 80, 80);
+    expect(below?.lines).toEqual([[76, 90]]);
+    expect(measureShapeInsideFlow('', style, outline, shapeInsideBox(style, 120, 80), 0, 120, 80)).toBeNull();
+  });
+
+  it('excludes a polygon grown by the shape margin (offset edges and vertex circles)', () => {
+    const square: Array<[number, number]> = [[0, 0], [10, 0], [10, 10], [0, 10]];
+    expect(polygonExcludedInterval(square, 0, 2, 4)).toEqual([0, 10]);
+    expect(polygonExcludedInterval(square, 2, 2, 4)).toEqual([-2, 12]);
+    const corner = polygonExcludedInterval(square, 2, 11, 12) as [number, number];
+    expect(corner[0]).toBeCloseTo(-Math.sqrt(3), 6);
+    expect(corner[1]).toBeCloseTo(10 + Math.sqrt(3), 6);
+    expect(polygonExcludedInterval(square, 2, 20, 21)).toBeNull();
+    expect(polygonExcludedInterval([[0, 0], [10, 10], [0, 10]], 0, 0, 5)).toEqual([0, 5]);
+  });
+
+  it('fits the font size to the flow for autosizeText (computeShapeInsideFontSize)', () => {
+    const style = vertex('ellipse;whiteSpace=wrap;html=1;shapeInside=1;');
+    const outline = shapeInsideFloats(style, 120, 80) as ShapeInsideOutline;
+    const size = computeShapeInsideFontSize('Short', style, outline, 120, 80) as number;
+    expect(size).toBeGreaterThan(14);
+    expect(computeShapeInsideFontSize(LOREM, style, outline, 120, 80)).toBeLessThan(size);
+    expect(computeShapeInsideFontSize('', style, outline, 120, 80)).toBeNull();
+  });
+});
+
+describe('shapeInside labels (the mxText.paint override)', () => {
+  const ELLIPSE = 'ellipse;whiteSpace=wrap;html=1;shapeInside=1;';
+  const CELL: Rect = { x: 0, y: 0, width: 120, height: 80 };
+
+  it('paints the value in its flow inside the label box', () => {
+    const svg = vertexLabelSvg(vertex(ELLIPSE), 'Ellipse', CELL, 1);
+    wellFormed(svg);
+    expect(svg).toContain('<div style="float:left;text-decoration:inherit;width:118px;height:76px;"><div data-shape-inside="1"');
+    expect(svg).toContain('style="height:31px;pointer-events:none;"></div>Ellipse</div></div></div></div></foreignObject>');
+    // draw.io lays the flow out in model units at any view scale
+    const two = vertexLabelSvg(vertex(ELLIPSE), 'Ellipse', { x: 0, y: 0, width: 240, height: 160 }, 2);
+    expect(two.replace(/^<g><g transform="scale\(2\)"/, '<g><g')).toBe(svg);
+  });
+
+  it('paints labels without the flow when it does not apply', () => {
+    expect(vertexLabelSvg(vertex('ellipse;html=1;shapeInside=1;'), 'x', CELL, 1)).not.toContain('data-shape-inside');
+    expect(vertexLabelSvg(vertex(`${ELLIPSE}labelPosition=left;`), 'x', CELL, 1)).not.toContain('data-shape-inside');
+    expect(vertexLabelSvg(vertex('shape=cloud;whiteSpace=wrap;html=1;shapeInside=1;'), 'x', CELL, 1)).not.toContain('data-shape-inside');
+    expect(edgeLabelSvg(edge('whiteSpace=wrap;html=1;shapeInside=1;shape=ellipse;'), 'x', { x: 0, y: 0 }, 1)).not.toContain('data-shape-inside');
+    expect(vertexLabelSvg(vertex('ellipse;whiteSpace=wrap;shapeInside=1;'), 'a & b', CELL, 1)).toContain('a &amp; b</div>');
+  });
+
+  it('paints the label background around the flowed text, not over the shape', () => {
+    const svg = vertexLabelSvg(vertex(`${ELLIPSE}labelBackgroundColor=#ffff00;labelBorderColor=#ff0000;`), 'Ellipse', CELL, 1);
+    wellFormed(svg);
+    expect(svg).toContain('position:relative;z-index:0;width:118px;height:76px;"><div data-shape-inside="1" data-shape-inside-background="1"');
+    expect(svg.match(/background-color: #ffff00;/g)).toHaveLength(1);
+    expect(svg).toContain('border-style:solid;border-width:1px;');
+    expect(svg).not.toContain('border: 1px solid');
+  });
+
+  it('keeps trailing newlines as empty lines inside the flow', () => {
+    const svg = vertexLabelSvg(vertex(ELLIPSE), 'a\nb\n', CELL, 1);
+    wellFormed(svg);
+    expect(svg).toContain('a<br/>b<div><br/></div></div>');
   });
 });

@@ -1,0 +1,144 @@
+/* draw.io's Layers window as a floating panel over the canvas (layersPanel.ts). */
+
+.layers-panel {
+  position: fixed;
+  top: 96px;
+  left: calc(100vw - 600px);
+  z-index: 900;
+  width: 272px;
+  max-height: calc(100vh - 160px);
+  display: flex;
+  flex-direction: column;
+  background: var(--panel, #252528);
+  color: var(--text, #e8e8ea);
+  border: 1px solid var(--line, #3a3a3f);
+  border-radius: var(--radius, 8px);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 45%);
+  font-size: 12px;
+  user-select: none;
+}
+
+.layers-panel[hidden] { display: none; }
+
+.layers-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 6px 6px 10px;
+  border-bottom: 1px solid var(--line, #3a3a3f);
+  cursor: move;
+}
+
+.layers-title { font-weight: 600; flex: 1; }
+
+.layers-diagram {
+  max-width: 110px;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 1px solid var(--line, #3a3a3f);
+  border-radius: 4px;
+}
+
+.layers-diagram[hidden] { display: none; }
+
+.layers-panel button {
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 4px;
+  color: inherit;
+  font: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.layers-panel button:hover:not(:disabled) { background: rgb(255 255 255 / 8%); }
+.layers-panel button:disabled { opacity: 0.35; cursor: default; }
+
+.layers-list {
+  overflow-y: auto;
+  min-height: 30px;
+}
+
+.layers-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 30px;
+  padding: 0 8px 0 4px;
+  border-bottom: 1px solid var(--line, #3a3a3f);
+  cursor: pointer;
+}
+
+.layers-row:hover { background: rgb(255 255 255 / 4%); }
+
+/* The current layer (draw.io's default parent): bold, highlighted. */
+.layers-row.current {
+  font-weight: 600;
+  background: var(--accent-soft, rgb(79 142 247 / 14%));
+  box-shadow: inset 2px 0 0 var(--accent, #4f8ef7);
+}
+
+/* draw.io shows a locked layer in red. */
+.layers-row.locked { color: var(--danger, #e5544b); }
+.layers-row .layers-lock { opacity: 0.4; }
+.layers-row.locked .layers-lock { opacity: 0.9; }
+.layers-row .layers-eye { opacity: 0.9; }
+.layers-row.hidden-layer .layers-name { opacity: 0.45; }
+.layers-row.hidden-layer .layers-eye { opacity: 0.5; }
+
+.layers-row.dragging { opacity: 0.5; }
+.layers-row.drop-target { box-shadow: inset 0 2px 0 var(--accent, #4f8ef7); }
+
+.layers-name {
+  flex: 1;
+  min-width: 0;
+  padding: 4px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.layers-rename {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  color: inherit;
+  background: var(--bg, #1c1c1e);
+  border: 1px solid var(--accent, #4f8ef7);
+  border-radius: 3px;
+  padding: 2px 4px;
+}
+
+.layers-dot { font-size: 16px; line-height: 1; padding: 0 2px; color: var(--accent, #4f8ef7); }
+
+.layers-empty {
+  padding: 10px;
+  color: var(--muted, #9a9aa2);
+}
+
+.layers-empty[hidden] { display: none; }
+
+.layers-tools {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-top: 1px solid var(--line, #3a3a3f);
+}
+
+.layers-tools .layers-spacer { flex: 1; }
+.layers-tools .layers-select,
+.layers-tools .layers-move { padding: 0 6px; white-space: nowrap; }
+
+.zoom-controls .layers-toggle { display: grid; place-items: center; }
+.zoom-controls .layers-toggle[hidden] { display: none; }
+.zoom-controls .layers-toggle.active { background: var(--accent-soft); color: var(--accent); }
+
+/* The folding icons over the slide (diagramCommands.ts): above the selection overlay. */
+.dg-folding-layer { z-index: 3; }
+.dg-folding-icon { user-select: none; }

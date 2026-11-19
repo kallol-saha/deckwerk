@@ -32,6 +32,9 @@ import {
 } from './textFormatting.js';
 import { showPasteThemeDialog } from './pasteThemeDialog.js';
 import { createToolbarPicker } from './exportPicker.js';
+import { diagramContextItems, handleDiagramKey, installDiagramCommands, installFoldingIcons } from './diagramCommands.js';
+import { installLayersPanel } from './layersPanel.js';
+import { installDiagramExtras } from './diagramExtras.js';
 
 /**
  * Shell-independent wiring shared by the Electron editor and the browser
@@ -263,6 +266,20 @@ export function hasNativeCopySelection(selection = window.getSelection()): boole
 
 export function bindEditorKeys(deps: ShellDeps, clipboard: ClipboardActions): void {
   const { store, canvas, rail, save } = deps;
+  // Diagrams: the folding icons on containers and the Layers panel
+  // (Ctrl/Cmd+Shift+L), in both shells (diagramCommands.ts, layersPanel.ts).
+  // Skipped for the stand-in canvas and store some unit tests pass, which
+  // have no stage and no subscriptions.
+  if (
+    typeof (canvas as Partial<typeof canvas>).addStageLayer === 'function'
+    && typeof (store as Partial<typeof store>).subscribe === 'function'
+  ) {
+    installFoldingIcons(store, canvas);
+    installLayersPanel(store, canvas);
+    installDiagramCommands(store);
+    // Figure export, math, tables and find/replace (diagramExtras.ts).
+    installDiagramExtras({ store, canvas, setStatusMessage: deps.setStatusMessage });
+  }
   // The contenteditable text surface stops keyboard events before they reach
   // the window. Give it the same shell-aware undo path used below (including
   // collaboration's selective undo implementation).
@@ -381,6 +398,10 @@ export function bindEditorKeys(deps: ShellDeps, clipboard: ClipboardActions): vo
     // Also bail while a canvas text edit is live, so Delete edits the text
     // rather than deleting the element being typed into.
     if (typing || canvas.isEditing()) return;
+    // draw.io's Ctrl+G, Ctrl+Shift+U, Ctrl+Home/End and Ctrl+Shift+L for diagram cells.
+    if (handleDiagramKey(e, store)) return;
+    // draw.io's arrows, Alt+Shift+arrows, Ctrl+Shift+G and Escape on the canvas (diagramEditing.ts).
+    if (canvas.diagramKey?.(e)) return;
 
     if (mod && e.key.toLowerCase() === 'z') {
       e.preventDefault();
@@ -637,6 +658,8 @@ export function makeContextActions(
         },
       );
     }
+    // Group, Ungroup, Collapse/Expand and Layers… for diagrams (diagramCommands.ts).
+    items.push(...diagramContextItems(store, el));
     return items;
   };
 }

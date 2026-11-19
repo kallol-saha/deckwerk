@@ -116,14 +116,14 @@ export function decodeEntities(s: string): string {
 
 // --- tokenizer ---------------------------------------------------------------------
 
-interface StartTag {
+export interface StartTag {
   type: 'start';
   name: string;
   attrs: Array<[string, string]>;
   selfClosing: boolean;
 }
 
-type Token =
+export type Token =
   | { type: 'text'; text: string }
   | StartTag
   | { type: 'end'; name: string };
@@ -137,7 +137,7 @@ const RAW_TEXT = new Set(['script', 'style', 'textarea', 'title', 'xmp', 'iframe
  * elements (script, style, …) run to their end tag as a browser reads them,
  * so markup inside them never becomes elements.
  */
-function tokenize(html: string): Token[] {
+export function tokenize(html: string): Token[] {
   const tokens: Token[] = [];
   let i = 0;
   let text = '';
@@ -471,10 +471,10 @@ function closeImplied(name: string, open: string[], out: string[]): void {
 }
 
 /** HTML void elements (never have content or an end tag). */
-const VOID_HTML = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr', 'frame', 'keygen']);
+export const VOID_HTML = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr', 'frame', 'keygen']);
 
 /** Block-level elements: their edges are line breaks in plain text. */
-const BLOCKS = new Set([
+export const BLOCKS = new Set([
   'address', 'article', 'aside', 'blockquote', 'caption', 'center', 'dd', 'details', 'div', 'dl', 'dt',
   'figcaption', 'figure', 'footer', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hr', 'li', 'main', 'nav',
   'ol', 'p', 'pre', 'section', 'summary', 'table', 'tbody', 'tfoot', 'thead', 'tr', 'ul',

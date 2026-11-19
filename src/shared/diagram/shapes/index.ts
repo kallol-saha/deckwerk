@@ -32,10 +32,46 @@ import {
   RequiredInterfaceShape, RequiresShape, SmileyFaceShape, StartStateShape, StateShape, UmlActorShape,
   UmlBoundaryShape, UmlControlShape, UmlDestroyShape, UmlEntityShape, UmlFrame, UmlLifeline, UmlStateShape,
 } from './uml.js';
+// --- draw.io's shape libraries (shapes/*.js and the rest of Shapes.js), one import each ---
+import { ELECTRICAL_SHAPES } from './mxElectrical.js';
+import { INFOGRAPHIC_SHAPES } from './mxInfographic.js';
+import { NETWORKS_SHAPES } from './mxNetworks.js';
+import { LEAN_MAP_SHAPES } from './mxLeanMap.js';
+import { BASIC_SHAPES } from './mxBasic.js';
+import { ARROWS_SHAPES } from './mxArrows.js';
+import { FLOWCHART_SHAPES } from './mxFlowchart.js';
+import { DRAWIO_EXTRA_GRAPH_SHAPES, DRAWIO_EXTRA_SHAPES } from './drawioExtra.js';
+import { UML25_SHAPES } from './mxUML25.js';
+import { ER_SHAPES } from './mxER.js';
 
 /** Shapes that paint along the route of an edge. */
 export const EDGE_SHAPES: readonly string[] = [
   'connector', 'arrow', 'arrowConnector', 'link', 'flexArrow', 'wire', 'filledEdge', 'pipe', 'taperedArrow',
+  // --- edge shapes of the libraries ---
+  'mxgraph.networks.comm_link_edge',
+  'mxgraph.lean_mapping.electronic_info_flow_edge', 'mxgraph.lean_mapping.manual_info_flow_edge',
+  'mxgraph.arrows2.wedgeArrow', 'mxgraph.arrows2.wedgeArrowDashed', 'mxgraph.arrows2.wedgeArrowDashed2',
+  'mermaidSankeyLink',
+];
+
+/**
+ * draw.io's shape libraries, each a list of [shape name, class] in the
+ * order the library registers them (registered after the core shapes, as
+ * mxStencilRegistry loads libraries after Shapes.js).
+ */
+const LIBRARIES: ReadonlyArray<ReadonlyArray<[string, ShapeClass]>> = [
+  // --- one entry per library ---
+  ELECTRICAL_SHAPES,
+  INFOGRAPHIC_SHAPES,
+  NETWORKS_SHAPES,
+  LEAN_MAP_SHAPES,
+  BASIC_SHAPES,
+  ARROWS_SHAPES,
+  FLOWCHART_SHAPES,
+  DRAWIO_EXTRA_SHAPES,
+  DRAWIO_EXTRA_GRAPH_SHAPES,
+  UML25_SHAPES,
+  ER_SHAPES,
 ];
 
 const SHAPES: Array<[string, ShapeClass]> = [
@@ -137,5 +173,6 @@ const SHAPES: Array<[string, ShapeClass]> = [
 ];
 
 for (const [name, ctor] of SHAPES) registerShape(name, ctor);
+for (const library of LIBRARIES) for (const [name, ctor] of library) registerShape(name, ctor);
 
 export { Connector, RectangleShape, WedgeCalloutShape, ImageShape };

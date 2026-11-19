@@ -5,19 +5,26 @@
  * mxArrowConnector.js; the edge shapes of js/grapheditor/Shapes.js (link,
  * flexArrow, wire, filledEdge, pipe, taperedArrow); and the curved-edge
  * parts of js/grapheditor/Graph.js (Graph.getCurvePoints,
- * Graph.getCurveSegments, mxConnector.isCurveTrimmed/paintCutCurve).
- * Modified for DeckWerk: line jumps, flow animation and the handles of the
- * tapered arrow are left out; the painting code is otherwise unchanged.
+ * Graph.getCurveSegments, mxConnector.isCurveTrimmed/paintCutCurve, and
+ * the line jumps of mxConnector.paintLine/paintCutCurve/getLineJumpSize).
+ * Modified for DeckWerk: flow animation and the handles of the tapered
+ * arrow are left out; the routed points with the jumps are given to the
+ * shape (routedPoints) instead of read from the cell state; the painting
+ * code is otherwise unchanged.
  */
 
 import type { SvgCanvas } from '../canvas.js';
+import type { RoutedPoint } from '../lineJumps.js';
 import { createMarker as createMarkerPainter, type MarkerPainter } from '../markers.js';
 import type { Point, Style } from '../types.js';
 import { Shape, type ConnectionConstraint } from './shape.js';
 import {
-  ARROW_SIZE, ARROW_SPACING, ARROW_WIDTH, DEFAULT_MARKERSIZE, NONE, clonePoint, getNumber, getString,
-  getValue, intersection, looseEq, relativeCcw, styleValue,
+  ARROW_SIZE, ARROW_SPACING, ARROW_WIDTH, DEFAULT_MARKERSIZE, LINE_ARCSIZE, NONE, clonePoint, getNumber, getString,
+  getValue, intersection, looseEq, relativeCcw, styleValue, toNumber,
 } from './util.js';
+
+/** Graph.defaultJumpSize. */
+const DEFAULT_JUMP_SIZE = 6;
 
 /** Graph.curvePointSteps. */
 const CURVE_POINT_STEPS = 16;
@@ -167,6 +174,118 @@ export class Connector extends Polyline {
   /** The ends of a trimmed curve before the markers moved them (Graph.js). */
   curveEnds: Point[] | null = null;
 
+  /**
+   * The route with its line jumps (mxCellState.routedPoints, see
+   * ../lineJumps.ts) in the coordinates of the painted points, or null
+   * when the edge has none to paint.
+   */
+  routedPoints: RoutedPoint[] | null = null;
+
+  /** mxConnector.isLineJumpsPainted: jumps are painted when routed points were given. */
+  isLineJumpsPainted(): boolean {
+    return this.routedPoints != null && !this.outline;
+  }
+
+  /** Graph.js mxConnector.getLineJumpSize: the distance of the ends of a jump from the intersection. */
+  getLineJumpSize(): number {
+    return (parseInt(String(getValue(this.style, 'jumpSize', DEFAULT_JUMP_SIZE)), 10) - 2) / 2 + this.strokewidth;
+  }
+
+  /** Graph.js mxConnector.paintLine: the line with the jumps of its routed points. */
+  override paintLine(c: SvgCanvas, absPts: Point[], rounded: boolean): void {
+    const rpts = this.routedPoints;
+    if (!this.isLineJumpsPainted() || !this.hasStyle || rpts == null || rpts.length === 0) {
+      super.paintLine(c, absPts, rounded);
+      return;
+    }
+    const arcSize = toNumber(getValue(this.style, 'arcSize', LINE_ARCSIZE)) / 2;
+    const size = this.getLineJumpSize();
+    const style = String(getValue(this.style, 'jumpStyle', 'none'));
+    let moveTo = true;
+    let last: Point | null = null;
+    let len: number | null = null;
+    let pts: Point[] = [];
+    let n: Point | null = null;
+    c.begin();
+
+    for (let i = 0; i < rpts.length; i++) {
+      const rpt = rpts[i];
+      let pt: Point = { x: rpt.x, y: rpt.y };
+
+      // Takes first and last point from passed-in array
+      if (i === 0) pt = absPts[0];
+      else if (i === rpts.length - 1) pt = absPts[absPts.length - 1];
+
+      let done = false;
+
+      // Type 1 is an intersection
+      if (last != null && rpt.type === 1) {
+        // Checks if next/previous points are too close
+        const next = rpts[i + 1];
+        let dx = next.x - pt.x;
+        let dy = next.y - pt.y;
+        let dist = dx * dx + dy * dy;
+
+        if (n == null) {
+          n = { x: pt.x - last.x, y: pt.y - last.y };
+          len = Math.sqrt(n.x * n.x + n.y * n.y);
+          if (len > 0) {
+            n.x = n.x * size / len;
+            n.y = n.y * size / len;
+          } else {
+            n = null;
+          }
+        }
+
+        if (dist > size * size && len != null && len > 0 && n != null) {
+          dx = last.x - pt.x;
+          dy = last.y - pt.y;
+          dist = dx * dx + dy * dy;
+
+          if (dist > size * size) {
+            const p0 = { x: pt.x - n.x, y: pt.y - n.y };
+            const p1 = { x: pt.x + n.x, y: pt.y + n.y };
+            pts.push(p0);
+            this.addPoints(c, pts, rounded, arcSize, false, null, moveTo);
+            let f = (Math.round(n.x) < 0 || (Math.round(n.x) === 0 && Math.round(n.y) <= 0)) ? 1 : -1;
+            moveTo = false;
+
+            if (style === 'sharp') {
+              c.lineTo(p0.x - n.y * f, p0.y + n.x * f);
+              c.lineTo(p1.x - n.y * f, p1.y + n.x * f);
+              c.lineTo(p1.x, p1.y);
+            } else if (style === 'line') {
+              c.moveTo(p0.x + n.y * f, p0.y - n.x * f);
+              c.lineTo(p0.x - n.y * f, p0.y + n.x * f);
+              c.moveTo(p1.x - n.y * f, p1.y + n.x * f);
+              c.lineTo(p1.x + n.y * f, p1.y - n.x * f);
+              c.moveTo(p1.x, p1.y);
+            } else if (style === 'arc') {
+              f *= 1.3;
+              c.curveTo(p0.x - n.y * f, p0.y + n.x * f, p1.x - n.y * f, p1.y + n.x * f, p1.x, p1.y);
+            } else {
+              c.moveTo(p1.x, p1.y);
+              moveTo = true;
+            }
+
+            pts = [p1];
+            done = true;
+          }
+        }
+      } else {
+        n = null;
+      }
+
+      if (!done) {
+        pts.push(pt);
+        last = pt;
+      }
+    }
+
+    this.addPoints(c, pts, rounded, arcSize, false, null, moveTo);
+    c.stroke();
+  }
+
   override paintEdgeShape(c: SvgCanvas, pts: Point[]): void {
     // The indirection via functions for markers is needed in
     // order to apply the offsets before painting the line and
@@ -245,14 +364,22 @@ export class Connector extends Polyline {
   }
 
   /**
-   * Graph.js mxConnector.paintCutCurve without line jumps: the curve of the
-   * original ends, cut where the markers start. False if not trimmed.
+   * Graph.js mxConnector.paintCutCurve: the curve with its original ends
+   * cut where the markers start if it is trimmed, and with the jumps of its
+   * routed points (curveGeometry=1), each cutting the curve before and after
+   * the intersection. False if the curve is not trimmed and has no jumps.
    */
   paintCutCurve(c: SvgCanvas, pts: Point[], bezier: boolean): boolean {
+    const rpts = this.routedPoints;
+    const style = String(getValue(this.style, 'jumpStyle', 'none'));
     const trimmed = this.isCurveTrimmed(pts);
-    if (!trimmed || pts.length < 2) return false;
+    let hasJumps = false;
+    for (let i = 0; rpts != null && i < rpts.length && !hasJumps; i++) hasJumps = rpts[i].type === 1;
+    hasJumps = hasJumps && style !== 'none' && this.isLineJumpsPainted();
+
+    if ((!hasJumps && !trimmed) || pts.length < 2) return false;
     if (pts.length < 3) {
-      // Painted as a straight line
+      // Painted as a straight line with the jumps of a straight line
       this.paintLine(c, pts, false);
       return true;
     }
@@ -334,12 +461,56 @@ export class Connector extends Polyline {
       return hi;
     };
 
+    // Position on the curve that is nearest to the given point, searched
+    // in the given segment and its neighbors if a segment is given
+    const getPosition = (pt: Point, segment?: number): number => {
+      const steps = 32;
+      let best = 0;
+      let bestDist: number | null = null;
+      const firstSeg = segment != null ? Math.max(0, segment - 1) : 0;
+      const lastSeg = segment != null ? Math.min(segs.length, segment + 2) : segs.length;
+      for (let i = firstSeg * steps; i <= lastSeg * steps; i++) {
+        const d = dist(getPoint(i / steps), pt);
+        if (bestDist == null || d < bestDist) {
+          best = i / steps;
+          bestDist = d;
+        }
+      }
+      let lo = Math.max(0, best - 1 / steps);
+      let hi = Math.min(segs.length, best + 1 / steps);
+      for (let i = 0; i < 24; i++) {
+        const m1 = lo + (hi - lo) / 3;
+        const m2 = hi - (hi - lo) / 3;
+        if (dist(getPoint(m1), pt) < dist(getPoint(m2), pt)) hi = m2;
+        else lo = m1;
+      }
+      return (lo + hi) / 2;
+    };
+
+    // Position at the given distance along the curve from the given
+    // position in the given direction, or null at the end of the curve
+    const advance = (pos: number, length: number, dir: number): number | null => {
+      const step = dir / 64;
+      let prev = getPoint(pos);
+      while (length > 0) {
+        const next = pos + step;
+        if (next < 0 || next > segs.length) return null;
+        const pt = getPoint(next);
+        const d = dist(prev, pt);
+        if (d >= length) return pos + step * length / d;
+        length -= d;
+        pos = next;
+        prev = pt;
+      }
+      return pos;
+    };
+
     let start: number | null = 0;
     let end: number | null = segs.length;
 
     // Paints the curve with the original ends from where the markers
     // start if it is longer than the markers (see createMarker)
-    if (this.curveEnds != null && this.curveEnds[0] != null && this.curveEnds[1] != null) {
+    if (trimmed && this.curveEnds != null && this.curveEnds[0] != null && this.curveEnds[1] != null) {
       const curve = pts.slice();
       curve[0] = this.curveEnds[0];
       curve[n - 1] = this.curveEnds[1];
@@ -354,10 +525,53 @@ export class Connector extends Polyline {
       }
     }
 
-    const first = getPoint(start ?? 0);
+    const startPos = start ?? 0;
+    const endPos = end ?? segs.length;
+    const first = getPoint(startPos);
+    let current = startPos;
     c.begin();
     c.moveTo(first.x, first.y);
-    addCurve(start ?? 0, end ?? segs.length);
+
+    if (hasJumps && rpts != null) {
+      const size = this.getLineJumpSize();
+      for (const rpt of rpts) {
+        if (rpt.type !== 1) continue;
+        const pos = getPosition({ x: rpt.x, y: rpt.y }, rpt.segment);
+        const from = advance(pos, size, -1);
+        const to = advance(pos, size, 1);
+
+        // Ignores jumps that are too close to the previous jump or
+        // to the ends of the curve
+        if (from != null && to != null && from > current && to <= endPos) {
+          addCurve(current, from);
+          const p0 = getPoint(from);
+          const p1 = getPoint(to);
+          const nx = (p1.x - p0.x) / 2;
+          const ny = (p1.y - p0.y) / 2;
+          let f = (Math.round(nx) < 0 || (Math.round(nx) === 0 && Math.round(ny) <= 0)) ? 1 : -1;
+
+          if (style === 'sharp') {
+            c.lineTo(p0.x - ny * f, p0.y + nx * f);
+            c.lineTo(p1.x - ny * f, p1.y + nx * f);
+            c.lineTo(p1.x, p1.y);
+          } else if (style === 'line') {
+            c.moveTo(p0.x + ny * f, p0.y - nx * f);
+            c.lineTo(p0.x - ny * f, p0.y + nx * f);
+            c.moveTo(p1.x - ny * f, p1.y + nx * f);
+            c.lineTo(p1.x + ny * f, p1.y - nx * f);
+            c.moveTo(p1.x, p1.y);
+          } else if (style === 'arc') {
+            f *= 1.3;
+            c.curveTo(p0.x - ny * f, p0.y + nx * f, p1.x - ny * f, p1.y + nx * f, p1.x, p1.y);
+          } else {
+            c.moveTo(p1.x, p1.y);
+          }
+          current = to;
+        }
+      }
+    }
+
+    addCurve(current, endPos);
     c.stroke();
     return true;
   }

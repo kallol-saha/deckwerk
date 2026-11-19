@@ -12,6 +12,7 @@
 
 import type { AgentOperation } from '../agent.js';
 import type { Deck, DiagramMeta, Slide, SlideElement } from '../deck.js';
+import { animationToBuilds, buildsMatchAnimation, placeDiagramBuilds } from './animation.js';
 import { fitPlacement, pageToElements, type Placement } from './convert.js';
 import type { DiagramPage, DrawioDocument } from './model.js';
 
@@ -157,10 +158,25 @@ export function diagramPageOperations(
       ...(lastExisting ? { afterElementId: lastExisting.id } : {}),
     });
   }
+  // The file's animation is the diagram's builds: when it reads as other
+  // builds than the slide has, they are replaced (with no animation in the
+  // file, the builds are left as they are).
+  const diagrams = { ...(slide.diagrams ?? {}), [diagramId]: nextMeta };
+  const after: Slide = {
+    ...slide,
+    elements: [...slide.elements.filter((el) => !deleted.includes(el.id) && !keptIds.has(el.id)), ...remapped],
+    timeline: slide.timeline.filter((entry) => !deleted.includes(entry.action.target)),
+    diagrams,
+  };
+  let timeline: Slide['timeline'] | undefined;
+  if (nextMeta.animation != null && !buildsMatchAnimation(after, diagramId)) {
+    const cellIds = new Set(remapped.map((el) => el.id));
+    timeline = placeDiagramBuilds(after.timeline, cellIds, animationToBuilds(nextMeta.animation, after, diagramId, options.makeId));
+  }
   operations.push({
     op: 'setSlideProperties',
     slideId: slide.id,
-    slide: { id: slide.id, diagrams: { ...(slide.diagrams ?? {}), [diagramId]: nextMeta } },
+    slide: { id: slide.id, diagrams, ...(timeline ? { timeline } : {}) },
   });
   return {
     operations,
@@ -193,7 +209,9 @@ export function drawioToSlides(
       background: { color: pageBackground(page.model.background), image: null },
       notes: '',
       elements,
-      timeline: [],
+      // draw.io's animation, as builds on the cells.
+      timeline: placeDiagramBuilds([], new Set(elements.map((el) => el.id)),
+        animationToBuilds(meta.animation, { elements, diagrams: { 'diagram-1': meta } }, 'diagram-1', makeId)),
       diagrams: { 'diagram-1': meta },
     };
   });

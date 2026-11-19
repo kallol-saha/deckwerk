@@ -1,4 +1,5 @@
 import { withRoutedConnectors } from './diagram/reroute.js';
+import { withTableLayout } from './diagram/table.js';
 import { z } from 'zod';
 import {
   CommentSchema,
@@ -313,7 +314,8 @@ export function applyAgentOperations(deck: Deck, operations: AgentOperation[]): 
     applyOperation(next, AgentOperationSchema.parse(renameRetiredFields(operation)));
   }
   // Connectors follow their vertices, and lose an end whose vertex was deleted.
-  const parsed = withRoutedConnectors(null, DeckSchema.parse(next));
+  // Tables lay out what changed in them (draw.io's layout manager).
+  const parsed = withRoutedConnectors(null, withTableLayout(parseDeck(deck), DeckSchema.parse(next)));
   const errors = validateDeckIntegrity(parsed);
   if (errors.length > 0) throw new Error(errors.join('\n'));
   return parsed;

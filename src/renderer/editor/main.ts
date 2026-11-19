@@ -1,4 +1,5 @@
 import { importDrawioDiagram } from './drawioImport.js';
+import { exportDiagramFigure } from './diagramExport.js';
 import '../player/player.css';
 import '../appChrome.css';
 import './editor.css';
@@ -55,6 +56,7 @@ import {
 } from './shellWiring.js';
 import { SlideRail } from './slideRail.js';
 import { createHistoryButton, createMediaButton, popoverPanelHost } from './toolbarPanels.js';
+import { createShapeLibrary } from './shapeLibrary.js';
 import { installWindowApiPosterProvider } from '../player/previewPosterProvider.js';
 import { EditorStore } from './store.js';
 import { statusBarText } from './statusBar.js';
@@ -190,6 +192,8 @@ const mediaPanel = new MediaPanel(mediaHost, store, {
   beginOperation: (message) => operationProgress.begin(message),
 });
 installMediaDrop(el('canvas'), store, mediaPanel);
+// draw.io's shape library beside the rail; Shapes on the Insert bar, Ctrl/Cmd+Shift+K.
+const shapeLibrary = createShapeLibrary(store, { canvasHost: el('canvas'), setStatusMessage });
 const rail = new SlideRail(el('rail'), store);
 rail.onStatus = setStatusMessage;
 // The slide's objects, from a floating icon in the canvas's top-left corner,
@@ -575,6 +579,7 @@ function buildToolbar(): void {
       options: [
         { label: 'PDF…', action: () => void exportPdf() },
         { label: 'Web…', action: () => void exportWeb() },
+        { label: 'Diagram as SVG, PNG or PDF…', action: () => void exportDiagramFigure(store, setStatusMessage) },
       ],
     },
   ];
@@ -606,6 +611,7 @@ function buildToolbar(): void {
         uploadEntry,
         { label: 'Export PDF…', action: () => void exportPdf() },
         { label: 'Export Web…', action: () => void exportWeb() },
+        { label: 'Export Diagram as…', action: () => void exportDiagramFigure(store, setStatusMessage) },
       ],
     },
   ], { deckOnly: true });
@@ -646,6 +652,7 @@ function buildToolbar(): void {
     createPenButton(canvas),
     createTableInsertPicker(store),
     createMediaButton(mediaHost),
+    shapeLibrary.button,
   );
 
   const right = document.createElement('div');

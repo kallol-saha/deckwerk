@@ -50,6 +50,7 @@ import {
   applyTextRenderState,
   syncShapeBody,
   syncDiagramBody,
+  diagramRedraws,
   fitAutoText,
   renderElement,
   renderSlide,
@@ -148,6 +149,7 @@ import { KeptSelectionHighlight, TEXT_EDIT_PANEL_CHROME } from './keptSelection.
 import { rangeForBookmark, textBookmark, type TextBookmark } from './caretPath.js';
 import { prepareCodeBlocks, syncCodeBody } from '../player/codeRender.js';
 import { CODE_EDIT_CHROME, CodeEditor } from './codeEditing.js';
+import { DiagramEditing } from './diagramEditing.js';
 import { CODE_LINE_HEIGHT, CODE_PADDING_EM, describeLines, isLineBuild } from '@shared/codeBlocks.js';
 import {
   HANDLES,
@@ -879,6 +881,8 @@ type DragMode =
       origin: Rect;
     }
   | { kind: 'marquee'; startCanvas: { x: number; y: number } }
+  /** A draw.io gesture (connect, edge handles, label): diagramEditing.ts drives it. */
+  | { kind: 'diagram'; startCanvas: { x: number; y: number } }
   | {
       kind: 'endpoint';
       which: 'start' | 'end';
@@ -962,6 +966,8 @@ export class EditorCanvas {
   private viewportListeners = new Set<() => void>();
   private zoomControls: HTMLElement;
   private drag: DragMode = { kind: 'none' };
+  /** draw.io's mouse interactions for diagram cells (diagramEditing.ts). */
+  private diagram: DiagramEditing;
   /**
    * Whether the pointer has moved far enough to count as a drag.
    *
@@ -1245,7 +1251,20 @@ export class EditorCanvas {
     this.overlay.className = 'overlay-layer';
     this.offSlideText = new OffSlideText(this.slideLayer, this.host);
     this.stage.append(this.slideLayer, this.offSlideText.layer, this.overlay);
+    this.diagram = new DiagramEditing({
+      store,
+      host,
+      stage: this.stage,
+      zoom: () => this.scale,
+      hitTest: (point) => this.hitTest(point),
+      redrawOverlay: () => this.redrawOverlay(),
+      busy: () => Boolean(this.editingId || this.pen || this.pencil || this.pathEdit || this.maskingId
+        || this.codeEditor.editingId()),
+    });
     this.zoomControls = this.createZoomControls();
+    // draw.io's grid toggle in the zoom pill; the grid redraws with the zoom.
+    this.zoomControls.prepend(this.diagram.gridControl());
+    this.addViewportListener(() => this.diagram.syncGrid());
     this.zoomInput = this.zoomControls.querySelector<HTMLInputElement>('.zoom-value')!;
     this.host.replaceChildren(this.stage, this.zoomControls);
 
@@ -1936,6 +1955,7 @@ export class EditorCanvas {
     if (rendered) applySlideRootStyles(rendered, slide, resolve);
     // A theme change can take this path; the Deck code scheme follows it.
     prepareCodeBlocks(this.store.get().deck);
+    const diagramRedraw = diagramRedraws(slide, previous);
 
     for (const el of slide.elements) {
       const node = this.slideLayer.querySelector<HTMLElement>(
@@ -1962,8 +1982,12 @@ export class EditorCanvas {
       // A shape's drawing is sized by its own viewBox, so the wrapper's new
       // box is not enough: rebuild the SVG for the current geometry.
       if (el.type === 'shape') syncShapeBody(node, el);
-      // A draw.io cell is drawn from its fields and its route; redraw when it changed.
-      if ((el.type === 'vertex' || el.type === 'connector') && before !== el) syncDiagramBody(node, el);
+      // A draw.io cell is drawn from its fields and its route, and from its
+      // slide (line jumps over other connectors, the page shadow): redraw
+      // when it or they changed.
+      if ((el.type === 'vertex' || el.type === 'connector') && (before !== el || diagramRedraw.has(el.id))) {
+        syncDiagramBody(node, el, slide);
+      }
       // A code block's lines are drawn from its fields; redraw when they change.
       if (el.type === 'code') syncCodeBody(node, el);
     }
@@ -2468,6 +2492,11 @@ export class EditorCanvas {
   }
 
   /** The element under live text edit, or null. For presence. */
+  /** draw.io's keys for diagram cells (diagramEditing.ts); true when one was handled. */
+  diagramKey(e: KeyboardEvent): boolean {
+    return this.diagram.handleKey(e);
+  }
+
   editingElementId(): string | null {
     return this.editingId;
   }
@@ -2651,6 +2680,18 @@ export class EditorCanvas {
         continue;
       }
 
+      // A draw.io connector shows draw.io's edge handles, not a box.
+      if (el.type === 'connector') {
+        this.diagram.connectorChrome(box, el);
+        frag.appendChild(box);
+        continue;
+      }
+      // A locked diagram shape shows its outline but no handles.
+      if (!this.diagram.resizable(el)) {
+        frag.appendChild(box);
+        continue;
+      }
+
       // Lines, arrows and braces get endpoint handles instead of a resize
       // box: what you want to move is where the arrow starts and ends, not
       // its bounding rectangle.
@@ -2776,6 +2817,9 @@ export class EditorCanvas {
       }
       frag.appendChild(box);
     }
+
+    // draw.io's hover arrows, connection points, previews and drop highlights.
+    frag.appendChild(this.diagram.overlay());
 
     // Two pictures selected: the way into a before/after wipe, or the length
     // of the one they already are; out of the way while anything is dragged
@@ -3168,6 +3212,8 @@ export class EditorCanvas {
         }
         const origins = new Map<string, ResizeOrigin>();
         for (const selected of this.store.selectedElements()) {
+          // Locked diagram cells keep their size.
+          if (!this.diagram.resizable(selected)) continue;
           origins.set(selected.id, {
             x: selected.x,
             y: selected.y,
@@ -3226,8 +3272,15 @@ export class EditorCanvas {
       }
     }
 
-    // Topmost element under the cursor wins, matching what you see.
-    const hit = this.hitTest(point);
+    // draw.io's own presses: edge handles, hover arrows, connection points, labels.
+    if (this.diagram.pointerDown(ev, point, target)) {
+      this.drag = { kind: 'diagram', startCanvas: point };
+      return;
+    }
+
+    // Topmost element under the cursor wins, matching what you see (a
+    // grouped diagram shape: its group first, as draw.io selects).
+    const hit = this.diagram.pickCell(this.hitTest(point), ev);
     // A selected code block's gutter picks lines rather than moving the
     // block: a click takes one line, Shift-click stretches to it.
     if (hit?.type === 'code' && !ev.altKey && !commandModifier(ev)) {
@@ -3297,7 +3350,10 @@ export class EditorCanvas {
       }
       return;
     }
-    if (this.drag.kind === 'none') return;
+    if (this.drag.kind === 'none') {
+      this.diagram.hover(ev, this.toCanvas(ev));
+      return;
+    }
     // Only a held button drags. See `isHoverMove`.
     if (isHoverMove(ev)) return;
     let slide = this.store.slide;
@@ -3344,10 +3400,17 @@ export class EditorCanvas {
           // for snapping and movement rather than the stale pre-clone slide.
           slide = this.store.slide!;
         }
+        // A connector moved without the shapes it joins comes loose (draw.io).
+        this.diagram.beginMove(this.drag.origin);
+        slide = this.store.slide!;
       }
     }
 
     switch (this.drag.kind) {
+      case 'diagram':
+        this.diagram.drag(point, ev);
+        break;
+
       case 'move': {
         const drag = this.drag;
         let dx = point.x - drag.startCanvas.x;
@@ -3379,6 +3442,9 @@ export class EditorCanvas {
           // The gesture modifier suspends snapping for fine placement.
           ? { rect: moved, guides: [], spacing: [], sizes: [] }
           : snapMove(moved, deck.canvas, others, threshold);
+        // Diagram cells snap to draw.io's grid where no guide took them.
+        snapped.rect = this.diagram.gridMove(bounds, snapped.rect, drag.origin, ev,
+          [...snapped.guides, ...snapped.spacing], commandModifier(ev));
         this.guides = snapped.guides;
         this.spacing = snapped.spacing;
         this.sizeMatches = snapped.sizes;
@@ -3397,6 +3463,8 @@ export class EditorCanvas {
             };
           }
         });
+        // A diagram container under the pointer is outlined as the drop target.
+        this.diagram.moveFeedback(point, drag.origin, ev);
         break;
       }
 
@@ -3560,7 +3628,8 @@ export class EditorCanvas {
             : snapResize(rect, edges, deck.canvas, others, threshold);
         this.guides = snapped.guides;
 
-        let r = { ...snapped.rect };
+        // A diagram shape's dragged edges snap to draw.io's grid unless a guide took them.
+        let r = this.diagram.gridResize({ ...snapped.rect }, edges, drag.origins, ev, snapped.guides, radians !== 0);
         if (centered) {
           // Aspect constraints and snapping anchor the opposite corner, which
           // would drift the center — pin it back to where the drag started.
@@ -3820,11 +3889,14 @@ export class EditorCanvas {
         const box = this.marquee;
         const hits = slide.elements
           // Locked master copies are not selectable (see selectAllElements).
-          .filter((e) => !e.layoutMasterId && intersects(rotatedBounds(e), box))
+          .filter((e) => !e.layoutMasterId && this.diagram.selectable(e) && intersects(rotatedBounds(e), box))
           .map((e) => e.id);
         if (hits.length > 0) this.store.select(hits, ev.shiftKey);
       }
     }
+    // draw.io gestures finish; a moved diagram shape joins or leaves a container.
+    if (this.drag.kind === 'diagram') this.diagram.release(this.toCanvas(ev), ev, this.dragStarted);
+    else if (this.drag.kind === 'move') this.diagram.endMove(this.toCanvas(ev), ev, this.drag.origin, this.dragStarted);
     this.host.releasePointerCapture?.(ev.pointerId);
     this.endDrag();
     if (textEdit) this.beginTextEdit(textEdit.elementId, textEdit, textEdit.selectWord);
@@ -3882,6 +3954,7 @@ export class EditorCanvas {
 
   private endDrag(): void {
     this.store.endTransaction();
+    this.diagram.endGesture();
     this.drag = { kind: 'none' };
     this.dragStarted = false;
     this.host.classList.remove('is-rotating');
@@ -4092,7 +4165,14 @@ export class EditorCanvas {
     const el = this.store.slide?.elements.find((candidate) => candidate.id === id);
     if (!node || !el || (el.type !== 'vertex' && el.type !== 'connector')) return;
     const html = /(?:^|;)html=1(?:;|$)/.test(el.dio);
-    const rect = node.getBoundingClientRect();
+    let rect = node.getBoundingClientRect();
+    // A connector's label is edited where it sits on the route, not in the
+    // middle of the route's box.
+    const anchor = el.type === 'connector' ? this.diagram.labelEditAnchor(el) : null;
+    if (anchor) {
+      const stage = this.stage.getBoundingClientRect();
+      rect = new DOMRect(stage.left + anchor.x * this.scale - 60, stage.top + anchor.y * this.scale - 14, 120, 28);
+    }
     const editor = document.createElement('div');
     editor.className = 'diagram-label-editor';
     editor.contentEditable = html ? 'true' : 'plaintext-only';
@@ -8378,7 +8458,11 @@ export class EditorCanvas {
     if (!slide) return null;
     const ordered = [...slide.elements].sort((a, b) => b.z - a.z);
     for (const el of ordered) {
+      // Diagram cells hidden or on a locked layer cannot be picked.
+      if (!this.diagram.pickable(el, point, LINE_HIT_SCREEN_PX / this.scale)) continue;
       if (elementContainsPoint(el, point, LINE_HIT_SCREEN_PX / this.scale)) return el;
+      // A connector's label selects the connector, wherever it sits.
+      if (el.type === 'connector' && this.diagram.labelContains(el, point)) return el;
       // Text that outgrew its box is painted outside it, and a box-only hit
       // test made those visible glyphs unclickable: clicking the words you
       // can see selected whatever happened to be behind them. Overflowing
