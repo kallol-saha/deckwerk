@@ -1,0 +1,106 @@
+<mxfile host="deckwerk-fixtures" agent="drawio-reference fixtures" version="32.7.4">
+  <diagram id="labels-vertex-align" name="Vertex label alignment and position">
+    <mxGraphModel dx="0" dy="0" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="html-left-top" value="left top" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="html-center-top" value="center top" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="210" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="html-right-top" value="right top" style="rounded=0;whiteSpace=wrap;html=1;align=right;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="380" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="html-left-middle" value="left middle" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="550" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="html-center-middle" value="center middle" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="720" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="html-right-middle" value="right middle" style="rounded=0;whiteSpace=wrap;html=1;align=right;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="150" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="html-left-bottom" value="left bottom" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="210" y="150" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="html-center-bottom" value="center bottom" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="380" y="150" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="html-right-bottom" value="right bottom" style="rounded=0;whiteSpace=wrap;html=1;align=right;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="550" y="150" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="plain-left-top" value="left top" style="rounded=0;whiteSpace=wrap;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="40" y="260" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="plain-center-top" value="center top" style="rounded=0;whiteSpace=wrap;align=center;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="210" y="260" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="plain-right-top" value="right top" style="rounded=0;whiteSpace=wrap;align=right;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="380" y="260" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="plain-left-middle" value="left middle" style="rounded=0;whiteSpace=wrap;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="550" y="260" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="plain-center-middle" value="center middle" style="rounded=0;whiteSpace=wrap;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="720" y="260" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="plain-right-middle" value="right middle" style="rounded=0;whiteSpace=wrap;align=right;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="370" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="plain-left-bottom" value="left bottom" style="rounded=0;whiteSpace=wrap;align=left;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="210" y="370" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="plain-center-bottom" value="center bottom" style="rounded=0;whiteSpace=wrap;align=center;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="380" y="370" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="plain-right-bottom" value="right bottom" style="rounded=0;whiteSpace=wrap;align=right;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="550" y="370" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="outside-left-top" value="left top" style="rounded=0;whiteSpace=wrap;html=1;labelPosition=left;verticalLabelPosition=top;align=right;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="40" y="480" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="outside-center-top" value="center top" style="rounded=0;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=top;align=center;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="210" y="480" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="outside-right-top" value="right top" style="rounded=0;whiteSpace=wrap;html=1;labelPosition=right;verticalLabelPosition=top;align=left;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="380" y="480" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="outside-left-middle" value="left middle" style="rounded=0;whiteSpace=wrap;html=1;labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="550" y="480" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="outside-right-middle" value="right middle" style="rounded=0;whiteSpace=wrap;html=1;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="720" y="480" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="outside-left-bottom" value="left bottom" style="rounded=0;whiteSpace=wrap;html=1;labelPosition=left;verticalLabelPosition=bottom;align=right;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="40" y="590" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="outside-center-bottom" value="center bottom" style="rounded=0;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="210" y="590" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="outside-right-bottom" value="right bottom" style="rounded=0;whiteSpace=wrap;html=1;labelPosition=right;verticalLabelPosition=bottom;align=left;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="380" y="590" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="spacing-10" value="spacing 10" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="700" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="spacing-top-20" value="top 20" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;spacingTop=20;" vertex="1" parent="1">
+          <mxGeometry x="210" y="700" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="spacing-left-30" value="left 30" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=30;" vertex="1" parent="1">
+          <mxGeometry x="380" y="700" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="spacing-right-30" value="right 30" style="rounded=0;whiteSpace=wrap;html=1;align=right;spacingRight=30;" vertex="1" parent="1">
+          <mxGeometry x="550" y="700" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="spacing-bottom-20" value="bottom 20" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=bottom;spacingBottom=20;" vertex="1" parent="1">
+          <mxGeometry x="720" y="700" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="spacing-plain-left-20" value="plain 20" style="rounded=0;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=20;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="810" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

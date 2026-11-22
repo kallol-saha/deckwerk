@@ -211,6 +211,29 @@ export function remapElementIds(
     el.id = id;
     el.morphId = null;
   }
+  // A connector stays attached to vertices copied with it; an end whose
+  // vertex was not copied becomes a loose end where it was drawn, as
+  // draw.io pastes an edge on its own.
+  for (const el of elements) {
+    if (el.type !== 'connector') continue;
+    if (el.source != null) {
+      const id = remap.get(el.source);
+      if (id) el.source = id;
+      else {
+        el.sourcePoint = el.route[0] ? { ...el.route[0] } : el.sourcePoint;
+        el.source = null;
+      }
+    }
+    if (el.target != null) {
+      const id = remap.get(el.target);
+      if (id) el.target = id;
+      else {
+        const last = el.route[el.route.length - 1];
+        el.targetPoint = last ? { ...last } : el.targetPoint;
+        el.target = null;
+      }
+    }
+  }
   for (const entry of timeline) {
     entry.id = makeId('t');
     entry.action.target = remap.get(entry.action.target) ?? entry.action.target;

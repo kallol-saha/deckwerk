@@ -5,6 +5,7 @@ import {
   DEFAULT_POP_DURATION,
   DEFAULT_DISSOLVE_DURATION,
   DEFAULT_DRAW_DURATION,
+  DEFAULT_WIPE_DURATION,
   buildEffect,
   effectDuration,
   popScales,
@@ -13,6 +14,7 @@ import {
   isParagraphBuild,
 } from '@shared/timeline.js';
 import type { BuildPreview } from './buildPreview.js';
+import { buildDiagramInOrder } from '@shared/diagram/animation.js';
 import { durationField } from './durationField.js';
 import {
   addEquationActionOptions,
@@ -79,7 +81,15 @@ const EFFECT_LABELS: Record<string, { group: string; label: string; short: strin
   'appear:blur': { group: 'Appear', label: 'Blur in — comes into focus', short: 'Blur in' },
   'appear:pop': { group: 'Appear', label: 'Pop in — grows, overshoots, settles', short: 'Pop in' },
   'appear:draw': { group: 'Appear', label: 'Line draw — traced from its start', short: 'Line draw' },
+  'appear:wipe': { group: 'Appear', label: 'Wipe in — drawn along its route, or from its left edge (draw.io)', short: 'Wipe in' },
   disappear: { group: 'Disappear', label: 'Disappear — at once', short: 'Disappear' },
+  'disappear:wipe': { group: 'Disappear', label: 'Wipe out — drawn back to its start (draw.io)', short: 'Wipe out' },
+  'disappear:pop': { group: 'Disappear', label: 'Pop out — shrinks away (draw.io)', short: 'Pop out' },
+  'opacity:opacity': { group: 'Diagram', label: 'Fade to an opacity (draw.io fadeTo)', short: 'Fade to' },
+  opacity: { group: 'Diagram', label: 'Set an opacity at once (draw.io opacity)', short: 'Opacity' },
+  flow: { group: 'Diagram', label: 'Flow — starts or stops the moving dashes', short: 'Flow' },
+  highlight: { group: 'Diagram', label: 'Highlight — outlines it for a moment (draw.io)', short: 'Highlight' },
+  drawio: { group: 'Diagram', label: 'draw.io step — kept for the file, not played', short: 'draw.io step' },
   'disappear:dissolve': { group: 'Disappear', label: 'Dissolve out — fades out', short: 'Dissolve out' },
   'disappear:blur': { group: 'Disappear', label: 'Blur out — goes out of focus', short: 'Blur out' },
   pulse: { group: 'Emphasis', label: 'Pulse — swells and settles back', short: 'Pulse' },
@@ -92,7 +102,7 @@ const EFFECT_LABELS: Record<string, { group: string; label: string; short: strin
   pause: { group: 'Video', label: 'Pause — stops the video', short: 'Pause' },
   ...CODE_EFFECT_LABELS,
 };
-const EFFECT_GROUPS = ['Code lines', 'Appear', 'Disappear', 'Emphasis', 'Equation', 'Video'];
+const EFFECT_GROUPS = ['Code lines', 'Appear', 'Disappear', 'Emphasis', 'Diagram', 'Equation', 'Video'];
 
 /** The effect menu's value for an entry: what it does and how. */
 function effectValue(entry: TimelineEntry, slide: Slide): string {
@@ -260,6 +270,21 @@ export class TimelinePanel {
         deck.slides[this.store.get().slideIndex].timeline.push(byLineBuild(codeTarget.id));
       }, { label: 'Add animation by line' }));
       elements.head.appendChild(addLines);
+    }
+
+    // A diagram builds in one go: every cell on its own click, in order.
+    const diagramCells = this.diagramBuildCells(slide, selection);
+    if (diagramCells.size > 0) {
+      const inOrder = document.createElement('button');
+      inOrder.className = 'ghost build-add-paragraph build-diagram-order';
+      inOrder.textContent = 'Build diagram in order';
+      inOrder.title = `Reveal the ${diagramCells.size} diagram cells one per click: shapes in order along the connectors `
+        + '(or top to bottom, left to right), each connector drawn once both its ends are in';
+      inOrder.addEventListener('click', () => this.store.commit((deck) => {
+        const target = deck.slides[this.store.get().slideIndex];
+        target.timeline = buildDiagramInOrder(target, diagramCells, makeId);
+      }, { label: 'Build diagram in order' }));
+      elements.head.appendChild(inOrder);
     }
 
     // The list mirrors the canvas selection: picking an object on the slide
@@ -742,7 +767,22 @@ export class TimelinePanel {
     optionAfter('appear:blur', 'blur in', 'appear:dissolve');
     optionAfter('appear:pop', 'pop in', 'appear:blur');
     // Keynote's name for it: a shape drawn in as if by a pen.
-    if (targetEl?.type === 'shape') optionAfter('appear:draw', 'line draw', 'appear:blur');
+    if (targetEl?.type === 'shape' || targetEl?.type === 'connector') optionAfter('appear:draw', 'line draw', 'appear:blur');
+    // draw.io's own effects on its cells (shared/diagram/animation.ts).
+    const cell = targetEl?.type === 'vertex' || targetEl?.type === 'connector';
+    if (cell) {
+      optionAfter('appear:wipe', 'wipe in', 'appear:pop');
+      optionAfter('disappear:wipe', 'wipe out', 'disappear');
+      optionAfter('disappear:pop', 'pop out', 'disappear:wipe');
+    }
+    // A step this card already is, though the menu does not offer it new.
+    const own = effectValue(entry, slide);
+    if (['opacity', 'opacity:opacity', 'flow', 'highlight', 'drawio'].includes(own)) {
+      const opt = document.createElement('option');
+      opt.value = own;
+      opt.textContent = own;
+      action.appendChild(opt);
+    }
     optionAfter('disappear:dissolve', 'dissolve out', 'disappear');
     optionAfter('disappear:blur', 'blur out', 'disappear:dissolve');
     addEquationActionOptions(action, entry, targetEl);
@@ -754,15 +794,17 @@ export class TimelinePanel {
     action.addEventListener('change', () =>
       this.mutate(entry.id, (e) => {
         const [type, variant] = action.value.split(':') as ['appear', string | undefined];
+        // The diagram steps are kept as they are; only the effects above switch.
+        if (['opacity', 'flow', 'highlight', 'drawio'].includes(type)) return;
         e.action.type = type;
         if (variant === 'paragraph') e.action.value = 'byParagraph';
-        else if (variant === 'draw' || variant === 'dissolve' || variant === 'blur' || variant === 'pop') e.action.value = variant;
-        else if (['byParagraph', 'draw', 'dissolve', 'blur', 'pop'].includes(String(e.action.value))) {
+        else if (variant === 'draw' || variant === 'dissolve' || variant === 'blur' || variant === 'pop' || variant === 'wipe') e.action.value = variant;
+        else if (['byParagraph', 'draw', 'dissolve', 'blur', 'pop', 'wipe'].includes(String(e.action.value))) {
           e.action.value = null;
         }
         // A time belongs to an animation; switching between two keeps the author's.
-        if (variant === 'draw' || variant === 'dissolve' || variant === 'blur' || variant === 'pop') {
-          e.action.duration ??= variant === 'draw' ? DEFAULT_DRAW_DURATION
+        if (variant === 'draw' || variant === 'dissolve' || variant === 'blur' || variant === 'pop' || variant === 'wipe') {
+          e.action.duration ??= variant === 'wipe' ? DEFAULT_WIPE_DURATION : variant === 'draw' ? DEFAULT_DRAW_DURATION
             : variant === 'blur' ? DEFAULT_BLUR_DURATION
             : variant === 'pop' ? DEFAULT_POP_DURATION : DEFAULT_DISSOLVE_DURATION;
         } else delete e.action.duration;
@@ -1024,6 +1066,16 @@ export class TimelinePanel {
    * click; the rest chain with `afterPrev` at zero delay so a multi-selection
    * reveals as a single group rather than needing one click each.
    */
+  /**
+   * The cells "Build diagram in order" builds: the selected diagram cells,
+   * else every cell of the slide's diagrams.
+   */
+  private diagramBuildCells(slide: Slide, selection: ReadonlySet<string>): Set<string> {
+    const cells = slide.elements.filter((el) => (el.type === 'vertex' || el.type === 'connector') && !el.hidden && !el.concealed);
+    const picked = cells.filter((el) => selection.has(el.id));
+    return new Set((picked.length > 0 ? picked : cells).map((el) => el.id));
+  }
+
   private addAnimationForSelection(): void {
     const ids = [...this.store.get().selection];
     if (ids.length === 0) return;

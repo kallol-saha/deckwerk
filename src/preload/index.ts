@@ -4,6 +4,7 @@ import type { DeckHistoryDocument } from '@shared/deckHistory.js';
 import type { ClipboardReadResult, ClipboardWriteRequest } from '@shared/clipboard.js';
 import type { ClipboardImageSource } from '@shared/clipboardImages.js';
 import { IPC } from '@shared/ipc.js';
+import { FIGURE_IPC, type FigureSaveRequest } from '@shared/diagram/figureIpc.js';
 import { DECK_ASSET_IPC, type DeckAssetListing, type DeckAssetTrashResult } from '@shared/mediaIndex.js';
 import {
   UPDATE_IPC,
@@ -191,6 +192,10 @@ const api = {
     ipcRenderer.invoke(IPC.exportBundle, request, operationId),
   exportPdf: (request: PdfExportRequest = {}, operationId?: string): Promise<string | null> =>
     ipcRenderer.invoke(IPC.exportPdf, request, operationId),
+  /** Export Diagram as…: save a figure where the author picks (the path, or null). */
+  saveFigure: (request: FigureSaveRequest): Promise<string | null> => ipcRenderer.invoke(FIGURE_IPC.save, request),
+  /** Export Diagram as… PDF: print a figure page (figurePrintPage) to PDF bytes. */
+  printFigurePdf: (html: string): Promise<Uint8Array> => ipcRenderer.invoke(FIGURE_IPC.pdf, html),
   onOperationProgress: (fn: (p: OperationProgress) => void): (() => void) =>
     on(IPC.operationProgress, fn),
   pdfReady: (jobId: string): void => ipcRenderer.send(IPC.exportPdfReady, jobId),

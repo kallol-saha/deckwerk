@@ -1,0 +1,123 @@
+<mxfile host="deckwerk-fixtures" agent="drawio-reference fixtures" version="32.7.4">
+  <diagram id="edges-straight" name="Straight edges, perimeters, loose ends">
+    <mxGraphModel dx="0" dy="0" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="hub" value="Hub" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="230" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="t-ellipse" value="" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="40" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="t-rhombus" value="" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="60" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="t-triangle" value="" style="triangle;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="560" y="220" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="t-hexagon" value="" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="380" width="100" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="t-cloud" value="" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;perimeter=cloudPerimeter;" vertex="1" parent="1">
+          <mxGeometry x="300" y="420" width="110" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="t-rotated" value="" style="rounded=0;whiteSpace=wrap;html=1;rotation=30;" vertex="1" parent="1">
+          <mxGeometry x="90" y="390" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="t-parallelogram" value="" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="230" width="110" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="t-circle-spaced" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;perimeterSpacing=8;" vertex="1" parent="1">
+          <mxGeometry x="90" y="60" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="hub-ellipse" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="hub" target="t-ellipse">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hub-rhombus" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="hub" target="t-rhombus">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hub-triangle" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="hub" target="t-triangle">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hub-hexagon" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="hub" target="t-hexagon">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hub-cloud" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="hub" target="t-cloud">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hub-rotated" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="hub" target="t-rotated">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hub-parallelogram" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="hub" target="t-parallelogram">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hub-circle-spaced" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="hub" target="t-circle-spaced">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p1" value="P1" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="540" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p2" value="P2" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="260" y="600" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="fixed-ports" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="p1" target="p2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p3" value="P3" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="540" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="center-exit" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="p3" target="p2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-spacing" value="" style="endArrow=classic;html=1;rounded=0;sourcePerimeterSpacing=4;targetPerimeterSpacing=10;" edge="1" parent="1" source="p1" target="p3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p4" value="P4" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="540" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="waypoints" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="p3" target="p4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560" y="500" />
+              <mxPoint x="700" y="480" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="curved" value="" style="endArrow=classic;html=1;rounded=0;curved=1;" edge="1" parent="1" source="p2" target="p4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="420" y="700" />
+              <mxPoint x="560" y="640" />
+              <mxPoint x="660" y="700" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rounded-waypoints" value="" style="endArrow=classic;html=1;rounded=1;" edge="1" parent="1" source="p1" target="p2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="90" y="680" />
+              <mxPoint x="200" y="700" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="loose-both" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="40" y="760" as="sourcePoint" />
+            <mxPoint x="220" y="820" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="loose-target" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="p2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330" y="800" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="loose-source" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" target="p4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="560" y="820" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

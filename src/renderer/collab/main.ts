@@ -20,10 +20,12 @@ import {
   type ToolbarPickerEntry,
 } from '../editor/exportPicker.js';
 import { showPdfExportDialog } from '../editor/pdfExportDialog.js';
+import { exportDiagramFigure } from '../editor/diagramExport.js';
 import { HistoryPanel } from '../editor/historyPanel.js';
 import { LightTable } from '../editor/lightTable.js';
 import { MediaPanel, installMediaDrop } from '../editor/mediaPanel.js';
 import { createHistoryButton, createMediaButton, popoverPanelHost } from '../editor/toolbarPanels.js';
+import { createShapeLibrary } from '../editor/shapeLibrary.js';
 import { ObjectList } from '../editor/objectList.js';
 import {
   createPenButton,
@@ -346,6 +348,8 @@ const mediaPanel = new MediaPanel(mediaHost, store, {
   beginOperation: (message) => operationProgress.begin(message),
 });
 installMediaDrop(el('canvas'), store, mediaPanel);
+// draw.io's shape library beside the rail, as in the desktop app (shapeLibrary.ts).
+const shapeLibrary = createShapeLibrary(store, { canvasHost: el('canvas'), setStatusMessage });
 const rail = new SlideRail(el('rail'), store);
 rail.onStatus = setStatusMessage;
 const objectsDrawer = document.createElement('div');
@@ -1228,6 +1232,7 @@ function buildToolbar(): void {
       options: [
         { label: 'PDF…', action: () => void exportPdf() },
         { label: 'Web…', action: () => void exportWeb() },
+        { label: 'Diagram as SVG, PNG or PDF…', action: () => void exportDiagramFigure(store, setStatusMessage) },
       ],
     },
   ];
@@ -1241,6 +1246,7 @@ function buildToolbar(): void {
       },
       { label: 'Export PDF…', action: () => void exportPdf() },
       { label: 'Export Web…', action: () => void exportWeb() },
+      { label: 'Export Diagram as…', action: () => void exportDiagramFigure(store, setStatusMessage) },
     ],
   });
   const compactFile = createToolbarPicker('File', compactFileEntries, { deckOnly: true });
@@ -1260,6 +1266,7 @@ function buildToolbar(): void {
     createPenButton(canvas),
     createTableInsertPicker(store),
     createMediaButton(mediaHost),
+    shapeLibrary.button,
   );
 
   const right = document.createElement('div');

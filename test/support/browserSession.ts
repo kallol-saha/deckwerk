@@ -923,17 +923,22 @@ export async function launchBrowser(
   /** Extra Electron switches, e.g. `--inspect=0` for the main process. */
   electronArgs: string[] = [],
 ): Promise<RunningBrowser> {
+  // The URL, port and profile travel in the environment (eval-browser.cjs
+  // reads them there first): on some Windows machines Electron exits at once
+  // when its command line holds a URL followed by another argument.
   const child = spawn(electronBinary, [
     join(process.cwd(), 'scripts/eval-browser.cjs'),
-    url,
-    // Chromium picks the port; see `reportedPorts`.
-    '0',
-    profileDir,
     ...electronArgs,
   ], {
     cwd: process.cwd(),
     stdio: ['ignore', 'pipe', 'pipe'],
-    env: electronChildEnv(),
+    env: {
+      ...electronChildEnv(),
+      DECKWERK_EVAL_URL: url,
+      // Chromium picks the port; see `reportedPorts`.
+      DECKWERK_EVAL_PORT: '0',
+      DECKWERK_EVAL_PROFILE: profileDir,
+    },
   });
   const log = collectProcessOutput(child);
   return { process: child, log, ...await reportedPorts(child, electronArgs, log) };

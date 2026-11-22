@@ -112,6 +112,8 @@ function contentKey(element: SlideElement): string | null {
         + `:${element.arrowStart}:${element.arrowEnd}`;
     case 'image':
     case 'video': return `${element.type}:${element.src}`;
+    case 'vertex':
+    case 'connector': return `${element.type}:${element.cell}`;
     default: return null;
   }
 }
@@ -237,6 +239,11 @@ function similarity(a: SlideElement, b: SlideElement): number {
     case 'unsupported':
       return b.type === 'unsupported' && a.originalType === b.originalType &&
         a.note === b.note ? 90 : 0;
+    case 'vertex':
+    case 'connector':
+      // draw.io cells pair by their cell id, the identity a diagram keeps
+      // from slide to slide (and from .drawio file to .drawio file).
+      return b.type === a.type && b.cell === a.cell ? 130 : 0;
   }
 }
 
@@ -283,4 +290,36 @@ function visualSignature(element: SlideElement): string {
     ...visual
   } = element;
   return JSON.stringify(visual);
+}
+
+/**
+ * draw.io cells pair by their cell id: the same vertex or connector of a
+ * diagram on two slides (in the same diagram, else in any one when that is
+ * unambiguous). Cells a `morphId` already paired are left out.
+ */
+export function diagramMorphPairs(
+  previous: SlideElement[],
+  next: SlideElement[],
+  taken: ReadonlySet<SlideElement> = new Set(),
+): MorphPair[] {
+  type Cell = Extract<SlideElement, { type: 'vertex' | 'connector' }>;
+  const cells = (list: SlideElement[]) => list.filter((el): el is Cell =>
+    (el.type === 'vertex' || el.type === 'connector') && !taken.has(el));
+  const sources = cells(previous);
+  const exact = new Map(sources.map((el) => [`${el.type} ${el.diagram} ${el.cell}`, el]));
+  const byCell = new Map<string, Cell[]>();
+  for (const el of sources) byCell.set(`${el.type} ${el.cell}`, [...(byCell.get(`${el.type} ${el.cell}`) ?? []), el]);
+  const used = new Set<SlideElement>();
+  const pairs: MorphPair[] = [];
+  for (const target of cells(next)) {
+    let source: Cell | undefined = exact.get(`${target.type} ${target.diagram} ${target.cell}`);
+    if (!source) {
+      const any = byCell.get(`${target.type} ${target.cell}`) ?? [];
+      if (any.length === 1) source = any[0];
+    }
+    if (!source || used.has(source)) continue;
+    used.add(source);
+    pairs.push([source, target]);
+  }
+  return pairs;
 }

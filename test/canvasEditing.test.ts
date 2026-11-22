@@ -218,7 +218,8 @@ describe('canvas zoom viewport', () => {
 
     expect(input.value).toBe('100%');
     expect(buttons.map((button) => button.getAttribute('aria-label'))).toEqual([
-      'Zoom out', 'Zoom in', 'Re-center slide',
+      // The draw.io grid toggle (shown only on a slide with a diagram) comes first.
+      'Grid', 'Zoom out', 'Zoom in', 'Re-center slide',
     ]);
 
     input.value = '175%';
@@ -226,9 +227,9 @@ describe('canvas zoom viewport', () => {
     expect(canvas.zoomPercent()).toBe(175);
     expect(input.value).toBe('175%');
 
-    buttons[1].click();
+    buttons[2].click();
     expect(canvas.zoomPercent()).toBe(200);
-    buttons[0].click();
+    buttons[1].click();
     expect(canvas.zoomPercent()).toBe(175);
   });
 

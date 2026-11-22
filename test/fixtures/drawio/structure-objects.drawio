@@ -1,0 +1,54 @@
+<mxfile host="deckwerk-fixtures" agent="drawio-reference fixtures" version="32.7.4">
+  <diagram id="structure-objects" name="object and UserObject cells">
+    <mxGraphModel dx="0" dy="0" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <object label="Server" tooltip="Main server" role="db" owner="kallol" id="obj-server">
+          <mxCell style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+            <mxGeometry x="40" y="40" width="120" height="60" as="geometry" />
+          </mxCell>
+        </object>
+        <UserObject label="%name% (%role%)" placeholders="1" name="API" role="gateway" id="uo-api">
+          <mxCell style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+            <mxGeometry x="280" y="40" width="120" height="60" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&lt;b&gt;%name%&lt;/b&gt;&lt;br&gt;v%version%" placeholders="1" name="Service" version="2.1" id="uo-html">
+          <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;" vertex="1" parent="1">
+            <mxGeometry x="520" y="40" width="120" height="60" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="%name% Text" placeholders="1" name="Variable" id="uo-variable">
+          <mxCell style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;overflow=hidden;" vertex="1" parent="1">
+            <mxGeometry x="40" y="160" width="80" height="20" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Link" link="https://www.draw.io" id="uo-link">
+          <mxCell style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=wrap;align=center;verticalAlign=middle;fontColor=#0000EE;fontStyle=4;" vertex="1" parent="1">
+            <mxGeometry x="160" y="150" width="60" height="40" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <object label="tagged" tags="alpha beta" id="obj-tags">
+          <mxCell style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+            <mxGeometry x="280" y="150" width="120" height="60" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="calls" protocol="https" id="obj-edge">
+          <mxCell style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="obj-server" target="uo-api">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="plain-edge" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="uo-api" target="uo-html">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <object label="Annotations" note="layer with properties" id="layer-annotations">
+          <mxCell parent="0" />
+        </object>
+        <mxCell id="annotation" value="Note on a wrapped layer" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=14;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="layer-annotations">
+          <mxGeometry x="520" y="150" width="140" height="70" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

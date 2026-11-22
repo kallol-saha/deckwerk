@@ -1,0 +1,37 @@
+<mxfile host="deckwerk-fixtures" agent="drawio-reference fixtures" version="32.7.4" pages="3">
+  <diagram id="page-plain" name="Plain">
+    <mxGraphModel dx="0" dy="0" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="a" value="A" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="b" value="B" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="120" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ab" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="a" target="b">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="page-compressed" name="Compressed">tZRNU4QwDIZ/Te/Q6s5eZb886GkPnmsbaZ1CmBIW8Nc7SFm2sjo6ozfy9k2aPG1hYlN0By8r84gaHOOJ7pjYMs4TxvkQ9lGYe6tHIZ2Fo32DIE62xmqoIyMhOrJVLCosS1AUadJ7bGPbC7p410rmsBCOSrql+mQ1mVFd3yazfg82N9POaRJWCjmZg1AbqbG9kMSOiY1HpPGr6DbgBm4Tl5DH+P4Lw7k3DyX9MEeNhpN0TZhwC8pqCD1SPw3uDRbPTc1E1hpLcKykGlZaLysmMkOFY2KbMpGFguAJui/7Ss8DF90BsADyPeNJSLgJbfdx2M7Az1jNBex10GQ44/xcOGLA+D5guI5EL5DcKVrywKbUoMPQ/8/kM5R0dYUKv0Jl9TdU1BJLD/UCC+gcjiFETwZzLKXbzWo2g0uYyGbPA2IVcL0CUR/evmwIr8EcNvoeJU9qbLyC6KKT9DnQxUEvgXtwkuwprv47eozv54f8sXbxJxS7dw==</diagram>
+  <diagram id="page-background" name="Background and shadow">
+    <mxGraphModel dx="0" dy="0" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="1" background="#FFF2CC">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="e" value="Shadowed" style="triangle;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="80" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="f" value="Page shadow" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="200" y="60" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ef" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="e" target="f">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

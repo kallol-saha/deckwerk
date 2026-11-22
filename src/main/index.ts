@@ -124,6 +124,7 @@ import {
 import { moveFullscreenWindow } from './fullscreenMove.js';
 import { presentationScreens } from './displays.js';
 import { registerDeckAssetIpc } from './deckAssetsIpc.js';
+import { registerFigureExportIpc } from './figureExport.js';
 import { registerUpdates } from './updates.js';
 
 /** Pick a loopback URL for the local bridge and a reachable URL for people. */
@@ -841,6 +842,8 @@ app.on('before-quit', () => {
 function registerHandlers(): void {
   // The Media library: list the deck's assets, move unused ones to the Trash.
   registerDeckAssetIpc(requireSession);
+  // Export Diagram as… (SVG, PNG, PDF).
+  registerFigureExportIpc();
   registerRemoteDeckIpc({
     requireOwner, requireSession, reportOperation, openDeckForRequester, recentDecks: recentDecks(),
   });

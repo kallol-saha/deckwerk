@@ -63,6 +63,9 @@ import { checkWebPage, renderSlidesToPng } from './renderSlides.js';
 import { removeTempDir, tempDir, untilStopped } from './scratch.js';
 import { failureMessage } from '../main/writeFailure.js';
 import { recordSlidesToVideo } from './recordSlides.js';
+import { diagramCommand } from './diagramCli.js';
+import { diagramProblems, type DiagramProblem } from '../shared/diagram/validate.js';
+import { figureCommand } from './figureCli.js';
 import { runConnectCommand } from './agentConnect.js';
 import { ChatUsageError, listChat, postChat, resolveChatTarget, waitForMention } from './chatClient.js';
 import { HISTORY_FILE, HISTORY_ROTATED_FILE, parseEditHistory, type EditHistoryEntry } from '@shared/editHistory.js';
@@ -131,13 +134,15 @@ Working on a deck someone hosts on a collaboration server:
 
 Everything else:
 
-  docs [authoring|web|themes|internals]   focused guides; bare docs is the
+  docs [authoring|web|themes|internals|diagrams]
+                                          focused guides; bare docs is the
                                           full repository reference
   capabilities                            every feature, with copyable JSON
   validate  [deck] [--slide id|number|a-b|--selected]
                                           schema, ids, references, assets, canvas
-                                          overflows and unclosed maths (scoped
-                                          to your slides)
+                                          overflows, unclosed maths and diagram
+                                          cells (dangling connectors, unknown
+                                          shapes…), scoped to your slides
   asset import <deck> <paths...>          copy media into assets/, probed
   web import <deck> <page.html> [--after <slideId>] [--title <text>] [--no-poster]
                                           add one slide showing a complete HTML
@@ -217,6 +222,36 @@ Everything else:
                                           the chat, then print that message
   say       [deck] <text> [--slide <id|number>]
                                           post to the chat as the agent
+  diagram export [deck] --slide <s> [--output f.drawio]
+                                          a slide's draw.io diagram as .drawio
+  diagram apply  [deck] <f.drawio> --slide <s> [--page <n|name>] [--scale <s>]
+                                          make the slide's diagram match the
+                                          file; cells match by draw.io id, so
+                                          untouched ones keep builds and Morph;
+                                          the file's animation steps are builds
+  diagram import [deck] <f.drawio> [--after <s>]
+                                          one new slide per page
+  diagram list   [deck] [--slide <s>]     the diagrams and their cells
+  figure    [deck] --slide <s> -o <f.svg|.png|.pdf> [--cells id,…] [--scale <n>]
+            [--border <px>] [--transparent]
+                                          a slide's diagram (or some cells) as a
+                                          cropped figure for a paper; SVG and PNG
+                                          reopen with diagram import/apply
+  diagram add    [deck] --slide <s> --vertex 'id=a label="A" x=40 y=40' --edge 'from=a to=b'
+            [--json <file>] [--layout layered|tree|…]
+                                          new shapes and connectors from a compact
+                                          spec (shape=library:<name> for the
+                                          shape library), no XML
+  diagram style  [deck] --slide <s> --cells a,b --set fillColor=#dae8fc [--unset k] [--label t]
+                                          patch draw.io style keys on cells, with
+                                          the keys draw.io sets alongside
+  diagram layout [deck] --slide <s> --algo layered|tree|radial|organic|circle
+            [--direction right|down|left|up] [--spacing n] [--cells a,b]
+                                          draw.io's Arrange > Layout (ELK)
+  diagram build  [deck] --slide <s> [--cells a,b] [--order auto|reading|flow]
+                                          builds revealing the diagram cell by
+                                          cell, each on a click, connectors drawn
+                                          once both ends are in
   transaction apply <deck> <file.json>    JSON fallback, for tooling with no
                                           browser — not how slides are authored
   history   [deck] [--deleted] [--slide <id>] [--limit <n>] [--full]
@@ -293,6 +328,20 @@ export async function runAgentCli(argv: string[], io: CliIo): Promise<number> {
         return await connectCommand(rest, io);
       case 'history':
         return await historyCommand(rest, io);
+      case 'diagram':
+        return await diagramCommand(rest, io, {
+          resolveDeckDir: (candidate) => resolveDeckDir(candidate, io),
+          loadDeck,
+          applyOperations: (deckDir, label, operations, extra) =>
+            applyTransaction(deckDir, { version: AGENT_PROTOCOL_VERSION, label, operations }, io, extra),
+          usageError: (message) => new UsageError(message),
+        });
+      case 'figure':
+        return await figureCommand(rest, io, {
+          resolveDeckDir: (candidate) => resolveDeckDir(candidate, io),
+          loadDeck,
+          usageError: (message) => new UsageError(message),
+        });
       case 'help':
       case '--help':
       case undefined:
@@ -315,7 +364,7 @@ export async function runAgentCli(argv: string[], io: CliIo): Promise<number> {
 }
 
 async function docsCommand(argv: string[], io: CliIo): Promise<number> {
-  const { flags, positional } = parseFlags(argv);
+  const { flags, options, positional } = parseFlags(argv, ['examples']);
   ensureKnownFlags('docs', flags, []);
   ensurePositionals('docs', positional, 1);
   const topic = positional[0];
@@ -328,10 +377,23 @@ async function docsCommand(argv: string[], io: CliIo): Promise<number> {
     web: 'agent-web.md',
     themes: 'agent-themes.md',
     internals: 'agent-internals.md',
+    diagrams: 'agent-diagrams.md',
   };
   const file = topics[topic];
-  if (!file) throw new UsageError(`Unknown docs topic: ${topic}. Choose authoring, web, themes or internals.`);
+  if (!file) throw new UsageError(`Unknown docs topic: ${topic}. Choose authoring, web, themes, internals or diagrams.`);
   io.out(await readFile(fileURLToPath(new URL(`../../docs/${file}`, import.meta.url)), 'utf8'));
+  if (topic === 'diagrams') {
+    // The guide, then the reference generated from the engine (diagramDocs.ts).
+    const { diagramReference, writeDiagramExamples } = await import('./diagramDocs.js');
+    io.out(`${diagramReference()}\n`);
+    const examples = options.get('examples');
+    if (examples) {
+      const count = await writeDiagramExamples(resolve(io.cwd, examples));
+      io.err(`Wrote ${count} example SVGs and index.html to ${resolve(io.cwd, examples)}\n`);
+    }
+  } else if (options.has('examples')) {
+    throw new UsageError('--examples goes with docs diagrams.');
+  }
   return EXIT_OK;
 }
 
@@ -936,8 +998,18 @@ async function validateCommand(argv: string[], io: CliIo): Promise<number> {
   } catch {
     // The parse failure is already represented in `errors`.
   }
+  // draw.io cells: dangling connectors, duplicate ids, missing parents,
+  // unknown shapes and arrowheads, rot vs rotation=, cells off the slide.
+  let diagramIssues: DiagramProblem[] = [];
+  try {
+    diagramIssues = diagramProblems(await loadDeck(deckDir));
+  } catch {
+    // The parse failure is already represented in `errors`.
+  }
   if (wanted) {
     const filter = wanted;
+    diagramIssues = diagramIssues.filter((problem) =>
+      filter({ id: problem.slideId, index: 0, selected: selectedSlideIds.includes(problem.slideId), active: false }));
     const keep = (slideId: string): boolean =>
       filter({ id: slideId, index: 0, selected: selectedSlideIds.includes(slideId), active: false });
     importGaps = importGaps.filter((gap) => keep(gap.slideId));
@@ -956,6 +1028,7 @@ async function validateCommand(argv: string[], io: CliIo): Promise<number> {
       overflows,
       mathProblems,
       buildProblems,
+      diagramProblems: diagramIssues,
     },
     ['overflows'],
   ));

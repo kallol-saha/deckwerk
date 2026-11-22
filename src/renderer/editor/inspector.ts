@@ -1,4 +1,5 @@
 import { codeTypeSection } from './codeInspector.js';
+import { diagramFormatPanel } from './diagramFormat.js';
 import {
   MAX_VIDEO_SPEED, MIN_VIDEO_SPEED, STROKE_DASHES, STROKE_STYLES, videoSpeed, type Deck, type MediaEffect, type ShapeEl, type Slide, type SlideElement, type StrokeDash,
   type StrokeStyle,
@@ -549,6 +550,16 @@ export class Inspector {
       this.appendMorph();
       return;
     }
+    // Diagram cells only: draw.io's Format panel, whose Arrange tab takes the
+    // place of Geometry and Align (rotation and flip are style keys there).
+    if (selected.every((element) => element.type === 'vertex' || element.type === 'connector')) {
+      const cells = selected as Array<Extract<SlideElement, { type: 'vertex' | 'connector' }>>;
+      const kinds = new Set(cells.map((cell) => (cell.type === 'vertex' ? 'shape' : 'connector')));
+      this.host.appendChild(sectionTitle(cells.length === 1 ? [...kinds][0]
+        : `${cells.length} ${kinds.size === 1 ? `${[...kinds][0]}s` : 'diagram cells'}`));
+      this.host.appendChild(this.diagramSection(cells));
+      return;
+    }
     if (selected.length > 1) {
       this.host.appendChild(sectionTitle(`${selected.length} elements`));
       this.host.appendChild(this.alignSection());
@@ -586,6 +597,10 @@ export class Inspector {
           selected as Array<Extract<SlideElement, { type: 'image' | 'video' }>>,
         ));
       }
+      // A mixed selection: the diagram cells among it get draw.io's panel too.
+      const cells = selected.filter((element): element is Extract<SlideElement, { type: 'vertex' | 'connector' }> =>
+        element.type === 'vertex' || element.type === 'connector');
+      if (cells.length > 0) this.host.appendChild(this.diagramSection(cells));
       return;
     }
 
@@ -2074,6 +2089,17 @@ export class Inspector {
     return section.section;
   }
 
+  /**
+   * draw.io cells: draw.io's Format panel (Style | Text | Arrange) for all of
+   * them at once, built in diagramFormat.ts. The style string is the source
+   * of truth for the look, so every control edits a key in it.
+   */
+  private diagramSection(cells: Array<Extract<SlideElement, { type: 'vertex' | 'connector' }>>): HTMLElement {
+    const wrap = typeSections();
+    wrap.appendChild(diagramFormatPanel({ store: this.store, cells }));
+    return wrap;
+  }
+
   private typeSection(el: SlideElement): HTMLElement | null {
     switch (el.type) {
       case 'video': {
@@ -2938,6 +2964,10 @@ export class Inspector {
         wrap.appendChild(details.section);
         return wrap;
       }
+
+      case 'vertex':
+      case 'connector':
+        return this.diagramSection([el]);
     }
   }
 

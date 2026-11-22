@@ -1,0 +1,340 @@
+/* draw.io's Format panel for diagram cells (diagramFormat.ts). Compact rows
+   like draw.io's, in the inspector's own colours so both UI themes work. */
+
+.dfmt {
+  --dfmt-row-h: 26px;
+  margin: 0 0 10px;
+  font-size: 12px;
+}
+
+.dfmt-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 0 0 8px;
+  border-bottom: 1px solid var(--line);
+}
+.dfmt-tab {
+  padding: 6px 0 7px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+.dfmt-tab:hover:not(:disabled) { background: transparent; color: var(--text); }
+.dfmt-tab.is-active { border-bottom-color: var(--accent); color: var(--text); }
+
+.dfmt-section { border-top: 1px solid var(--line); padding: 6px 0; }
+.dfmt-tab-body > .dfmt-section:first-child,
+.dfmt-tab-body > .dfmt-schemes + .dfmt-section { border-top: 0; }
+.dfmt-section-head { display: flex; align-items: center; min-height: 20px; }
+.dfmt-section-title {
+  color: var(--text);
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.dfmt-section-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 2px 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+.dfmt-section-toggle:hover:not(:disabled) { background: transparent; }
+.dfmt-caret {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid var(--muted);
+  transition: transform 0.12s;
+}
+.dfmt-section.is-folded .dfmt-caret { transform: rotate(-90deg); }
+.dfmt-section.is-folded > .dfmt-section-body { display: none; }
+.dfmt-section-body { padding-top: 4px; }
+
+.dfmt-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--dfmt-row-h);
+  margin: 2px 0;
+}
+.dfmt-row-label {
+  flex: 0 0 auto;
+  min-width: 64px;
+  max-width: 96px;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dfmt-row-controls {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  min-width: 0;
+}
+.dfmt-pattern-row .dfmt-row-controls,
+.dfmt-row:not(:has(> .dfmt-row-label)) > .dfmt-row-controls { justify-content: flex-start; }
+
+.dfmt-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  color: var(--text);
+  font-size: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+.dfmt-check input { margin: 0; }
+.dfmt-check span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dfmt-color-row > .dfmt-check { flex: 1 1 auto; font-weight: 600; }
+.dfmt-color-row > .dfmt-row-controls { flex: 0 1 auto; }
+.dfmt-check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; padding: 2px 0; }
+.dfmt-check-grid-1 { grid-template-columns: 1fr; }
+.dfmt-check-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 4px 0; }
+
+/* The colour picker's own field, slimmed to its swatch. */
+.dfmt-color.field { display: block; margin: 0; }
+.dfmt-color.field > span { display: none; }
+.dfmt-color .color-picker-trigger { width: 44px; height: 22px; padding: 2px; }
+
+.dfmt-number {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  width: 74px;
+  height: 24px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--panel-2);
+}
+/* `:not(#dfmt)` outranks appChrome.css's input:not(…)×4 rule, which would
+   otherwise draw a second border inside the field. */
+.dfmt-number input:not(#dfmt) {
+  width: 100%;
+  border-radius: 0;
+  min-width: 0;
+  height: 100%;
+  padding: 0 2px 0 6px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+}
+.dfmt-number input:focus { outline: none; }
+.dfmt-number:focus-within { border-color: var(--accent); }
+.dfmt-unit { flex: none; padding-right: 6px; color: var(--muted); font-size: 10.5px; }
+
+.dfmt-select,
+.dfmt-font-family:not(#dfmt),
+.dfmt-prop-input:not(#dfmt),
+.dfmt-style-text {
+  min-width: 0;
+  height: 24px;
+  padding: 0 6px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  /* Not the shorthand: select keeps appChrome.css's arrow image. */
+  background-color: var(--panel-2);
+  color: var(--text);
+  font: inherit;
+}
+.dfmt-select { flex: 0 1 112px; width: 112px; padding-right: 22px; background-position: right 6px center; }
+.dfmt-row-controls > .dfmt-select:only-child { flex-basis: 132px; width: 132px; }
+.dfmt-font-family { display: block; width: 100%; margin: 4px 0; }
+.dfmt-style-text {
+  display: block;
+  width: 100%;
+  height: auto;
+  padding: 5px 7px;
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  resize: vertical;
+}
+
+.dfmt-button {
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 12px;
+}
+.dfmt-button-row { display: flex; gap: 6px; margin: 6px 0; }
+.dfmt-button-row > .dfmt-button { flex: 1 1 0; }
+.dfmt-button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 2px 0 8px; }
+.dfmt-tab-body > .dfmt-button { display: block; width: 100%; margin: 6px 0; }
+
+.dfmt-icon-button {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--panel-2);
+  color: var(--text);
+}
+.dfmt-icon-button.is-active { background: var(--accent-soft, rgb(59 130 246 / 22%)); color: var(--accent); }
+.dfmt-icon { width: 14px; height: 14px; overflow: visible; }
+.dfmt-toggle-group { display: inline-flex; }
+.dfmt-toggle-group > .dfmt-icon-button + .dfmt-icon-button { margin-left: -1px; }
+.dfmt-toggle-group > .dfmt-icon-button:first-child { border-radius: 5px 0 0 5px; }
+.dfmt-toggle-group > .dfmt-icon-button:last-child { border-radius: 0 5px 5px 0; }
+.dfmt-font-row,
+.dfmt-align-row { justify-content: space-between; }
+.dfmt-align-strip { display: flex; }
+.dfmt-align-strip > .dfmt-icon-button { flex: 1 1 0; }
+
+.dfmt-menu-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 26px;
+  min-width: 56px;
+  padding: 0 6px;
+  border-radius: 5px;
+  color: var(--text);
+}
+.dfmt-menu-trigger.is-dimmed { opacity: 0.4; }
+.dfmt-menu-arrow {
+  width: 0;
+  height: 0;
+  border-left: 3.5px solid transparent;
+  border-right: 3.5px solid transparent;
+  border-top: 4px solid var(--muted);
+}
+.dfmt-menu-text { color: var(--text); font-size: 11.5px; white-space: nowrap; }
+.dfmt-marker { width: 32px; height: 20px; overflow: visible; }
+.dfmt-dash { width: 64px; height: 10px; }
+.dfmt-shape-icon { width: 42px; height: 20px; }
+.dfmt-route-icon { width: 22px; height: 22px; }
+.dfmt-pattern-row .dfmt-menu-trigger:has(.dfmt-dash) { min-width: 86px; }
+
+.dfmt-menu {
+  position: fixed;
+  z-index: 1000;
+  display: grid;
+  grid-template-columns: repeat(var(--dfmt-columns, 1), auto);
+  gap: 2px;
+  max-height: min(70vh, 520px);
+  overflow-y: auto;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 28%);
+}
+.dfmt-menu-item {
+  display: grid;
+  place-items: center;
+  min-width: 40px;
+  min-height: 28px;
+  padding: 3px 6px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text);
+}
+.dfmt-menu-item:hover:not(:disabled) { background: var(--panel-2); border-color: var(--line); }
+.dfmt-menu-item.is-active { border-color: var(--accent); background: var(--accent-soft, rgb(59 130 246 / 22%)); }
+
+.dfmt-pair-grid {
+  display: grid;
+  grid-template-columns: minmax(56px, auto) 1fr 1fr;
+  align-items: center;
+  gap: 2px 6px;
+  margin: 4px 0;
+}
+.dfmt-pair-grid > .dfmt-number { width: 100%; }
+.dfmt-caption { color: var(--muted); font-size: 10px; text-align: center; }
+
+.dfmt-spacing {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px 6px;
+}
+.dfmt-spacing-cell { display: grid; gap: 2px; }
+.dfmt-spacing-cell > .dfmt-number { width: 100%; }
+
+.dfmt-schemes { padding: 0 0 6px; }
+.dfmt-scheme-body { display: flex; align-items: center; gap: 4px; }
+.dfmt-scheme-body > .dfmt-icon-button { width: 18px; height: 52px; border: 0; background: transparent; color: var(--muted); }
+.dfmt-scheme-grid {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+}
+.dfmt-scheme {
+  height: 24px;
+  padding: 0;
+  border: 1px solid #000;
+  border-radius: 3px;
+  font-size: 10px;
+  line-height: 22px;
+}
+.dfmt-scheme.is-none {
+  background: linear-gradient(to top right, transparent calc(50% - 0.75px), #e5484d calc(50% - 0.75px),
+    #e5484d calc(50% + 0.75px), transparent calc(50% + 0.75px)), #fff;
+}
+.dfmt-scheme:hover:not(:disabled) { outline: 2px solid var(--accent); outline-offset: 1px; }
+.dfmt-scheme-dots { display: flex; justify-content: center; gap: 6px; padding-top: 6px; }
+.dfmt-scheme-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 1px solid var(--muted);
+  border-radius: 50%;
+  background: transparent;
+}
+.dfmt-scheme-dot.is-active { border-color: var(--accent); background: var(--accent); }
+
+.dfmt-props,
+.dfmt-data {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 3px 6px;
+}
+.dfmt-data { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.3fr) auto; }
+.dfmt-prop-name {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dfmt-prop-value { display: flex; justify-content: flex-end; min-width: 0; }
+.dfmt-prop-value > .dfmt-select,
+.dfmt-prop-input { width: 100%; flex: 1 1 auto; }
+.dfmt-data .dfmt-icon-button { border-radius: 5px; }
+.dfmt-data-add { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px; margin: 6px 0; }
+.dfmt-cell-id {
+  overflow: hidden;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--panel-2);
+  color: var(--text);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  user-select: all;
+}
+
+.dfmt-opacity-row { border-top: 1px solid var(--line); padding-top: 6px; }
+.dfmt-ops { border-top: 1px solid var(--line); margin-top: 4px; }
+.dfmt-ops > .dfmt-section { border-top: 0; }

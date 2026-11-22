@@ -62,6 +62,15 @@ export const DEFAULT_POP_DURATION = 500;
 /** The size a pop grows from, and the size it overshoots to, when its entry does not say. */
 export const DEFAULT_POP_FROM = 0.6;
 export const DEFAULT_POP_PEAK = 1.06;
+/** How long a diagram cell's wipe takes when its entry does not say (draw.io's 30 frames × 30 ms). */
+export const DEFAULT_WIPE_DURATION = 900;
+/** How long an `opacity` change takes when its entry does not say (draw.io's fadeTo). */
+export const DEFAULT_OPACITY_DURATION = 1000;
+
+/** A draw.io cell: a `vertex` or a `connector`. */
+function isDiagramCell(el: SlideElement | undefined): boolean {
+  return el?.type === 'vertex' || el?.type === 'connector';
+}
 
 /** The sizes a pop moves through: from `from`, up to `peak`, settling at 1. */
 export function popScales(entry: TimelineEntry): { from: number; peak: number } {
@@ -77,7 +86,7 @@ export function popScales(entry: TimelineEntry): { from: number; peak: number } 
  * `draw` draws a line or arrow in from its start; `pop` (appear only) grows the
  * element in from smaller, overshoots a little and settles.
  */
-export type BuildEffect = 'draw' | 'dissolve' | 'blur' | 'pop' | 'terms' | 'emphasis';
+export type BuildEffect = 'draw' | 'dissolve' | 'blur' | 'pop' | 'terms' | 'emphasis' | 'wipe' | 'opacity';
 
 /** The effect an entry animates with, or null for an instant change. */
 export function buildEffect(entry: TimelineEntry, slide: Slide): BuildEffect | null {
@@ -91,6 +100,10 @@ export function buildEffect(entry: TimelineEntry, slide: Slide): BuildEffect | n
     return value;
   }
   if (value === 'pop' && type === 'appear') return 'pop';
+  // draw.io's wipe, and its pop out, on diagram cells (shared/diagram/animation.ts).
+  if ((type === 'appear' || type === 'disappear') && (value === 'wipe' || value === 'pop')
+    && isDiagramCell(findElement(slide, entry.action.target))) return value;
+  if (type === 'opacity') return entry.action.duration === 0 ? null : 'opacity';
   if (isDrawBuild(entry, slide)) return 'draw';
   return null;
 }
@@ -102,6 +115,8 @@ export function effectDuration(entry: TimelineEntry, effect: BuildEffect): numbe
       : effect === 'emphasis' ? defaultEmphasisDuration(entry.action.type as EmphasisType)
       : effect === 'draw' ? DEFAULT_DRAW_DURATION
       : effect === 'blur' ? DEFAULT_BLUR_DURATION
+      : effect === 'wipe' ? DEFAULT_WIPE_DURATION
+      : effect === 'opacity' ? DEFAULT_OPACITY_DURATION
       : effect === 'pop' ? DEFAULT_POP_DURATION : DEFAULT_DISSOLVE_DURATION);
 }
 
@@ -114,7 +129,9 @@ export function effectDuration(entry: TimelineEntry, effect: BuildEffect): numbe
  */
 export function isDrawBuild(entry: TimelineEntry, slide: Slide): boolean {
   if (entry.action.type !== 'appear' || entry.action.value !== 'draw') return false;
-  return findElement(slide, entry.action.target)?.type === 'shape';
+  // A diagram connector draws on along its route, as draw.io's wipe.
+  const type = findElement(slide, entry.action.target)?.type;
+  return type === 'shape' || type === 'connector';
 }
 
 /** Milliseconds a draw build takes. */
@@ -249,6 +266,10 @@ export interface SlideState {
    * highlight or dim that holds. A block with none shows every line plainly.
    */
   lines: Map<string, CodeLineState>;
+  /** Opacity an `opacity` action gave an element (0–1, times its own); absent: unchanged. */
+  opacity: Map<string, number>;
+  /** Connectors whose flow a `flow` action started or stopped; absent: as their style says. */
+  flowing: Map<string, boolean>;
 }
 
 /**
@@ -282,6 +303,8 @@ export function resolveState(slide: Slide, step: number): SlideState {
     ),
     terms: initialTermStates(slide),
     lines: initialCodeLineStates(slide),
+    opacity: new Map(),
+    flowing: new Map(),
   };
 
   const steps = groupIntoSteps(slide);
@@ -344,6 +367,31 @@ export function applyAction(
     case 'lines':
       applyLineAction(state.lines, entry, slide);
       break;
+    // A fade to some opacity: an element out of view comes into view at it,
+    // and fading to nothing takes it out of view, its opacity back as it was.
+    case 'opacity': {
+      const v = Math.max(0, Math.min(1, typeof value === 'number' ? value : Number(value ?? 1)));
+      if (!(v > 0)) {
+        state.visible.delete(target);
+        state.opacity.delete(target);
+      } else {
+        state.visible.add(target);
+        if (v === 1) state.opacity.delete(target);
+        else state.opacity.set(target, v);
+      }
+      break;
+    }
+    case 'flow': {
+      const el = findElement(slide, target);
+      if (el?.type !== 'connector') break;
+      const now = state.flowing.get(target) ?? /(?:^|;)flowAnimation=1(?:;|$)/.test(el.dio);
+      state.flowing.set(target, value === 'start' ? true : value === 'stop' ? false : !now);
+      break;
+    }
+    // A highlight leaves nothing behind; a kept draw.io step does nothing here.
+    case 'highlight':
+    case 'drawio':
+      break;
   }
 }
 
@@ -386,7 +434,8 @@ export function nextCursor(slides: Slide[], cur: Cursor): Cursor {
 
 /** A step whose every build is an emphasis: stepping back over it changes nothing. */
 function isEmphasisStep(step: ExpandedEntry[] | undefined): boolean {
-  return Boolean(step?.length) && step!.every((entry) => isEmphasisType(entry.action.type));
+  return Boolean(step?.length) && step!.every((entry) => isEmphasisType(entry.action.type)
+    || entry.action.type === 'highlight' || entry.action.type === 'drawio');
 }
 
 /**

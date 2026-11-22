@@ -1,0 +1,113 @@
+<mxfile host="deckwerk-fixtures" agent="drawio-reference fixtures" version="32.7.4">
+  <diagram id="page-jumps" name="Line jumps">
+    <mxGraphModel dx="0" dy="0" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+      <mxCell id="0" />
+      <mxCell id="1" parent="0" />
+      <mxCell id="a1" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxGeometry x="20" y="40" width="40" height="40" as="geometry" />
+      </mxCell>
+      <mxCell id="a2" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxGeometry x="20" y="140" width="40" height="40" as="geometry" />
+      </mxCell>
+      <mxCell id="a3" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxGeometry x="20" y="240" width="40" height="40" as="geometry" />
+      </mxCell>
+      <mxCell id="b1" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxGeometry x="560" y="40" width="40" height="40" as="geometry" />
+      </mxCell>
+      <mxCell id="b2" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxGeometry x="560" y="140" width="40" height="40" as="geometry" />
+      </mxCell>
+      <mxCell id="b3" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxGeometry x="560" y="240" width="40" height="40" as="geometry" />
+      </mxCell>
+      <mxCell id="h1" value="" style="endArrow=classic;html=1;" edge="1" parent="1" source="a1" target="b1">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="h2" value="" style="endArrow=classic;html=1;strokeWidth=2;" edge="1" parent="1" source="a2" target="b2">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="h3" value="" style="endArrow=classic;html=1;dashed=1;" edge="1" parent="1" source="a3" target="b3">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="v1" value="" style="endArrow=classic;html=1;jumpStyle=arc;" edge="1" parent="1">
+        <mxGeometry relative="1" as="geometry">
+          <mxPoint x="100" y="10" as="sourcePoint" />
+          <mxPoint x="100" y="320" as="targetPoint" />
+        </mxGeometry>
+      </mxCell>
+      <mxCell id="v2" value="" style="endArrow=classic;html=1;jumpStyle=gap;" edge="1" parent="1">
+        <mxGeometry relative="1" as="geometry">
+          <mxPoint x="170" y="10" as="sourcePoint" />
+          <mxPoint x="170" y="320" as="targetPoint" />
+        </mxGeometry>
+      </mxCell>
+      <mxCell id="v3" value="" style="endArrow=classic;html=1;jumpStyle=sharp;" edge="1" parent="1">
+        <mxGeometry relative="1" as="geometry">
+          <mxPoint x="240" y="10" as="sourcePoint" />
+          <mxPoint x="240" y="320" as="targetPoint" />
+        </mxGeometry>
+      </mxCell>
+      <mxCell id="v4" value="" style="endArrow=classic;html=1;jumpStyle=line;" edge="1" parent="1">
+        <mxGeometry relative="1" as="geometry">
+          <mxPoint x="310" y="10" as="sourcePoint" />
+          <mxPoint x="310" y="320" as="targetPoint" />
+        </mxGeometry>
+      </mxCell>
+      <mxCell id="v5" value="" style="endArrow=classic;html=1;jumpStyle=arc;jumpSize=14;" edge="1" parent="1">
+        <mxGeometry relative="1" as="geometry">
+          <mxPoint x="380" y="10" as="sourcePoint" />
+          <mxPoint x="380" y="320" as="targetPoint" />
+        </mxGeometry>
+      </mxCell>
+      <mxCell id="v6" value="" style="endArrow=classic;html=1;jumpStyle=sharp;jumpSize=10;strokeWidth=3;" edge="1" parent="1">
+        <mxGeometry relative="1" as="geometry">
+          <mxPoint x="450" y="10" as="sourcePoint" />
+          <mxPoint x="450" y="320" as="targetPoint" />
+        </mxGeometry>
+      </mxCell>
+      <mxCell id="o1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jumpStyle=arc;jumpSize=10;" edge="1" parent="1">
+        <mxGeometry relative="1" as="geometry">
+          <mxPoint x="80" y="400" as="sourcePoint" />
+          <mxPoint x="540" y="360" as="targetPoint" />
+          <Array as="points">
+            <mxPoint x="300" y="400" />
+            <mxPoint x="300" y="20" />
+          </Array>
+        </mxGeometry>
+      </mxCell>
+      <mxCell id="o2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;jumpStyle=arc;" edge="1" parent="1">
+        <mxGeometry relative="1" as="geometry">
+          <mxPoint x="40" y="300" as="sourcePoint" />
+          <mxPoint x="600" y="380" as="targetPoint" />
+          <Array as="points">
+            <mxPoint x="40" y="380" />
+          </Array>
+        </mxGeometry>
+      </mxCell>
+      <mxCell id="o3" value="" style="html=1;jumpStyle=gap;endArrow=block;endFill=1;" edge="1" parent="1">
+        <mxGeometry relative="1" as="geometry">
+          <mxPoint x="20" y="20" as="sourcePoint" />
+          <mxPoint x="620" y="420" as="targetPoint" />
+        </mxGeometry>
+      </mxCell>
+      <mxCell id="o4" value="" style="html=1;jumpStyle=arc;noJump=1;" edge="1" parent="1">
+        <mxGeometry relative="1" as="geometry">
+          <mxPoint x="620" y="20" as="sourcePoint" />
+          <mxPoint x="20" y="420" as="targetPoint" />
+        </mxGeometry>
+      </mxCell>
+      <mxCell id="o5" value="" style="html=1;jumpStyle=sharp;" edge="1" parent="1">
+        <mxGeometry relative="1" as="geometry">
+          <mxPoint x="640" y="60" as="sourcePoint" />
+          <mxPoint x="640" y="420" as="targetPoint" />
+          <Array as="points">
+            <mxPoint x="500" y="200" />
+          </Array>
+        </mxGeometry>
+      </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

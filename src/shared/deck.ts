@@ -487,6 +487,122 @@ const UnsupportedElement = BaseElement.extend({
   note: z.string().default(''),
 });
 
+const DiagramPointSchema = z.object({ x: z.number(), y: z.number() });
+
+/** The `<object>`/`<UserObject>` wrapper of a draw.io cell: its tag and custom properties. */
+const DiagramObjectSchema = z.object({ tag: z.string(), attrs: z.record(z.string()) });
+
+/**
+ * What makes an element a draw.io cell (src/shared/diagram). The look is
+ * the draw.io style string `dio`, verbatim: draw.io's own keys
+ * (`shape=cylinder3;fillColor=#dae8fc;dashed=1;…`) are the source of truth,
+ * so a person or an agent changes a diagram in draw.io's vocabulary and a
+ * `.drawio` file round-trips. Geometry lives in the element box, in slide
+ * pixels; `scale` is draw.io's view scale, so style values (font sizes,
+ * stroke widths, arrowheads) stay in draw.io units and are drawn `scale`
+ * times larger.
+ */
+const DiagramCellFields = {
+  /** The draw.io style string, verbatim. */
+  dio: z.string().default(''),
+  /** The label: HTML when the style has `html=1`, else plain text. */
+  label: z.string().default(''),
+  /** The draw.io cell id, unique among the cells of its diagram. */
+  cell: z.string(),
+  /** Which diagram on the slide the cell belongs to: a key of `slide.diagrams`. */
+  diagram: z.string().default('diagram-1'),
+  /** The draw.io parent cell: a layer, a group or a container. */
+  parent: z.string().nullable().default(null),
+  /** draw.io's view scale for this cell. */
+  scale: z.number().positive().default(1),
+  /**
+   * Where draw.io's page origin (0,0) sits on the slide, in slide pixels: a
+   * cell's draw.io coordinates are (slide position − origin) ÷ scale.
+   * Routing runs in those coordinates, so routes round exactly as draw.io's.
+   */
+  origin: DiagramPointSchema.default({ x: 0, y: 0 }),
+  /** Present when the cell is wrapped in `<object>`/`<UserObject>`. */
+  object: DiagramObjectSchema.nullable().optional(),
+  /** mxCell attributes DeckWerk does not interpret, kept for writing back. */
+  extra: z.record(z.string()).optional(),
+  /** draw.io `visible="0"` on the cell itself: kept and exported, never drawn. */
+  hidden: z.boolean().optional(),
+  /** Not drawn because a layer or a collapsed container above it hides it. */
+  concealed: z.boolean().optional(),
+};
+
+/** A draw.io vertex: a diagram shape with its label. */
+const VertexElement = BaseElement.extend({
+  type: z.literal('vertex'),
+  ...DiagramCellFields,
+  /** A collapsed container. */
+  collapsed: z.boolean().optional(),
+  /** `connectable="0"`; absent means connectors may attach. */
+  connectable: z.boolean().optional(),
+  /**
+   * A relative vertex (a port on its parent): x and y are fractions of the
+   * parent's size, `offset` is in draw.io units. The box still holds the
+   * absolute geometry; this says how to write it back.
+   */
+  relative: z.object({ x: z.number(), y: z.number(), offset: DiagramPointSchema.nullable().default(null) }).nullable().optional(),
+  /** The geometry offset of a vertex that is not relative (it moves the label), in draw.io units. */
+  offset: DiagramPointSchema.nullable().optional(),
+  /** A container's other bounds (expanded when collapsed and vice versa), in draw.io units. */
+  alternateBounds: z.object({ x: z.number(), y: z.number(), w: z.number(), h: z.number() }).nullable().optional(),
+});
+
+/** A label cell attached to a connector (draw.io `edgeLabel` child with relative geometry). */
+const ConnectorLabelSchema = z.object({
+  cell: z.string(),
+  label: z.string().default(''),
+  dio: z.string().default(''),
+  /** Along the connector, -1 (source) to 1 (target). */
+  x: z.number().default(0),
+  /** Perpendicular offset in draw.io units. */
+  y: z.number().default(0),
+  offset: DiagramPointSchema.nullable().default(null),
+  /** Box size from the file (usually 0: the label sizes to its text). */
+  w: z.number().min(0).default(0),
+  h: z.number().min(0).default(0),
+  connectable: z.boolean().optional(),
+  object: DiagramObjectSchema.nullable().optional(),
+  extra: z.record(z.string()).optional(),
+  hidden: z.boolean().optional(),
+});
+
+/**
+ * A draw.io edge: a connector that stays attached to the vertices it joins.
+ * Its route is draw.io's routing of `source`/`target`, the waypoints and the
+ * style (edgeStyle, ports, jetty sizes…), recomputed whenever an end moves;
+ * `route` holds the last result so every surface draws it without the rest
+ * of the slide, and the box is the route's bounds.
+ */
+const ConnectorElement = BaseElement.extend({
+  type: z.literal('connector'),
+  ...DiagramCellFields,
+  /** The vertex element at each end; null for a loose end. */
+  source: Id.nullable().default(null),
+  target: Id.nullable().default(null),
+  /** Waypoints, in slide pixels. */
+  points: z.array(DiagramPointSchema).default([]),
+  /** Loose ends, in slide pixels; used when `source`/`target` is null. */
+  sourcePoint: DiagramPointSchema.nullable().default(null),
+  targetPoint: DiagramPointSchema.nullable().default(null),
+  /** Where the connector's own label sits: draw.io geometry x (-1…1), y, offset. */
+  labelGeometry: z.object({
+    x: z.number(),
+    y: z.number(),
+    offset: DiagramPointSchema.nullable().default(null),
+    /** The edge geometry size draw.io keeps (usually 0); it sizes the label box. */
+    w: z.number().min(0).optional(),
+    h: z.number().min(0).optional(),
+  }).nullable().optional(),
+  /** Label cells attached to this connector. */
+  labels: z.array(ConnectorLabelSchema).default([]),
+  /** The routed points (terminal points included), in slide pixels. */
+  route: z.array(DiagramPointSchema).default([]),
+});
+
 export const ElementSchema = z.discriminatedUnion('type', [
   TextElement,
   ImageElement,
@@ -496,7 +612,43 @@ export const ElementSchema = z.discriminatedUnion('type', [
   WebElement,
   CodeElement,
   UnsupportedElement,
+  VertexElement,
+  ConnectorElement,
 ]);
+
+/**
+ * What a slide keeps about each draw.io diagram on it, beyond its cells:
+ * enough to write the `.drawio` page back as it was read.
+ */
+export const DiagramMetaSchema = z.object({
+  /** The draw.io page name and id. */
+  name: z.string().default('Page-1'),
+  pageId: z.string().optional(),
+  /** `<mxGraphModel>` attributes (grid, pageWidth, background, math, …). */
+  model: z.record(z.string()).default({}),
+  /** The root cell id. */
+  root: z.string().default('0'),
+  /** The root cell's `<object>`: the page's custom properties (draw.io's Edit Data with nothing selected). */
+  rootObject: DiagramObjectSchema.nullable().optional(),
+  /** Layers, bottom first. */
+  layers: z.array(z.object({
+    cell: z.string(),
+    label: z.string().default(''),
+    dio: z.string().default(''),
+    hidden: z.boolean().optional(),
+    object: DiagramObjectSchema.nullable().optional(),
+    extra: z.record(z.string()).optional(),
+  })).default([{ cell: '1', label: '', dio: '' }]),
+  /** Where the draw.io page origin (0,0) sits on the slide, in slide pixels. */
+  origin: DiagramPointSchema.default({ x: 0, y: 0 }),
+  /** draw.io's view scale the diagram was placed with. */
+  scale: z.number().positive().default(1),
+  /** draw.io animation (its step JSON or legacy script), verbatim. */
+  animation: z.string().optional(),
+  /** `<mxfile>` and `<diagram>` attributes, kept for writing back. */
+  fileAttributes: z.record(z.string()).optional(),
+  pageAttributes: z.record(z.string()).optional(),
+});
 
 const SlideBackgroundSchema = z.object({
   color: z.string().nullable().default(null),
@@ -540,6 +692,14 @@ export const ActionSchema = z.object({
     'jiggle',
     'pop',
     'lines',
+    // draw.io's animation steps (shared/diagram/animation.ts): an opacity
+    // change (draw.io's fadeTo and opacity), a connector's flow animation
+    // starting or stopping, a cell's outline lit up for a moment, and a step
+    // DeckWerk does not play, kept so that it is written back to the file.
+    'opacity',
+    'flow',
+    'highlight',
+    'drawio',
   ]),
   target: Id,
   /**
@@ -557,9 +717,23 @@ export const ActionSchema = z.object({
    * the lines it names: `"appear"` (default) reveals them, `"highlight"`
    * tints them and `"dim"` fades every other line. A highlight or a dim holds
    * until the block's next one replaces it, or a reveal ends it.
+   *
+   * On `appear` or `disappear` of a diagram cell (`vertex`, `connector`),
+   * `"wipe"` is draw.io's wipe: a connector draws on along its route with its
+   * arrowhead at the tip, a vertex grows in from its left edge; `"pop"` on a
+   * vertex is draw.io's spring. On `opacity`, the opacity (0–1) the element
+   * goes to, over `duration` (an element that is hidden comes into view at
+   * it); `appear` and `disappear` leave it unchanged. On `flow` (a connector),
+   * `"start"`, `"stop"` or `"toggle"` its moving dashes. On `highlight`, the
+   * outline's opacity in percent (null: 100). On `drawio`, the draw.io step,
+   * as JSON, that DeckWerk keeps without playing.
    */
   value: z.union([z.number(), z.string()]).nullable().default(null),
-  /** Milliseconds an animated build takes (`"draw"`, `"dissolve"`, `"blur"`, `"pop"`). */
+  /**
+   * Milliseconds an animated build takes (`"draw"`, `"dissolve"`, `"blur"`,
+   * `"pop"`, `"wipe"`, `opacity`). On `highlight`, how long the outline
+   * shows before it fades.
+   */
   duration: z.number().min(0).optional(),
   /** On a `"pop"`: the size it grows from, as a fraction of its own (default 0.6). */
   popFrom: z.number().min(0).max(1).optional(),
@@ -581,8 +755,8 @@ export const ActionSchema = z.object({
    */
   lines: z.string().regex(/^\d+(?:-\d+)?(?:,\d+(?:-\d+)?)*$/).optional(),
   /**
-   * The colour a `terms` action with value `"color"` paints its terms, or a
-   * `lines` highlight tints its lines.
+   * The colour a `terms` action with value `"color"` paints its terms, a
+   * `lines` highlight tints its lines, or a `highlight` draws its outline in.
    */
   color: z.string().optional(),
   /** How far a `pulse` (default 1.6) or a `pop` (default 1.3) enlarges its target at the peak. */
@@ -621,6 +795,8 @@ export const SlideSchema = z.object({
   timeline: z.array(TimelineEntrySchema).default([]),
   /** Discussion attached to the slide as a whole; absent when there is none. */
   comments: z.array(CommentSchema).optional(),
+  /** draw.io diagrams on the slide, by the id their cells name in `diagram`. */
+  diagrams: z.record(DiagramMetaSchema).optional(),
 });
 
 /**
@@ -691,6 +867,15 @@ export type ShapeEl = z.infer<typeof ShapeElement>;
 export type HtmlEl = z.infer<typeof HtmlElement>;
 export type CodeEl = z.infer<typeof CodeElement>;
 export type UnsupportedEl = z.infer<typeof UnsupportedElement>;
+export type VertexEl = z.infer<typeof VertexElement>;
+export type ConnectorEl = z.infer<typeof ConnectorElement>;
+export type DiagramEl = VertexEl | ConnectorEl;
+export type ConnectorLabel = z.infer<typeof ConnectorLabelSchema>;
+export type DiagramMeta = z.infer<typeof DiagramMetaSchema>;
+
+export function isDiagramElement(el: { type: string }): el is DiagramEl {
+  return el.type === 'vertex' || el.type === 'connector';
+}
 export type Slide = z.infer<typeof SlideSchema>;
 export type Comment = z.infer<typeof CommentSchema>;
 export type Deck = z.infer<typeof DeckSchema>;

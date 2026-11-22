@@ -2125,6 +2125,8 @@ export function measureSlides(doc: Document): MeasuredSlide[] {
       ...(root.dataset.morphDuration !== undefined
         ? { morphDuration: Number(root.dataset.morphDuration) }
         : {}),
+      // draw.io diagram records (layers, page, origin, scale): diagramHtml.ts.
+      ...(root.dataset.diagrams !== undefined ? { diagrams: root.dataset.diagrams } : {}),
       ...(root.dataset.base !== undefined ? { base: root.dataset.base, baseIds: root.dataset.baseIds } : {}),
       nodes,
       warnings,

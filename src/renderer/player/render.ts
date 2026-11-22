@@ -10,6 +10,10 @@ import { videoMemory } from './videoMemory.js';
 import { previewPosterProvider } from './previewPosterProvider.js';
 import { prepareSlideLinks } from './links.js';
 import { quadraticPath, shapeSvg } from '@shared/shapeSvg.js';
+import { connectorLineJumps, connectorMarkup, vertexMarkup } from '@shared/diagram/element.js';
+import type { RoutedPoint } from '@shared/diagram/lineJumps.js';
+import { cellMarkupOptions, diagramContextKey } from '@shared/diagram/cellContext.js';
+import { applyConnectorFlow } from './diagramMotion.js';
 import { isMediaBorderPaint, typedPropertyOwnsCss } from '@shared/nativeCss.js';
 import { applyTableColumnWidths } from '@shared/paragraphs.js';
 import { isEmbeddableWebSrc, webReadinessAction } from '@shared/webBridge.js';
@@ -76,6 +80,55 @@ export interface RenderOptions {
    * (editingLatencyBrowser.test.ts).
    */
   decodeImagesAsync?: boolean;
+  /**
+   * The slide a draw.io cell is drawn on. A connector's line jumps depend on
+   * the connectors drawn before it, and a page with shadow="1" shadows every
+   * cell, so a cell drawn without its slide has neither. `renderSlide` sets
+   * it; a caller that renders one cell of a slide passes it.
+   */
+  diagramSlide?: DiagramSlide;
+}
+
+/** What a draw.io cell needs of the slide it is on. */
+export type DiagramSlide = Pick<Slide, 'elements' | 'diagrams'>;
+
+/** Line jumps per slide state (element arrays are replaced, never mutated, on change). */
+const lineJumpsBySlide = new WeakMap<readonly SlideElement[], Map<string, RoutedPoint[]>>();
+
+function slideLineJumps(elements: readonly SlideElement[]): Map<string, RoutedPoint[]> {
+  let jumps = lineJumpsBySlide.get(elements);
+  if (!jumps) {
+    jumps = connectorLineJumps(elements);
+    lineJumpsBySlide.set(elements, jumps);
+  }
+  return jumps;
+}
+
+/**
+ * The draw.io cells of `slide` that must be drawn again because something
+ * else on the slide changed how they look since `previous`: a connector
+ * whose line jumps moved (another connector was re-routed), or every cell
+ * when a page's shadow or math, or a placeholder an ancestor fills,
+ * changed (cellContext.ts). Cells that changed themselves are not listed
+ * (the caller redraws those anyway).
+ */
+export function diagramRedraws(slide: DiagramSlide, previous: DiagramSlide | undefined): Set<string> {
+  const out = new Set<string>();
+  if (!previous || (previous.elements === slide.elements && previous.diagrams === slide.diagrams)) return out;
+  const cells = slide.elements.filter((el) => el.type === 'vertex' || el.type === 'connector');
+  if (cells.length === 0) return out;
+  if (diagramContextKey(slide) !== diagramContextKey(previous)) {
+    for (const el of cells) out.add(el.id);
+    return out;
+  }
+  const before = slideLineJumps(previous.elements);
+  const after = slideLineJumps(slide.elements);
+  const same = (a: RoutedPoint[] | undefined, b: RoutedPoint[] | undefined) =>
+    a === b || (a != null && b != null && JSON.stringify(a) === JSON.stringify(b));
+  for (const el of cells) {
+    if (el.type === 'connector' && !same(before.get(el.id), after.get(el.id))) out.add(el.id);
+  }
+  return out;
 }
 
 /** Give a picture its source, or park it for the host (`deferImageSrc`). */
@@ -93,10 +146,13 @@ export function renderSlide(slide: Slide, opts: RenderOptions): HTMLElement {
   root.dataset.slideId = slide.id;
   applySlideRootStyles(root, slide, opts);
 
+  // Diagram cells are drawn knowing their slide (line jumps, page shadow).
+  const cellOpts = slide.elements.some((el) => el.type === 'vertex' || el.type === 'connector')
+    ? { ...opts, diagramSlide: slide } : opts;
   // Sort by z so paint order is explicit rather than relying on array order;
   // a stable sort keeps array order as the tie-breaker.
   for (const el of [...slide.elements].sort((a, b) => a.z - b.z)) {
-    root.appendChild(renderElement(el, opts));
+    root.appendChild(renderElement(el, cellOpts));
   }
   return root;
 }
@@ -877,7 +933,44 @@ function renderBody(el: SlideElement, opts: RenderOptions): HTMLElement | SVGEle
       div.textContent = el.note || el.originalType;
       return div;
     }
+
+    case 'vertex':
+    case 'connector':
+      return renderDiagramCell(el, opts.diagramSlide);
   }
+}
+
+/**
+ * A draw.io cell: the shape or connector and its labels, drawn by the
+ * diagram engine (src/shared/diagram) into one SVG sized to the box. The
+ * same markup is what figure export writes, so the slide and the exported
+ * figure agree.
+ */
+function renderDiagramCell(el: Extract<SlideElement, { type: 'vertex' | 'connector' }>, slide?: DiagramSlide): SVGElement {
+  const template = document.createElement('template');
+  // The page's shadow and math, placeholders from ancestors, line jumps.
+  const options = cellMarkupOptions(slide, el);
+  template.innerHTML = el.type === 'vertex'
+    ? vertexMarkup(el, options)
+    : connectorMarkup(el, { ...options, routedPoints: slide ? slideLineJumps(slide.elements).get(el.id) : null });
+  const svg = template.content.firstElementChild as SVGElement;
+  // flowAnimation=1: draw.io's moving dashes (or dots, rings) along the line.
+  if (el.type === 'connector') applyConnectorFlow(svg, el, null);
+  return svg;
+}
+
+/**
+ * Redraw a draw.io cell for its current fields (the editor's patch path).
+ * Pass its slide, or the cell loses its line jumps and page shadow.
+ */
+export function syncDiagramBody(
+  node: HTMLElement,
+  el: Extract<SlideElement, { type: 'vertex' | 'connector' }>,
+  slide?: DiagramSlide,
+): void {
+  const body = elementBody(node);
+  if (!body) return;
+  body.replaceWith(renderDiagramCell(el, slide));
 }
 
 /**

@@ -1,0 +1,936 @@
+{
+  "fixture": "shapes-misc-sketch.drawio",
+  "generator": {
+    "bundles": ["js/app.min.js", "js/stencils.min.js", "js/shapes-14-6-5.min.js"],
+    "chromium": "128.0.6613.186",
+    "drawio": "32.7.4",
+    "electron": "32.3.3",
+    "platform": "win32-x64"
+  },
+  "pages": [
+    {
+      "cells": [
+        {
+          "geometry": null,
+          "id": "0",
+          "kind": "root",
+          "label": "",
+          "order": 0,
+          "parent": null,
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "light-dark(#ffffff, var(--ge-dark-color, #121212))",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "perimeter": "rectanglePerimeter",
+            "shape": "label",
+            "strokeColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "verticalAlign": "middle"
+          },
+          "state": null,
+          "style": "",
+          "visible": true
+        },
+        {
+          "geometry": null,
+          "id": "1",
+          "kind": "layer",
+          "label": "",
+          "order": 1,
+          "parent": "0",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "light-dark(#ffffff, var(--ge-dark-color, #121212))",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "perimeter": "rectanglePerimeter",
+            "shape": "label",
+            "strokeColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "verticalAlign": "middle"
+          },
+          "state": null,
+          "style": "",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 60,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 120,
+            "x": 20,
+            "y": 20
+          },
+          "id": "rect-sketch",
+          "kind": "vertex",
+          "label": "Sketch",
+          "order": 2,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#1ba1e2",
+            "fillWeight": 4,
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "hachureAngle": 45,
+            "hachureGap": 8,
+            "html": 1,
+            "perimeter": "rectanglePerimeter",
+            "rounded": 1,
+            "shape": "label",
+            "sketch": 1,
+            "strokeColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "strokeWidth": 2,
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 60,
+            "origin": {"x": 20, "y": 20},
+            "perimeter": {
+              "name": "rectanglePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 140, "y": 50}, "toward": {"x": 660, "y": 50}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 140, "y": 74.853},
+                  "toward": {"x": 615.85, "y": 271.956}
+                },
+                {"angle": 45, "point": {"x": 110, "y": 80}, "toward": {"x": 490.122, "y": 460.122}},
+                {
+                  "angle": 67.5,
+                  "point": {"x": 92.426, "y": 80},
+                  "toward": {"x": 301.956, "y": 585.85}
+                },
+                {"angle": 90, "point": {"x": 80, "y": 80}, "toward": {"x": 80, "y": 630}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 67.574, "y": 80},
+                  "toward": {"x": -141.956, "y": 585.85}
+                },
+                {"angle": 135, "point": {"x": 50, "y": 80}, "toward": {"x": -330.122, "y": 460.122}},
+                {
+                  "angle": 157.5,
+                  "point": {"x": 20, "y": 74.853},
+                  "toward": {"x": -455.85, "y": 271.956}
+                },
+                {"angle": 180, "point": {"x": 20, "y": 50}, "toward": {"x": -500, "y": 50}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 20, "y": 25.147},
+                  "toward": {"x": -455.85, "y": -171.956}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 50, "y": 20},
+                  "toward": {"x": -330.122, "y": -360.122}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 67.574, "y": 20},
+                  "toward": {"x": -141.956, "y": -485.85}
+                },
+                {"angle": 270, "point": {"x": 80, "y": 20}, "toward": {"x": 80, "y": -530}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 92.426, "y": 20},
+                  "toward": {"x": 301.956, "y": -485.85}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 110, "y": 20},
+                  "toward": {"x": 490.122, "y": -360.122}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 140, "y": 25.147},
+                  "toward": {"x": 615.85, "y": -171.956}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 62.666, "width": 122.557, "x": 18.948, "y": 18.646},
+              "bounds": {"height": 60, "width": 120, "x": 20, "y": 20},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "label",
+              "name": "label",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 2
+            },
+            "text": {
+              "align": "center",
+              "background": null,
+              "border": null,
+              "boundingBox": {"height": 14, "width": 37, "x": 61.5, "y": 43},
+              "bounds": {"height": 56, "width": 116, "x": 80, "y": 50},
+              "clipped": false,
+              "draws": [
+                {
+                  "align": "center",
+                  "canvas": {
+                    "alpha": 1,
+                    "dx": -3,
+                    "dy": -8,
+                    "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+                    "fontFamily": "Helvetica",
+                    "fontSize": 12,
+                    "fontStyle": 0,
+                    "rotation": 0,
+                    "rotationCx": 0,
+                    "rotationCy": 0,
+                    "scale": 1
+                  },
+                  "clip": false,
+                  "dir": null,
+                  "format": "html",
+                  "height": 56,
+                  "overflow": "visible",
+                  "rotation": 0,
+                  "valign": "middle",
+                  "value": "Sketch",
+                  "width": 116,
+                  "wrap": true,
+                  "x": 80,
+                  "y": 50
+                }
+              ],
+              "font": {
+                "color": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+                "family": "Helvetica",
+                "size": 12,
+                "style": 0
+              },
+              "horizontal": true,
+              "html": true,
+              "margin": {"x": -0.5, "y": -0.5},
+              "opacity": 100,
+              "overflow": "visible",
+              "rotation": 0,
+              "spacing": {"base": 2, "bottom": 2, "left": 2, "right": 2, "top": 2},
+              "textDirection": null,
+              "textOpacity": null,
+              "unrotatedBoundingBox": null,
+              "valign": "middle",
+              "wrap": true
+            },
+            "width": 120,
+            "x": 20,
+            "y": 20
+          },
+          "style": "rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fillWeight=4;hachureGap=8;hachureAngle=45;fillColor=#1ba1e2;sketch=1;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 60,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 120,
+            "x": 170,
+            "y": 20
+          },
+          "id": "ellipse-sketch",
+          "kind": "vertex",
+          "label": "Sketch",
+          "order": 3,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#990000",
+            "fillStyle": "dots",
+            "fillWeight": 2,
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "hachureGap": 8,
+            "html": 1,
+            "perimeter": "ellipsePerimeter",
+            "shape": "ellipse",
+            "sketch": 1,
+            "strokeColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "strokeWidth": 2,
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 60,
+            "origin": {"x": 170, "y": 20},
+            "perimeter": {
+              "name": "ellipsePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 290, "y": 50}, "toward": {"x": 810, "y": 50}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 276.256, "y": 69.108},
+                  "toward": {"x": 765.85, "y": 271.956}
+                },
+                {
+                  "angle": 45,
+                  "point": {"x": 256.833, "y": 76.833},
+                  "toward": {"x": 640.122, "y": 460.122}
+                },
+                {
+                  "angle": 67.5,
+                  "point": {"x": 242.136, "y": 79.38},
+                  "toward": {"x": 451.956, "y": 585.85}
+                },
+                {"angle": 90, "point": {"x": 230, "y": 80}, "toward": {"x": 230, "y": 630}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 217.864, "y": 79.38},
+                  "toward": {"x": 8.044, "y": 585.85}
+                },
+                {
+                  "angle": 135,
+                  "point": {"x": 203.167, "y": 76.833},
+                  "toward": {"x": -180.122, "y": 460.122}
+                },
+                {
+                  "angle": 157.5,
+                  "point": {"x": 183.744, "y": 69.108},
+                  "toward": {"x": -305.85, "y": 271.956}
+                },
+                {"angle": 180, "point": {"x": 170, "y": 50}, "toward": {"x": -350, "y": 50}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 183.744, "y": 30.892},
+                  "toward": {"x": -305.85, "y": -171.956}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 203.167, "y": 23.167},
+                  "toward": {"x": -180.122, "y": -360.122}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 217.864, "y": 20.62},
+                  "toward": {"x": 8.044, "y": -485.85}
+                },
+                {"angle": 270, "point": {"x": 230, "y": 20}, "toward": {"x": 230, "y": -530}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 242.136, "y": 20.62},
+                  "toward": {"x": 451.956, "y": -485.85}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 256.833, "y": 23.167},
+                  "toward": {"x": 640.122, "y": -360.122}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 276.256, "y": 30.892},
+                  "toward": {"x": 765.85, "y": -171.956}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 67.038, "width": 122, "x": 169, "y": 17.882},
+              "bounds": {"height": 60, "width": 120, "x": 170, "y": 20},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "ellipse",
+              "name": "ellipse",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 2
+            },
+            "text": {
+              "align": "center",
+              "background": null,
+              "border": null,
+              "boundingBox": {"height": 14, "width": 37, "x": 211.5, "y": 43},
+              "bounds": {"height": 56, "width": 116, "x": 230, "y": 50},
+              "clipped": false,
+              "draws": [
+                {
+                  "align": "center",
+                  "canvas": {
+                    "alpha": 1,
+                    "dx": -3,
+                    "dy": -8,
+                    "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+                    "fontFamily": "Helvetica",
+                    "fontSize": 12,
+                    "fontStyle": 0,
+                    "rotation": 0,
+                    "rotationCx": 0,
+                    "rotationCy": 0,
+                    "scale": 1
+                  },
+                  "clip": false,
+                  "dir": null,
+                  "format": "html",
+                  "height": 56,
+                  "overflow": "visible",
+                  "rotation": 0,
+                  "valign": "middle",
+                  "value": "Sketch",
+                  "width": 116,
+                  "wrap": true,
+                  "x": 230,
+                  "y": 50
+                }
+              ],
+              "font": {
+                "color": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+                "family": "Helvetica",
+                "size": 12,
+                "style": 0
+              },
+              "horizontal": true,
+              "html": true,
+              "margin": {"x": -0.5, "y": -0.5},
+              "opacity": 100,
+              "overflow": "visible",
+              "rotation": 0,
+              "spacing": {"base": 2, "bottom": 2, "left": 2, "right": 2, "top": 2},
+              "textDirection": null,
+              "textOpacity": null,
+              "unrotatedBoundingBox": null,
+              "valign": "middle",
+              "wrap": true
+            },
+            "width": 120,
+            "x": 170,
+            "y": 20
+          },
+          "style": "ellipse;whiteSpace=wrap;html=1;strokeWidth=2;fillWeight=2;hachureGap=8;fillColor=#990000;fillStyle=dots;sketch=1;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 60,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 120,
+            "x": 320,
+            "y": 20
+          },
+          "id": "diamond-sketch",
+          "kind": "vertex",
+          "label": "Sketch",
+          "order": 4,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "#006600",
+            "fillStyle": "cross-hatch",
+            "fillWeight": -1,
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "hachureGap": 8,
+            "html": 1,
+            "perimeter": "rhombusPerimeter",
+            "shape": "rhombus",
+            "sketch": 1,
+            "strokeColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "strokeWidth": 2,
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 60,
+            "origin": {"x": 320, "y": 20},
+            "perimeter": {
+              "name": "rhombusPerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 440, "y": 50}, "toward": {"x": 960, "y": 50}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 412.815, "y": 63.592},
+                  "toward": {"x": 915.85, "y": 271.956}
+                },
+                {"angle": 45, "point": {"x": 400, "y": 70}, "toward": {"x": 790.122, "y": 460.122}},
+                {
+                  "angle": 67.5,
+                  "point": {"x": 390.294, "y": 74.853},
+                  "toward": {"x": 601.956, "y": 585.85}
+                },
+                {"angle": 90, "point": {"x": 380, "y": 80}, "toward": {"x": 380, "y": 630}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 369.706, "y": 74.853},
+                  "toward": {"x": 158.044, "y": 585.85}
+                },
+                {"angle": 135, "point": {"x": 360, "y": 70}, "toward": {"x": -30.122, "y": 460.122}},
+                {
+                  "angle": 157.5,
+                  "point": {"x": 347.185, "y": 63.592},
+                  "toward": {"x": -155.85, "y": 271.956}
+                },
+                {"angle": 180, "point": {"x": 320, "y": 50}, "toward": {"x": -200, "y": 50}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 347.185, "y": 36.408},
+                  "toward": {"x": -155.85, "y": -171.956}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 360, "y": 30},
+                  "toward": {"x": -30.122, "y": -360.122}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 369.706, "y": 25.147},
+                  "toward": {"x": 158.044, "y": -485.85}
+                },
+                {"angle": 270, "point": {"x": 380, "y": 20}, "toward": {"x": 380, "y": -530}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 390.294, "y": 25.147},
+                  "toward": {"x": 601.956, "y": -485.85}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 400, "y": 30},
+                  "toward": {"x": 790.122, "y": -360.122}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 412.815, "y": 36.408},
+                  "toward": {"x": 915.85, "y": -171.956}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 62, "width": 122.23, "x": 318.77, "y": 19},
+              "bounds": {"height": 60, "width": 120, "x": 320, "y": 20},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "rhombus",
+              "name": "rhombus",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 2
+            },
+            "text": {
+              "align": "center",
+              "background": null,
+              "border": null,
+              "boundingBox": {"height": 14, "width": 37, "x": 361.5, "y": 43},
+              "bounds": {"height": 56, "width": 116, "x": 380, "y": 50},
+              "clipped": false,
+              "draws": [
+                {
+                  "align": "center",
+                  "canvas": {
+                    "alpha": 1,
+                    "dx": -3,
+                    "dy": -8,
+                    "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+                    "fontFamily": "Helvetica",
+                    "fontSize": 12,
+                    "fontStyle": 0,
+                    "rotation": 0,
+                    "rotationCx": 0,
+                    "rotationCy": 0,
+                    "scale": 1
+                  },
+                  "clip": false,
+                  "dir": null,
+                  "format": "html",
+                  "height": 56,
+                  "overflow": "visible",
+                  "rotation": 0,
+                  "valign": "middle",
+                  "value": "Sketch",
+                  "width": 116,
+                  "wrap": true,
+                  "x": 380,
+                  "y": 50
+                }
+              ],
+              "font": {
+                "color": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+                "family": "Helvetica",
+                "size": 12,
+                "style": 0
+              },
+              "horizontal": true,
+              "html": true,
+              "margin": {"x": -0.5, "y": -0.5},
+              "opacity": 100,
+              "overflow": "visible",
+              "rotation": 0,
+              "spacing": {"base": 2, "bottom": 2, "left": 2, "right": 2, "top": 2},
+              "textDirection": null,
+              "textOpacity": null,
+              "unrotatedBoundingBox": null,
+              "valign": "middle",
+              "wrap": true
+            },
+            "width": 120,
+            "x": 320,
+            "y": 20
+          },
+          "style": "rhombus;whiteSpace=wrap;html=1;strokeWidth=2;fillWeight=-1;hachureGap=8;fillStyle=cross-hatch;fillColor=#006600;sketch=1;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 60,
+            "offset": null,
+            "points": null,
+            "relative": false,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 120,
+            "x": 470,
+            "y": 20
+          },
+          "id": "plain-sketch",
+          "kind": "vertex",
+          "label": "Plain",
+          "order": 5,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "fillColor": "light-dark(#ffffff, var(--ge-dark-color, #121212))",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 12,
+            "html": 1,
+            "perimeter": "rectanglePerimeter",
+            "rounded": 0,
+            "shape": "label",
+            "sketch": 1,
+            "strokeColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "verticalAlign": "middle",
+            "whiteSpace": "wrap"
+          },
+          "state": {
+            "absoluteOffset": {"x": 0, "y": 0},
+            "height": 60,
+            "origin": {"x": 470, "y": 20},
+            "perimeter": {
+              "name": "rectanglePerimeter",
+              "probes": [
+                {"angle": 0, "point": {"x": 590, "y": 50}, "toward": {"x": 1110, "y": 50}},
+                {
+                  "angle": 22.5,
+                  "point": {"x": 590, "y": 74.853},
+                  "toward": {"x": 1065.85, "y": 271.956}
+                },
+                {"angle": 45, "point": {"x": 560, "y": 80}, "toward": {"x": 940.122, "y": 460.122}},
+                {
+                  "angle": 67.5,
+                  "point": {"x": 542.426, "y": 80},
+                  "toward": {"x": 751.956, "y": 585.85}
+                },
+                {"angle": 90, "point": {"x": 530, "y": 80}, "toward": {"x": 530, "y": 630}},
+                {
+                  "angle": 112.5,
+                  "point": {"x": 517.574, "y": 80},
+                  "toward": {"x": 308.044, "y": 585.85}
+                },
+                {"angle": 135, "point": {"x": 500, "y": 80}, "toward": {"x": 119.878, "y": 460.122}},
+                {
+                  "angle": 157.5,
+                  "point": {"x": 470, "y": 74.853},
+                  "toward": {"x": -5.85, "y": 271.956}
+                },
+                {"angle": 180, "point": {"x": 470, "y": 50}, "toward": {"x": -50, "y": 50}},
+                {
+                  "angle": 202.5,
+                  "point": {"x": 470, "y": 25.147},
+                  "toward": {"x": -5.85, "y": -171.956}
+                },
+                {
+                  "angle": 225,
+                  "point": {"x": 500, "y": 20},
+                  "toward": {"x": 119.878, "y": -360.122}
+                },
+                {
+                  "angle": 247.5,
+                  "point": {"x": 517.574, "y": 20},
+                  "toward": {"x": 308.044, "y": -485.85}
+                },
+                {"angle": 270, "point": {"x": 530, "y": 20}, "toward": {"x": 530, "y": -530}},
+                {
+                  "angle": 292.5,
+                  "point": {"x": 542.426, "y": 20},
+                  "toward": {"x": 751.956, "y": -485.85}
+                },
+                {
+                  "angle": 315,
+                  "point": {"x": 560, "y": 20},
+                  "toward": {"x": 940.122, "y": -360.122}
+                },
+                {
+                  "angle": 337.5,
+                  "point": {"x": 590, "y": 25.147},
+                  "toward": {"x": 1065.85, "y": -171.956}
+                }
+              ]
+            },
+            "shape": {
+              "boundingBox": {"height": 63.441, "width": 122.683, "x": 468.14, "y": 17.98},
+              "bounds": {"height": 60, "width": 120, "x": 470, "y": 20},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "label",
+              "name": "label",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": {
+              "align": "center",
+              "background": null,
+              "border": null,
+              "boundingBox": {"height": 14, "width": 27, "x": 516.5, "y": 43},
+              "bounds": {"height": 56, "width": 116, "x": 530, "y": 50},
+              "clipped": false,
+              "draws": [
+                {
+                  "align": "center",
+                  "canvas": {
+                    "alpha": 1,
+                    "dx": -3,
+                    "dy": -8,
+                    "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+                    "fontFamily": "Helvetica",
+                    "fontSize": 12,
+                    "fontStyle": 0,
+                    "rotation": 0,
+                    "rotationCx": 0,
+                    "rotationCy": 0,
+                    "scale": 1
+                  },
+                  "clip": false,
+                  "dir": null,
+                  "format": "html",
+                  "height": 56,
+                  "overflow": "visible",
+                  "rotation": 0,
+                  "valign": "middle",
+                  "value": "Plain",
+                  "width": 116,
+                  "wrap": true,
+                  "x": 530,
+                  "y": 50
+                }
+              ],
+              "font": {
+                "color": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+                "family": "Helvetica",
+                "size": 12,
+                "style": 0
+              },
+              "horizontal": true,
+              "html": true,
+              "margin": {"x": -0.5, "y": -0.5},
+              "opacity": 100,
+              "overflow": "visible",
+              "rotation": 0,
+              "spacing": {"base": 2, "bottom": 2, "left": 2, "right": 2, "top": 2},
+              "textDirection": null,
+              "textOpacity": null,
+              "unrotatedBoundingBox": null,
+              "valign": "middle",
+              "wrap": true
+            },
+            "width": 120,
+            "x": 470,
+            "y": 20
+          },
+          "style": "rounded=0;whiteSpace=wrap;html=1;sketch=1;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 0,
+            "offset": null,
+            "points": null,
+            "relative": true,
+            "sourcePoint": {"x": 20, "y": 140},
+            "targetPoint": {"x": 260, "y": 140},
+            "width": 0,
+            "x": 0,
+            "y": 0
+          },
+          "id": "sketch-edge",
+          "kind": "edge",
+          "label": "",
+          "order": 6,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "endArrow": "classic",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 11,
+            "html": 1,
+            "labelBackgroundColor": "light-dark(#ffffff, var(--ge-dark-color, #121212))",
+            "rounded": 0,
+            "shape": "connector",
+            "sketch": 1,
+            "strokeColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "verticalAlign": "middle"
+          },
+          "state": {
+            "absoluteOffset": {"x": 140, "y": 140},
+            "edge": {
+              "edgeStyle": null,
+              "length": 240,
+              "points": [{"x": 20, "y": 140}, {"x": 260, "y": 140}],
+              "segments": [240],
+              "source": null,
+              "sourcePoint": {"x": 20, "y": 140},
+              "target": null,
+              "targetPoint": {"x": 260, "y": 140},
+              "terminalDistance": 240
+            },
+            "height": 1,
+            "origin": {"x": 0, "y": 0},
+            "shape": {
+              "boundingBox": {"height": 16, "width": 256, "x": 12.5, "y": 132.5},
+              "bounds": {"height": 1, "width": 241, "x": 20, "y": 140},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "connector",
+              "name": "connector",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 240,
+            "x": 20,
+            "y": 140
+          },
+          "style": "endArrow=classic;html=1;rounded=0;sketch=1;",
+          "visible": true
+        },
+        {
+          "geometry": {
+            "height": 0,
+            "offset": null,
+            "points": null,
+            "relative": true,
+            "sourcePoint": null,
+            "targetPoint": null,
+            "width": 0,
+            "x": 0,
+            "y": 0
+          },
+          "id": "sketch-edge-connected",
+          "kind": "edge",
+          "label": "",
+          "order": 7,
+          "parent": "1",
+          "resolvedStyle": {
+            "align": "center",
+            "edgeStyle": "orthogonalEdgeStyle",
+            "endArrow": "classic",
+            "fontColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "fontFamily": "Helvetica",
+            "fontSize": 11,
+            "html": 1,
+            "labelBackgroundColor": "light-dark(#ffffff, var(--ge-dark-color, #121212))",
+            "rounded": 0,
+            "shape": "connector",
+            "sketch": 1,
+            "strokeColor": "light-dark(#000000, var(--ge-light-color, #ffffff))",
+            "verticalAlign": "middle"
+          },
+          "state": {
+            "absoluteOffset": {"x": 305, "y": 50},
+            "edge": {
+              "edgeStyle": "orthogonalEdgeStyle",
+              "length": 330,
+              "points": [{"x": 140, "y": 50}, {"x": 470, "y": 50}],
+              "segments": [330],
+              "source": "rect-sketch",
+              "sourcePoint": {"x": 140, "y": 50},
+              "target": "plain-sketch",
+              "targetPoint": {"x": 470, "y": 50},
+              "terminalDistance": 330
+            },
+            "height": 1,
+            "origin": {"x": 0, "y": 0},
+            "shape": {
+              "boundingBox": {"height": 16, "width": 346, "x": 132.5, "y": 42.5},
+              "bounds": {"height": 1, "width": 331, "x": 140, "y": 50},
+              "direction": null,
+              "flipH": false,
+              "flipV": false,
+              "implementation": "connector",
+              "name": "connector",
+              "rotation": 0,
+              "stencil": false,
+              "strokeWidth": 1
+            },
+            "text": null,
+            "width": 330,
+            "x": 140,
+            "y": 50
+          },
+          "style": "edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;sketch=1;",
+          "visible": true
+        }
+      ],
+      "graphBounds": {"height": 130.618, "width": 578.323, "x": 12.5, "y": 17.882},
+      "id": "shapes-misc-sketch",
+      "index": 0,
+      "model": {
+        "arrows": "1",
+        "connect": "1",
+        "dx": "0",
+        "dy": "0",
+        "fold": "1",
+        "grid": "1",
+        "gridSize": "10",
+        "guides": "1",
+        "math": "0",
+        "page": "1",
+        "pageHeight": "1100",
+        "pageScale": "1",
+        "pageWidth": "850",
+        "shadow": "0",
+        "tooltips": "1"
+      },
+      "name": "Sketch style",
+      "png": {
+        "background": "#ffffff",
+        "file": "shapes-misc-sketch.0.png",
+        "height": 304,
+        "scale": 2,
+        "width": 1198
+      },
+      "svg": {
+        "background": null,
+        "border": 10,
+        "file": "shapes-misc-sketch.0.svg",
+        "height": 152,
+        "scale": 1,
+        "translate": {"x": -3, "y": -8},
+        "width": 599
+      }
+    }
+  ]
+}
